@@ -2,6 +2,7 @@ import { ArrowLeft } from 'lucide-react';
 import { useState } from 'react';
 import { products, Product } from '../../../data/productData';
 import ProductCard from './ProductCard';
+import ImageGallery from './ImageGallery';
 
 // Интерфейс для пропсов
 interface CategoryPageProps {
@@ -55,21 +56,16 @@ const CategoryPage = ({ categoryId, onBack }: CategoryPageProps) => {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
             {/* Изображение и основная информация */}
             <div>
-              <div className="bg-gray-50 rounded-lg p-8 flex items-center justify-center mb-6">
-                <img 
-                  src={selectedProduct.image} 
-                  alt={selectedProduct.name} 
-                  className="max-w-full max-h-80 object-contain"
+              <div className="mb-6">
+                <ImageGallery 
+                  images={selectedProduct.images} 
+                  alt={selectedProduct.name}
                 />
               </div>
               <h2 className="text-2xl font-bold mb-2">{selectedProduct.name}</h2>
               <p className="text-gray-500 mb-4">{selectedProduct.model}</p>
               
               <div className="space-y-4 mb-6">
-                <div className="flex justify-between items-center">
-                  <span className="text-gray-600">Тип:</span>
-                  <span className="font-medium">{selectedProduct.type}</span>
-                </div>
                 <div className="flex justify-between items-center">
                   <span className="text-gray-600">Цвет:</span>
                   <span className="font-medium">{selectedProduct.color}</span>
@@ -128,9 +124,8 @@ const CategoryPage = ({ categoryId, onBack }: CategoryPageProps) => {
                 id={product.id}
                 name={product.name}
                 model={product.model}
-                image={product.image}
+                image={product.images[0]}
                 price={product.price}
-                type={product.type}
                 color={product.color}
                 onSelect={handleProductSelect}
               />
