@@ -1,0 +1,272 @@
+/* Стили для статей энциклопедии */
+
+.article-content {
+  font-family: 'Roboto', sans-serif;
+  color: #333;
+  line-height: 1.6;
+  max-width: 100%;
+  margin: 0 auto;
+}
+
+.article-title {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: #1a73e8;
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+
+.article-intro {
+  font-size: 1.2rem;
+  line-height: 1.8;
+  color: #555;
+  margin-bottom: 2rem;
+  border-left: 4px solid #1a73e8;
+  padding-left: 1rem;
+  font-style: italic;
+}
+
+.article-section {
+  margin-bottom: 2.5rem;
+}
+
+.section-title {
+  font-size: 1.8rem;
+  font-weight: 600;
+  color: #1a73e8;
+  margin-bottom: 1.2rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid #e0e0e0;
+}
+
+.article-section p {
+  margin-bottom: 1rem;
+}
+
+.article-section ul, 
+.article-section ol {
+  margin-bottom: 1.5rem;
+  padding-left: 1.5rem;
+}
+
+.article-section li {
+  margin-bottom: 0.5rem;
+}
+
+.article-section h3 {
+  font-size: 1.4rem;
+  font-weight: 600;
+  color: #2c3e50;
+  margin: 1.5rem 0 1rem 0;
+}
+
+.article-section h4 {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #34495e;
+  margin: 1.2rem 0 0.8rem 0;
+}
+
+.highlight {
+  font-weight: 700;
+  color: #1a73e8;
+}
+
+.warning-box {
+  background-color: #fff8e1;
+  border-left: 4px solid #ffc107;
+  padding: 1rem;
+  margin: 1.5rem 0;
+  border-radius: 0 4px 4px 0;
+}
+
+.warning-box p {
+  margin: 0;
+}
+
+.factors-list li,
+.pros-cons li,
+.consequences-list li,
+.recommendation-list li,
+.warning-signs li {
+  position: relative;
+  padding-left: 1.5rem;
+  margin-bottom: 0.8rem;
+}
+
+.factors-list li:before,
+.pros-cons li:before,
+.consequences-list li:before,
+.recommendation-list li:before,
+.warning-signs li:before {
+  content: "•";
+  color: #1a73e8;
+  font-weight: bold;
+  position: absolute;
+  left: 0;
+}
+
+.factor-name,
+.function-name {
+  font-weight: 600;
+  color: #2c3e50;
+}
+
+.ac-type {
+  margin-bottom: 1.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px dashed #e0e0e0;
+}
+
+.ac-type:last-child {
+  border-bottom: none;
+}
+
+.comparison-block {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.comparison-item {
+  flex: 1;
+  min-width: 250px;
+  background-color: #f8f9fa;
+  padding: 1.2rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.comparison-item h3 {
+  margin-top: 0;
+  color: #1a73e8;
+  border-bottom: 1px solid #e0e0e0;
+  padding-bottom: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.maintenance-task {
+  margin-bottom: 2rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.maintenance-task:last-child {
+  border-bottom: none;
+}
+
+.task-details {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+  margin: 1rem 0;
+}
+
+.task-frequency,
+.task-steps,
+.task-includes {
+  flex: 1;
+  min-width: 250px;
+}
+
+.task-frequency h4,
+.task-steps h4,
+.task-includes h4 {
+  color: #1a73e8;
+  margin-top: 0;
+  margin-bottom: 0.8rem;
+}
+
+.seasonal-checklist {
+  counter-reset: item;
+  list-style-type: none;
+  padding-left: 0;
+}
+
+.seasonal-checklist li {
+  position: relative;
+  padding-left: 2rem;
+  margin-bottom: 0.8rem;
+  counter-increment: item;
+}
+
+.seasonal-checklist li:before {
+  content: counter(item) ".";
+  position: absolute;
+  left: 0;
+  color: #1a73e8;
+  font-weight: 600;
+}
+
+.myth {
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+
+.myth .section-title {
+  color: #e53935;
+  border-bottom-color: #ffcdd2;
+}
+
+.myth-reality h3,
+.myth-recommendations h3 {
+  color: #e53935;
+  margin-top: 1rem;
+  margin-bottom: 0.8rem;
+}
+
+.key-rules {
+  background-color: #e8f5e9;
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin: 1.5rem 0;
+}
+
+.key-rules h3 {
+  color: #2e7d32;
+  margin-top: 0;
+  margin-bottom: 1rem;
+}
+
+.key-rules ul {
+  margin-bottom: 0;
+}
+
+.conclusion {
+  background-color: #f5f5f5;
+  padding: 1.5rem;
+  border-radius: 8px;
+  margin-top: 3rem;
+}
+
+.conclusion .section-title {
+  color: #2c3e50;
+  border-bottom-color: #bdc3c7;
+}
+
+/* Адаптивность для мобильных устройств */
+@media (max-width: 768px) {
+  .article-title {
+    font-size: 2rem;
+  }
+  
+  .section-title {
+    font-size: 1.5rem;
+  }
+  
+  .article-section h3 {
+    font-size: 1.3rem;
+  }
+  
+  .comparison-block {
+    flex-direction: column;
+  }
+  
+  .task-details {
+    flex-direction: column;
+  }
+}
