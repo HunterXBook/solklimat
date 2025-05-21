@@ -1,6 +1,6 @@
 import { ArrowLeft } from 'lucide-react';
 import { useState } from 'react';
-import { products, Product, ProductSpec } from '../../../data/productData';
+import { products, Product } from '../../../data/productData';
 import ProductCard from './ProductCard';
 
 // Интерфейс для пропсов
