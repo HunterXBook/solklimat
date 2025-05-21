@@ -21,9 +21,8 @@ export const products: Record<string, Product[]> = {
       name: 'INTEGRA Inverter',
       model: 'MDSI-07HRDN8/MDOI-07HDN8',
       images: [
-        '/images/products/integra-inverter.png',
-        '/images/products/integra-inverter-outdoor.png',
-        '/images/products/integra-inverter-indoor-front.png'
+        '/images/products/integra-inverter-indoor-new.png',
+        '/images/products/integra-inverter-outdoor-new.png'
       ],
       price: 44100,
       color: 'Белый',
@@ -83,9 +82,8 @@ export const products: Record<string, Product[]> = {
       name: 'INTEGRA Inverter',
       model: 'MDSI-09HRDN8/MDOI-09HDN8',
       images: [
-        '/images/products/integra-inverter.png',
-        '/images/products/integra-inverter-outdoor.png',
-        '/images/products/integra-inverter-indoor-front.png'
+        '/images/products/integra-inverter-indoor-new.png',
+        '/images/products/integra-inverter-outdoor-new.png'
       ],
       price: 47100,
       color: 'Белый',
@@ -145,9 +143,8 @@ export const products: Record<string, Product[]> = {
       name: 'INTEGRA Inverter',
       model: 'MDSI-12HRDN8/MDOI-12HDN8',
       images: [
-        '/images/products/integra-inverter.png',
-        '/images/products/integra-inverter-outdoor.png',
-        '/images/products/integra-inverter-indoor-front.png'
+        '/images/products/integra-inverter-indoor-new.png',
+        '/images/products/integra-inverter-outdoor-new.png'
       ],
       price: 58500,
       color: 'Белый',
@@ -207,9 +204,8 @@ export const products: Record<string, Product[]> = {
       name: 'INTEGRA Inverter',
       model: 'MDSI-18HRFN8/MDOI-18HFN8',
       images: [
-        '/images/products/integra-inverter.png',
-        '/images/products/integra-inverter-outdoor.png',
-        '/images/products/integra-inverter-indoor-front.png'
+        '/images/products/integra-inverter-indoor-new.png',
+        '/images/products/integra-inverter-outdoor-new.png'
       ],
       price: 89300,
       color: 'Белый',
@@ -269,9 +265,8 @@ export const products: Record<string, Product[]> = {
       name: 'INTEGRA Inverter',
       model: 'MDSI-24HRFN8/MDOI-24HFN8',
       images: [
-        '/images/products/integra-inverter.png',
-        '/images/products/integra-inverter-outdoor.png',
-        '/images/products/integra-inverter-indoor-front.png'
+        '/images/products/integra-inverter-indoor-new.png',
+        '/images/products/integra-inverter-outdoor-new.png'
       ],
       price: 114500,
       color: 'Белый',
