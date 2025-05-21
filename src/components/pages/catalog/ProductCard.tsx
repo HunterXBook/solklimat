@@ -28,7 +28,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
         <img 
           src={image} 
           alt={`${name} ${model}`} 
-          className="w-full h-48 object-contain bg-gray-50 p-4"
+          className="w-full h-56 object-contain bg-gray-50 p-4"
         />
         <div className="absolute top-3 left-3 bg-blue-500 text-white text-xs font-semibold px-2 py-1 rounded">
           Инвертор

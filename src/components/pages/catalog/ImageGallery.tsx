@@ -22,8 +22,8 @@ const ImageGallery: React.FC<ImageGalleryProps> = ({ images, alt }) => {
   };
 
   return (
-    <div className="relative w-full h-80 bg-gray-50 rounded-lg overflow-hidden">
-      <div className="absolute top-0 left-0 w-full h-full flex items-center justify-center">
+    <div className="relative w-full h-96 bg-gray-50 rounded-lg overflow-hidden">
+      <div className="absolute top-0 left-0 w-full h-full flex items-center justify-center p-4">
         <img 
           src={images[currentIndex]} 
           alt={`${alt} - изображение ${currentIndex + 1}`} 
