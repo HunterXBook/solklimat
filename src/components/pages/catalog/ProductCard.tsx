@@ -50,11 +50,10 @@ const ProductCard: React.FC<ProductCardProps> = ({
             className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition-colors text-sm font-medium"
             onClick={(e) => {
               e.stopPropagation();
-              // Здесь можно добавить логику для добавления в корзину
-              alert('Товар добавлен в корзину');
+              onSelect(id);
             }}
           >
-            В корзину
+            Подробнее
           </button>
         </div>
       </div>

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 
 interface ImageGalleryProps {
@@ -9,13 +9,22 @@ interface ImageGalleryProps {
 const ImageGallery: React.FC<ImageGalleryProps> = ({ images, alt }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
 
-  const goToPrevious = () => {
+  // Reset index when images change
+  useEffect(() => {
+    setCurrentIndex(0);
+  }, [images]);
+
+  const goToPrevious = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
     const isFirstSlide = currentIndex === 0;
     const newIndex = isFirstSlide ? images.length - 1 : currentIndex - 1;
     setCurrentIndex(newIndex);
   };
 
-  const goToNext = () => {
+  const goToNext = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
     const isLastSlide = currentIndex === images.length - 1;
     const newIndex = isLastSlide ? 0 : currentIndex + 1;
     setCurrentIndex(newIndex);
@@ -35,7 +44,7 @@ const ImageGallery: React.FC<ImageGalleryProps> = ({ images, alt }) => {
         <>
           <button 
             onClick={goToPrevious}
-            className="absolute top-1/2 left-2 -translate-y-1/2 bg-white/80 hover:bg-white text-gray-800 p-2 rounded-full shadow-md transition-colors"
+            className="absolute top-1/2 left-2 -translate-y-1/2 bg-white/80 hover:bg-white text-gray-800 p-2 rounded-full shadow-md transition-colors z-10"
             aria-label="Предыдущее изображение"
           >
             <ChevronLeft size={20} />
@@ -43,7 +52,7 @@ const ImageGallery: React.FC<ImageGalleryProps> = ({ images, alt }) => {
           
           <button 
             onClick={goToNext}
-            className="absolute top-1/2 right-2 -translate-y-1/2 bg-white/80 hover:bg-white text-gray-800 p-2 rounded-full shadow-md transition-colors"
+            className="absolute top-1/2 right-2 -translate-y-1/2 bg-white/80 hover:bg-white text-gray-800 p-2 rounded-full shadow-md transition-colors z-10"
             aria-label="Следующее изображение"
           >
             <ChevronRight size={20} />
@@ -53,7 +62,11 @@ const ImageGallery: React.FC<ImageGalleryProps> = ({ images, alt }) => {
             {images.map((_, index) => (
               <button
                 key={index}
-                onClick={() => setCurrentIndex(index)}
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  setCurrentIndex(index);
+                }}
                 className={`w-2 h-2 rounded-full transition-colors ${
                   index === currentIndex ? 'bg-blue-600' : 'bg-gray-300'
                 }`}
