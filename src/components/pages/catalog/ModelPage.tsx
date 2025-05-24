@@ -21,7 +21,7 @@ const ModelPage = ({ categoryId, onBack, onModelSelect }: ModelPageProps) => {
   // Фильтруем продукты по бренду
   const filteredProducts = categoryProducts.filter(product => {
     if (selectedBrand === 'all') return true;
-    return product.name.includes(selectedBrand);
+    return product.model.startsWith('MDSI') || product.model.startsWith('MDOI') || product.model.startsWith('MDSBI');
   });
   
   // Получаем уникальные модели (по имени)
