@@ -44,7 +44,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
           <span className="font-medium">{color}</span>
         </div>
         
-        <div className="flex justify-between items-center mb-4">
+        <div className="flex justify-between items-center">
           <span className="text-xl font-bold text-blue-600">{price.toLocaleString()} ₽</span>
           <button 
             className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition-colors text-sm font-medium"
@@ -53,14 +53,8 @@ const ProductCard: React.FC<ProductCardProps> = ({
               onSelect(id);
             }}
           >
-            Заказать
+            Подробнее
           </button>
-        </div>
-
-        <div className="text-sm text-gray-600 mt-4 space-y-2">
-          <p>Серия INTEGRA Pro Black от MDV — это новое поколение климатических систем, разработанных для профессионального охлаждения и обогрева помещений с использованием современных технологий.</p>
-          <p>Полностью инверторная сплит-система оснащена интеллектуальной системой охлаждения CoolFlash, встроенным Wi-Fi-модулем и функцией искусственного интеллекта. Алгоритм AI ECOMASTER анализирует привычки пользователя и параметры среды, автоматически подбирая оптимальные настройки для максимального комфорта при минимальном энергопотреблении.</p>
-          <p>Внутренний блок с матовым чёрным покрытием отличается лаконичным и стильным дизайном, гармонично вписываясь в современный интерьер. Система очистки воздуха включает биполярный ионизатор Air Magic, фотокаталитический и комбинированный фильтры, эффективно устраняющие вирусы и вредные микрочастицы.</p>
         </div>
       </div>
     </div>
