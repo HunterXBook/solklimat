@@ -7,10 +7,11 @@ import ImageGallery from './ImageGallery';
 // Интерфейс для пропсов
 interface CategoryPageProps {
   categoryId: string;
+  modelFilter?: string;
   onBack: () => void;
 }
 
-const CategoryPage = ({ categoryId, onBack }: CategoryPageProps) => {
+const CategoryPage = ({ categoryId, modelFilter, onBack }: CategoryPageProps) => {
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   
   const getCategoryTitle = (catId: string): string => {
@@ -22,7 +23,13 @@ const CategoryPage = ({ categoryId, onBack }: CategoryPageProps) => {
     }
   };
 
-  const categoryProducts = products[categoryId] || [];
+  // Получаем все продукты для данной категории
+  const allCategoryProducts = products[categoryId] || [];
+  
+  // Фильтруем продукты по модели, если указан modelFilter
+  const categoryProducts = modelFilter 
+    ? allCategoryProducts.filter(product => product.name === modelFilter)
+    : allCategoryProducts;
 
   // Обработчик выбора продукта
   const handleProductSelect = (productId: string) => {
@@ -35,6 +42,16 @@ const CategoryPage = ({ categoryId, onBack }: CategoryPageProps) => {
     setSelectedProduct(null);
   };
 
+  // Определяем заголовок страницы
+  const pageTitle = modelFilter 
+    ? modelFilter 
+    : getCategoryTitle(categoryId);
+
+  // Определяем текст для кнопки "Назад"
+  const backButtonText = selectedProduct 
+    ? 'Назад к списку' 
+    : (modelFilter ? `Назад к ${getCategoryTitle(categoryId)}` : 'Назад к категориям');
+
   return (
     <div className="container mx-auto py-12 px-4">
       <div className="flex items-center mb-8">
@@ -43,10 +60,11 @@ const CategoryPage = ({ categoryId, onBack }: CategoryPageProps) => {
           className="flex items-center text-blue-600 font-medium mr-4"
         >
           <ArrowLeft className="mr-2 h-5 w-5" />
-          {selectedProduct ? 'Назад к списку' : 'Назад к категориям'}
+          {backButtonText}
         </button>
         <h1 className="text-3xl font-bold">
-          {selectedProduct ? selectedProduct.name : getCategoryTitle(categoryId)}
+          {selectedProduct ? selectedProduct.name : pageTitle}
+          {selectedProduct && <span className="ml-2 text-gray-500 text-xl">{selectedProduct.model}</span>}
         </h1>
       </div>
       
