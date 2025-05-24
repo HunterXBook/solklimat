@@ -502,6 +502,87 @@ export const products: Record<string, Product[]> = {
         { name: 'Вес внутреннего блока (нетто/брутто), кг', value: '13 / 16,4' },
         { name: 'Вес наружного блока (нетто/брутто), кг', value: '41 / 44' }
       ]
+    },
+    // INTEGRA Pro Black models
+    {
+      id: 'integra-pro-black-09',
+      name: 'INTEGRA Pro Black',
+      model: 'MDSBI-09HRFN8/MDOAI-09HFN8',
+      images: [
+        '/images/products/integra-pro-black-indoor.png',
+        '/images/products/integra-pro-black-outdoor.png'
+      ],
+      price: 61400,
+      color: 'Чёрный',
+      keyFeatures: [
+        'Премиальная серия с улучшенной производительностью',
+        'Инверторное управление компрессором',
+        'Сверхнизкий уровень шума (19 дБ)',
+        'Класс энергоэффективности A+++',
+        'SEER 8.80',
+        'Wi-Fi управление (опция)'
+      ],
+      specs: []
+    },
+    {
+      id: 'integra-pro-black-12',
+      name: 'INTEGRA Pro Black',
+      model: 'MDSBI-12HRFN8/MDOAI-12HFN8',
+      images: [
+        '/images/products/integra-pro-black-indoor.png',
+        '/images/products/integra-pro-black-outdoor.png'
+      ],
+      price: 69200,
+      color: 'Чёрный',
+      keyFeatures: [
+        'Премиальная серия с улучшенной производительностью',
+        'Инверторное управление компрессором',
+        'Сверхнизкий уровень шума (20 дБ)',
+        'Класс энергоэффективности A+++',
+        'SEER 8.50',
+        'Wi-Fi управление (опция)'
+      ],
+      specs: []
+    },
+    {
+      id: 'integra-pro-black-18',
+      name: 'INTEGRA Pro Black',
+      model: 'MDSBI-18HRFN8/MDOAI-18HFN8',
+      images: [
+        '/images/products/integra-pro-black-indoor.png',
+        '/images/products/integra-pro-black-outdoor.png'
+      ],
+      price: 101200,
+      color: 'Чёрный',
+      keyFeatures: [
+        'Премиальная серия с улучшенной производительностью',
+        'Инверторное управление компрессором',
+        'Низкий уровень шума (21,5 дБ)',
+        'Класс энергоэффективности A+++',
+        'SEER 8.50',
+        'Wi-Fi управление (опция)'
+      ],
+      specs: []
+    },
+    {
+      id: 'integra-pro-black-24',
+      name: 'INTEGRA Pro Black',
+      model: 'MDSBI-24HRFN8/MDOAI-24HFN8',
+      images: [
+        '/images/products/integra-pro-black-indoor.png',
+        '/images/products/integra-pro-black-outdoor.png'
+      ],
+      price: 127800,
+      color: 'Чёрный',
+      keyFeatures: [
+        'Премиальная серия с улучшенной производительностью',
+        'Инверторное управление компрессором',
+        'Низкий уровень шума (21,5 дБ)',
+        'Класс энергоэффективности A++',
+        'SEER 7.90',
+        'Wi-Fi управление (опция)'
+      ],
+      specs: []
     }
   ]
 };
