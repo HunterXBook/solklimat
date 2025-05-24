@@ -18,10 +18,23 @@ const ModelPage = ({ categoryId, onBack, onModelSelect }: ModelPageProps) => {
   // Получаем все продукты для данной категории
   const categoryProducts = products[categoryId] || [];
   
+  // Функция для определения бренда по модели
+  const getBrandFromModel = (model: string): Brand => {
+    if (model.startsWith('MDSI') || model.startsWith('MDOI') || model.startsWith('MDSBI')) {
+      return 'MDV';
+    } else if (model.startsWith('MDS')) {
+      return 'Mitsubishi';
+    } else if (model.startsWith('H')) {
+      return 'Hisense';
+    }
+    return 'all';
+  };
+  
   // Фильтруем продукты по бренду
   const filteredProducts = categoryProducts.filter(product => {
     if (selectedBrand === 'all') return true;
-    return product.model.startsWith('MDSI') || product.model.startsWith('MDOI') || product.model.startsWith('MDSBI');
+    const productBrand = getBrandFromModel(product.model);
+    return productBrand === selectedBrand;
   });
   
   // Получаем уникальные модели (по имени)
@@ -135,7 +148,7 @@ const ModelPage = ({ categoryId, onBack, onModelSelect }: ModelPageProps) => {
                   <div className="flex justify-between items-start mb-2">
                     <h3 className="text-xl font-semibold">{model.name}</h3>
                     <span className="text-sm font-medium text-blue-600 bg-blue-50 px-2 py-1 rounded">
-                      MDV
+                      {getBrandFromModel(model.model)}
                     </span>
                   </div>
                   <p className="text-gray-600 mb-4">
