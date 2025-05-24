@@ -132,7 +132,14 @@ const ModelPage = ({ categoryId, onBack, onModelSelect }: ModelPageProps) => {
                   )}
                 </div>
                 <div className="p-6">
-                  <h3 className="text-xl font-semibold mb-2">{model.name}</h3>
+                  <div className="flex items-center gap-2 mb-2">
+                    <span className="text-sm font-medium text-blue-600">
+                      {model.name.includes('Mitsubishi') ? 'Mitsubishi' : 
+                       model.name.includes('MDV') ? 'MDV' : 
+                       model.name.includes('Hisense') ? 'Hisense' : ''}
+                    </span>
+                    <h3 className="text-xl font-semibold">{model.name}</h3>
+                  </div>
                   <p className="text-gray-600 mb-4">
                     {model.keyFeatures && model.keyFeatures.length > 0 
                       ? model.keyFeatures[0] 

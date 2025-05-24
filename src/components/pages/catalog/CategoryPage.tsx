@@ -11,12 +11,8 @@ interface CategoryPageProps {
   onBack: () => void;
 }
 
-// Типы брендов
-type Brand = 'Mitsubishi' | 'MDV' | 'Hisense' | 'all';
-
 const CategoryPage = ({ categoryId, modelFilter, onBack }: CategoryPageProps) => {
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
-  const [selectedBrand, setSelectedBrand] = useState<Brand>('all');
   
   const getCategoryTitle = (catId: string): string => {
     switch (catId) {
@@ -30,13 +26,10 @@ const CategoryPage = ({ categoryId, modelFilter, onBack }: CategoryPageProps) =>
   // Получаем все продукты для данной категории
   const allCategoryProducts = products[categoryId] || [];
   
-  // Фильтруем продукты по модели и бренду
-  const categoryProducts = allCategoryProducts
-    .filter(product => !modelFilter || product.name === modelFilter)
-    .filter(product => {
-      if (selectedBrand === 'all') return true;
-      return product.name.includes(selectedBrand);
-    });
+  // Фильтруем продукты по модели
+  const categoryProducts = modelFilter 
+    ? allCategoryProducts.filter(product => product.name === modelFilter)
+    : allCategoryProducts;
 
   // Обработчик выбора продукта
   const handleProductSelect = (productId: string) => {
@@ -147,79 +140,30 @@ const CategoryPage = ({ categoryId, modelFilter, onBack }: CategoryPageProps) =>
         </div>
       ) : (
         // Список продуктов категории
-        <>
-          {/* Фильтры по бренду */}
-          <div className="mb-8">
-            <h2 className="text-lg font-semibold mb-4">Фильтр по бренду</h2>
-            <div className="flex flex-wrap gap-4">
-              <button
-                onClick={() => setSelectedBrand('all')}
-                className={`px-4 py-2 rounded-lg border transition-colors ${
-                  selectedBrand === 'all'
-                    ? 'bg-blue-600 text-white border-blue-600'
-                    : 'bg-white text-gray-700 border-gray-300 hover:border-blue-600'
-                }`}
-              >
-                Все бренды
-              </button>
-              <button
-                onClick={() => setSelectedBrand('Mitsubishi')}
-                className={`px-4 py-2 rounded-lg border transition-colors ${
-                  selectedBrand === 'Mitsubishi'
-                    ? 'bg-blue-600 text-white border-blue-600'
-                    : 'bg-white text-gray-700 border-gray-300 hover:border-blue-600'
-                }`}
-              >
-                Mitsubishi
-              </button>
-              <button
-                onClick={() => setSelectedBrand('MDV')}
-                className={`px-4 py-2 rounded-lg border transition-colors ${
-                  selectedBrand === 'MDV'
-                    ? 'bg-blue-600 text-white border-blue-600'
-                    : 'bg-white text-gray-700 border-gray-300 hover:border-blue-600'
-                }`}
-              >
-                MDV
-              </button>
-              <button
-                onClick={() => setSelectedBrand('Hisense')}
-                className={`px-4 py-2 rounded-lg border transition-colors ${
-                  selectedBrand === 'Hisense'
-                    ? 'bg-blue-600 text-white border-blue-600'
-                    : 'bg-white text-gray-700 border-gray-300 hover:border-blue-600'
-                }`}
-              >
-                Hisense
-              </button>
-            </div>
+        categoryProducts.length > 0 ? (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {categoryProducts.map((product) => (
+              <ProductCard 
+                key={product.id}
+                id={product.id}
+                name={product.name}
+                model={product.model}
+                image={product.images[0]}
+                price={product.price}
+                color={product.color}
+                onSelect={handleProductSelect}
+              />
+            ))}
           </div>
-
-          {categoryProducts.length > 0 ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {categoryProducts.map((product) => (
-                <ProductCard 
-                  key={product.id}
-                  id={product.id}
-                  name={product.name}
-                  model={product.model}
-                  image={product.images[0]}
-                  price={product.price}
-                  color={product.color}
-                  onSelect={handleProductSelect}
-                />
-              ))}
-            </div>
-          ) : (
-            <div className="bg-white rounded-xl shadow-md p-10 text-center">
-              <svg className="w-20 h-20 mx-auto mb-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
-              </svg>
-              <h3 className="text-2xl font-semibold mb-2">Каталог пуст</h3>
-              <p className="text-gray-600 mb-6">В данной категории пока нет товаров. Скоро здесь появятся модели кондиционеров.</p>
-            </div>
-          )}
-        </>
+        ) : (
+          <div className="bg-white rounded-xl shadow-md p-10 text-center">
+            <svg className="w-20 h-20 mx-auto mb-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+            </svg>
+            <h3 className="text-2xl font-semibold mb-2">Каталог пуст</h3>
+            <p className="text-gray-600 mb-6">В данной категории пока нет товаров. Скоро здесь появятся модели кондиционеров.</p>
+          </div>
+        )
       )}
     </div>
   );
