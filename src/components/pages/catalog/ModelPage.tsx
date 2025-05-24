@@ -134,9 +134,10 @@ const ModelPage = ({ categoryId, onBack, onModelSelect }: ModelPageProps) => {
                 <div className="p-6">
                   <div className="flex items-center gap-2 mb-2">
                     <span className="text-sm font-medium text-blue-600">
-                      {model.name.includes('Mitsubishi') ? 'Mitsubishi' : 
-                       model.name.includes('MDV') ? 'MDV' : 
-                       model.name.includes('Hisense') ? 'Hisense' : ''}
+                      {model.model.startsWith('MDSI') || model.model.startsWith('MDOI') ? 'MDV' :
+                       model.model.startsWith('MDSBI') ? 'MDV' :
+                       model.model.startsWith('MDS') ? 'Mitsubishi' :
+                       model.model.startsWith('H') ? 'Hisense' : ''}
                     </span>
                     <h3 className="text-xl font-semibold">{model.name}</h3>
                   </div>
