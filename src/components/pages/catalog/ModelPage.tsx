@@ -1,4 +1,5 @@
 import { ArrowLeft } from 'lucide-react';
+import { useState } from 'react';
 import { products } from '../../../data/productData';
 
 // Интерфейс для пропсов
@@ -8,18 +9,29 @@ interface ModelPageProps {
   onModelSelect: (modelName: string) => void;
 }
 
+// Типы брендов
+type Brand = 'Mitsubishi' | 'MDV' | 'Hisense' | 'all';
+
 const ModelPage = ({ categoryId, onBack, onModelSelect }: ModelPageProps) => {
+  const [selectedBrand, setSelectedBrand] = useState<Brand>('all');
+
   // Получаем все продукты для данной категории
   const categoryProducts = products[categoryId] || [];
   
+  // Фильтруем продукты по бренду
+  const filteredProducts = categoryProducts.filter(product => {
+    if (selectedBrand === 'all') return true;
+    return product.name.includes(selectedBrand);
+  });
+  
   // Получаем уникальные модели (по имени)
   const uniqueModels = Array.from(
-    new Set(categoryProducts.map(product => product.name))
+    new Set(filteredProducts.map(product => product.name))
   );
   
   // Получаем первый продукт для каждой модели (для отображения изображения и описания)
   const modelPreviews = uniqueModels.map(modelName => {
-    return categoryProducts.find(product => product.name === modelName);
+    return filteredProducts.find(product => product.name === modelName);
   }).filter(Boolean);
 
   // Получаем название категории
@@ -45,6 +57,53 @@ const ModelPage = ({ categoryId, onBack, onModelSelect }: ModelPageProps) => {
         <h1 className="text-3xl font-bold">
           {getCategoryTitle(categoryId)}
         </h1>
+      </div>
+
+      {/* Фильтры по бренду */}
+      <div className="mb-8">
+        <h2 className="text-lg font-semibold mb-4">Фильтр по бренду</h2>
+        <div className="flex flex-wrap gap-4">
+          <button
+            onClick={() => setSelectedBrand('all')}
+            className={`px-4 py-2 rounded-lg border transition-colors ${
+              selectedBrand === 'all'
+                ? 'bg-blue-600 text-white border-blue-600'
+                : 'bg-white text-gray-700 border-gray-300 hover:border-blue-600'
+            }`}
+          >
+            Все бренды
+          </button>
+          <button
+            onClick={() => setSelectedBrand('Mitsubishi')}
+            className={`px-4 py-2 rounded-lg border transition-colors ${
+              selectedBrand === 'Mitsubishi'
+                ? 'bg-blue-600 text-white border-blue-600'
+                : 'bg-white text-gray-700 border-gray-300 hover:border-blue-600'
+            }`}
+          >
+            Mitsubishi
+          </button>
+          <button
+            onClick={() => setSelectedBrand('MDV')}
+            className={`px-4 py-2 rounded-lg border transition-colors ${
+              selectedBrand === 'MDV'
+                ? 'bg-blue-600 text-white border-blue-600'
+                : 'bg-white text-gray-700 border-gray-300 hover:border-blue-600'
+            }`}
+          >
+            MDV
+          </button>
+          <button
+            onClick={() => setSelectedBrand('Hisense')}
+            className={`px-4 py-2 rounded-lg border transition-colors ${
+              selectedBrand === 'Hisense'
+                ? 'bg-blue-600 text-white border-blue-600'
+                : 'bg-white text-gray-700 border-gray-300 hover:border-blue-600'
+            }`}
+          >
+            Hisense
+          </button>
+        </div>
       </div>
       
       {modelPreviews.length > 0 ? (
