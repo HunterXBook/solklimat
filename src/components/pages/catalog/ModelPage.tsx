@@ -20,9 +20,9 @@ const ModelPage = ({ categoryId, onBack, onModelSelect }: ModelPageProps) => {
   
   // Функция для определения бренда по модели
   const getBrandFromModel = (model: string): Brand => {
-    if (model.startsWith('MDSI') || model.startsWith('MDOI') || model.startsWith('MDSBI')) {
+    if (model.startsWith('MDSI') || model.startsWith('MDOI') || model.startsWith('MDSBI') || model.includes('INTEGRA PRO')) {
       return 'MDV';
-    } else if (model.startsWith('MDS')) {
+    } else if (model.startsWith('MDS') && !model.includes('INTEGRA PRO')) {
       return 'Mitsubishi';
     } else if (model.startsWith('H')) {
       return 'Hisense';
