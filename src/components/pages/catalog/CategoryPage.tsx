@@ -28,9 +28,6 @@ const CategoryPage = () => {
     if (productName.startsWith('INTEGRA')) return 'MDV';
     return productName.split(' ')[0];
   };
-
-  // Получаем уникальные бренды из существующих продуктов
-  const existingBrands = Array.from(new Set(allCategoryProducts.map(product => getBrand(product.name))));
   
   // Добавляем фильтры для будущих брендов
   const allBrands = ['MDV', 'Mitsubishi', 'Hisense'];

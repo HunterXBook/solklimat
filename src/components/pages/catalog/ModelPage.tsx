@@ -11,6 +11,12 @@ export default function ModelPage() {
   const [selectedProduct, setSelectedProduct] = useState<string | null>(null);
   const [selectedBrand, setSelectedBrand] = useState<string | null>(null);
 
+  // Функция для определения бренда
+  const getBrand = (productName: string): string => {
+    if (productName.startsWith('INTEGRA')) return 'MDV';
+    return productName.split(' ')[0];
+  };
+
   if (!categoryId || !modelId) {
     return (
       <div className="container mx-auto px-4 py-8">
@@ -28,10 +34,10 @@ export default function ModelPage() {
   );
 
   // Get unique brands from model products
-  const brands = Array.from(new Set(modelProducts.map((product: Product) => product.name.split(' ')[0])));
+  const brands = Array.from(new Set(modelProducts.map((product: Product) => getBrand(product.name))));
 
   const filteredProducts = selectedBrand
-    ? modelProducts.filter((product: Product) => product.name.startsWith(selectedBrand))
+    ? modelProducts.filter((product: Product) => getBrand(product.name) === selectedBrand)
     : modelProducts;
 
   const handleProductSelect = (productId: string) => {
@@ -108,6 +114,7 @@ export default function ModelPage() {
                 image={product.images[0]}
                 price={product.price}
                 color={product.color}
+                brand={getBrand(product.name)}
                 onSelect={handleProductSelect}
               />
             ))}
