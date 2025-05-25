@@ -9,7 +9,6 @@ export default function ModelPage() {
   const { categoryId, modelId } = useParams<{ categoryId: string; modelId: string }>();
   const navigate = useNavigate();
   const [selectedProduct, setSelectedProduct] = useState<string | null>(null);
-  const [selectedBrand, setSelectedBrand] = useState<string | null>(null);
 
   if (!categoryId || !modelId) {
     return (
@@ -27,12 +26,8 @@ export default function ModelPage() {
     (product: Product) => product.model === modelId
   );
 
-  // Get unique brands from model products
-  const brands = Array.from(new Set(modelProducts.map((product: Product) => product.name.split(' ')[0])));
-
-  const filteredProducts = selectedBrand
-    ? modelProducts.filter((product: Product) => product.name.startsWith(selectedBrand))
-    : modelProducts;
+  // Get sample product for model info
+  const sampleProduct = modelProducts[0];
 
   const handleProductSelect = (productId: string) => {
     setSelectedProduct(productId);
@@ -50,7 +45,7 @@ export default function ModelPage() {
     ? modelProducts.find((p: Product) => p.id === selectedProduct)
     : null;
 
-  const pageTitle = selectedProductData?.name || 'Выберите модель';
+  const pageTitle = selectedProductData?.name || sampleProduct?.name || 'Модель';
   const backButtonText = selectedProduct ? 'Назад к моделям' : 'Назад к категориям';
 
   return (
@@ -69,48 +64,50 @@ export default function ModelPage() {
 
       {!selectedProduct ? (
         <>
+          {sampleProduct && (
+            <div className="bg-white rounded-xl shadow-lg p-8 mb-8">
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <div>
+                  <ImageGallery
+                    images={sampleProduct.images}
+                    alt={sampleProduct.name}
+                  />
+                </div>
+                <div>
+                  <h2 className="text-2xl font-semibold mb-4">
+                    {sampleProduct.name}
+                  </h2>
+                  <div className="mb-6">
+                    <h3 className="text-lg font-semibold mb-2">Ключевые особенности</h3>
+                    <ul className="list-disc list-inside space-y-2">
+                      {sampleProduct.keyFeatures.map((feature: string, index: number) => (
+                        <li key={index} className="text-gray-600">
+                          {feature}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
           <div className="mb-8">
-            <h2 className="text-xl font-semibold mb-4">Фильтр по бренду</h2>
-            <div className="flex flex-wrap gap-4">
-              <button
-                onClick={() => setSelectedBrand(null)}
-                className={`px-4 py-2 rounded-full ${
-                  !selectedBrand
-                    ? 'bg-blue-600 text-white'
-                    : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-                }`}
-              >
-                Все бренды
-              </button>
-              {brands.map((brand: string) => (
-                <button
-                  key={brand}
-                  onClick={() => setSelectedBrand(brand)}
-                  className={`px-4 py-2 rounded-full ${
-                    selectedBrand === brand
-                      ? 'bg-blue-600 text-white'
-                      : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-                  }`}
-                >
-                  {brand}
-                </button>
+            <h2 className="text-xl font-semibold mb-4">Доступные модификации</h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {modelProducts.map((product: Product) => (
+                <ProductCard
+                  key={product.id}
+                  id={product.id}
+                  name={product.name}
+                  model={product.model}
+                  image={product.images[0]}
+                  price={product.price}
+                  color={product.color}
+                  onSelect={handleProductSelect}
+                />
               ))}
             </div>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {filteredProducts.map((product: Product) => (
-              <ProductCard
-                key={product.id}
-                id={product.id}
-                name={product.name}
-                model={product.model}
-                image={product.images[0]}
-                price={product.price}
-                color={product.color}
-                onSelect={handleProductSelect}
-              />
-            ))}
           </div>
         </>
       ) : selectedProductData ? (
