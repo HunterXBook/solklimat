@@ -9,6 +9,7 @@ const CategoryPage = () => {
   const { categoryId, modelId } = useParams();
   const navigate = useNavigate();
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
+  const [selectedBrand, setSelectedBrand] = useState<string | null>(null);
   
   const getCategoryTitle = (catId: string): string => {
     switch (catId) {
@@ -29,6 +30,20 @@ const CategoryPage = () => {
   const modelProducts = modelId 
     ? allCategoryProducts.filter(product => product.name === modelId)
     : [];
+
+  // Получаем уникальные бренды
+  const brands = Array.from(new Set(allCategoryProducts.map(product => {
+    const brand = product.name.split(' ')[0];
+    return brand === 'INTEGRA' ? 'MDV' : brand;
+  })));
+
+  // Фильтруем модели по бренду
+  const filteredModels = selectedBrand
+    ? uniqueModels.filter(modelName => {
+        const brand = modelName.split(' ')[0];
+        return brand === 'INTEGRA' ? selectedBrand === 'MDV' : brand === selectedBrand;
+      })
+    : uniqueModels;
 
   // Обработчик выбора продукта
   const handleProductSelect = (productId: string) => {
@@ -179,42 +194,85 @@ const CategoryPage = () => {
         )
       ) : (
         // Список моделей
-        uniqueModels.length > 0 ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {uniqueModels.map((modelName) => {
-              const firstProduct = allCategoryProducts.find(p => p.name === modelName);
-              if (!firstProduct) return null;
-              
-              return (
-                <div 
-                  key={modelName}
-                  onClick={() => handleModelSelect(modelName)}
-                  className="bg-white rounded-xl shadow-md overflow-hidden transition-transform duration-300 hover:shadow-lg hover:-translate-y-1 cursor-pointer"
+        <>
+          {/* Фильтры по бренду */}
+          <div className="mb-8">
+            <h2 className="text-xl font-semibold mb-4">Фильтр по бренду</h2>
+            <div className="flex flex-wrap gap-4">
+              <button
+                onClick={() => setSelectedBrand(null)}
+                className={`px-4 py-2 rounded-full ${
+                  !selectedBrand
+                    ? 'bg-blue-600 text-white'
+                    : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                }`}
+              >
+                Все бренды
+              </button>
+              {brands.map((brand) => (
+                <button
+                  key={brand}
+                  onClick={() => setSelectedBrand(brand)}
+                  className={`px-4 py-2 rounded-full ${
+                    selectedBrand === brand
+                      ? 'bg-blue-600 text-white'
+                      : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                  }`}
                 >
-                  <div className="relative h-48">
-                    <img 
-                      src={firstProduct.images[0]} 
-                      alt={modelName}
-                      className="w-full h-full object-contain p-4"
-                    />
-                  </div>
-                  <div className="p-6">
-                    <h3 className="text-xl font-semibold mb-2">{modelName}</h3>
-                    <p className="text-gray-600">Нажмите, чтобы увидеть все варианты</p>
-                  </div>
-                </div>
-              );
-            })}
+                  {brand}
+                </button>
+              ))}
+            </div>
           </div>
-        ) : (
-          <div className="bg-white rounded-xl shadow-md p-10 text-center">
-            <svg className="w-20 h-20 mx-auto mb-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
-            </svg>
-            <h3 className="text-2xl font-semibold mb-2">Каталог пуст</h3>
-            <p className="text-gray-600 mb-6">В данной категории пока нет моделей.</p>
-          </div>
-        )
+
+          {filteredModels.length > 0 ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {filteredModels.map((modelName) => {
+                const firstProduct = allCategoryProducts.find(p => p.name === modelName);
+                if (!firstProduct) return null;
+                
+                const brand = modelName.split(' ')[0];
+                const displayBrand = brand === 'INTEGRA' ? 'MDV' : brand;
+                
+                return (
+                  <div 
+                    key={modelName}
+                    onClick={() => handleModelSelect(modelName)}
+                    className="bg-white rounded-xl shadow-md overflow-hidden transition-transform duration-300 hover:shadow-lg hover:-translate-y-1 cursor-pointer relative"
+                  >
+                    <div className="absolute top-4 right-4 bg-blue-600 text-white px-3 py-1 rounded-full text-sm font-medium">
+                      {displayBrand}
+                    </div>
+                    <div className="relative h-48">
+                      <img 
+                        src={firstProduct.images[0]} 
+                        alt={modelName}
+                        className="w-full h-full object-contain p-4"
+                      />
+                    </div>
+                    <div className="p-6">
+                      <h3 className="text-xl font-semibold mb-2">{modelName}</h3>
+                      <div className="space-y-2 text-gray-600">
+                        <p>Цвет: {firstProduct.color}</p>
+                        <p className="text-lg font-semibold text-blue-600">
+                          от {firstProduct.price.toLocaleString()} ₽
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          ) : (
+            <div className="bg-white rounded-xl shadow-md p-10 text-center">
+              <svg className="w-20 h-20 mx-auto mb-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+              </svg>
+              <h3 className="text-2xl font-semibold mb-2">Модели не найдены</h3>
+              <p className="text-gray-600 mb-6">По выбранному бренду модели не найдены.</p>
+            </div>
+          )}
+        </>
       )}
     </div>
   );
