@@ -234,7 +234,7 @@ export default function ModelPage() {
               
               <div>
                 <h3 className="text-lg font-semibold mb-4">Технические характеристики</h3>
-                <div className="space-y-1 max-h-96 overflow-y-auto">
+                <div className="space-y-1">
                   {selectedProductData.specs.map((spec, index) => (
                     <div 
                       key={index} 
