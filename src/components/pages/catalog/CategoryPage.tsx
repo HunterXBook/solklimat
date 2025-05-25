@@ -1,6 +1,7 @@
 import { ArrowLeft } from 'lucide-react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { products, Product } from '../../../data/productData';
+import ProductCard from './ProductCard';
 
 const CategoryPage = () => {
   const { categoryId } = useParams();
@@ -81,10 +82,7 @@ const CategoryPage = () => {
                     className="w-full h-full object-contain"
                     onError={(e) => {
                       e.currentTarget.style.display = 'none';
-                      const nextElement = e.currentTarget.nextElementSibling as HTMLElement;
-                      if (nextElement) {
-                        nextElement.style.display = 'flex';
-                      }
+                      e.currentTarget.nextElementSibling!.style.display = 'flex';
                     }}
                   />
                   <div className="hidden w-full h-full items-center justify-center text-gray-500">
@@ -112,8 +110,8 @@ const CategoryPage = () => {
 
                   <div className="text-sm text-gray-600 mb-4">
                     <div className="flex justify-between">
-                      <span>Класс энергоэффективности:</span>
-                      <span className="font-medium">{firstProduct.specs.find(s => s.name.includes('энергоэффективности (охлаждение)'))?.value || 'A'}</span>
+                      <span>Цвет корпуса:</span>
+                      <span className="font-medium">{firstProduct.color}</span>
                     </div>
                   </div>
 

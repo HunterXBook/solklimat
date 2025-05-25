@@ -93,7 +93,7 @@ export default function ModelPage() {
                       onClick={() => handleProductSelect(product.id)}
                       className="bg-white rounded-xl shadow-md overflow-hidden cursor-pointer transform transition-all duration-300 hover:scale-105 hover:shadow-lg"
                     >
-                      <div className="h-48 bg-gray-100 flex items-center justify-center overflow-hidden">
+                      <div className="relative h-48 bg-gray-100 flex items-center justify-center overflow-hidden">
                         <img 
                           src={product.images[0]} 
                           alt={product.name}
@@ -110,6 +110,16 @@ export default function ModelPage() {
                           <svg className="w-16 h-16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
                           </svg>
+                        </div>
+                        
+                        {/* Плашка "Инвертор" слева сверху */}
+                        <div className="absolute top-3 left-3 bg-blue-500 text-white text-xs font-semibold px-2 py-1 rounded">
+                          Инвертор
+                        </div>
+                        
+                        {/* Плашка бренда справа сверху */}
+                        <div className="absolute top-3 right-3 bg-gray-800 text-white text-xs font-semibold px-2 py-1 rounded">
+                          MDV
                         </div>
                       </div>
                       
@@ -224,14 +234,14 @@ export default function ModelPage() {
               
               <div>
                 <h3 className="text-lg font-semibold mb-4">Технические характеристики</h3>
-                <div className="space-y-2 max-h-96 overflow-y-auto">
+                <div className="space-y-1 max-h-96 overflow-y-auto">
                   {selectedProductData.specs.map((spec, index) => (
                     <div 
                       key={index} 
-                      className={`flex justify-between py-2 ${index % 2 === 0 ? 'bg-gray-50' : ''} px-2 rounded`}
+                      className={`flex justify-between items-start py-2 ${index % 2 === 0 ? 'bg-gray-50' : ''} px-3 rounded text-sm`}
                     >
-                      <span className="text-gray-600 text-sm">{spec.name}:</span>
-                      <span className="font-medium text-gray-800 text-sm text-right">{spec.value}</span>
+                      <span className="text-gray-700 font-medium flex-1 pr-4">{spec.name}:</span>
+                      <span className="text-gray-900 font-semibold text-right flex-1">{spec.value}</span>
                     </div>
                   ))}
                 </div>
