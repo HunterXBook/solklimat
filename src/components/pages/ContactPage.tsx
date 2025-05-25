@@ -1,12 +1,10 @@
 import React, { useState } from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Phone, Mail, Clock, Send, ArrowRight } from 'lucide-react';
+import { useNavigate, Link } from 'react-router-dom';
 
-interface ContactPageProps {
-  onNavigate?: (page: string) => void;
-}
-
-const ContactPage: React.FC<ContactPageProps> = ({ onNavigate }) => {
+const ContactPage: React.FC = () => {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     name: '',
     phone: '',
@@ -110,7 +108,13 @@ const ContactPage: React.FC<ContactPageProps> = ({ onNavigate }) => {
             </button>
             
             <p className="text-sm text-gray-600 mt-2 text-center">
-              Нажимая на кнопку "Отправить сообщение", Вы соглашаетесь на <a href="#" onClick={(e) => {e.preventDefault(); onNavigate && onNavigate('privacy-policy');}} className="text-blue-600 underline hover:text-blue-800">обработку своих персональных данных</a>.
+              Нажимая на кнопку "Отправить сообщение", Вы соглашаетесь на{' '}
+              <Link
+                to="/privacy-policy"
+                className="text-blue-600 underline hover:text-blue-800"
+              >
+                обработку своих персональных данных
+              </Link>.
             </p>
           </form>
         </div>
