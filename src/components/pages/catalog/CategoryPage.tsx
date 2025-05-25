@@ -51,7 +51,9 @@ const CategoryPage = () => {
   // Обработчик выбора продукта
   const handleProductSelect = (productId: string) => {
     const product = allCategoryProducts.find(p => p.id === productId) || null;
-    setSelectedProduct(product);
+    if (product) {
+      navigate(`/catalog/${categoryId}/${product.model}`);
+    }
   };
 
   // Обработчик возврата к списку продуктов
