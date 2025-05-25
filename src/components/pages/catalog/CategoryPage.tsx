@@ -74,20 +74,33 @@ const CategoryPage = () => {
                 onClick={() => handleSeriesSelect(seriesSlug)}
                 className="bg-white rounded-xl shadow-md overflow-hidden cursor-pointer transform transition-all duration-300 hover:scale-105 hover:shadow-lg"
               >
-                <div className="h-48 bg-gray-100 flex items-center justify-center overflow-hidden">
+                <div className="relative h-48 bg-gray-100 flex items-center justify-center overflow-hidden">
                   <img 
                     src={firstProduct.images[0]} 
                     alt={firstProduct.name}
                     className="w-full h-full object-contain"
                     onError={(e) => {
-                      (e.currentTarget as HTMLElement).style.display = 'none';
-                      ((e.currentTarget.nextElementSibling as HTMLElement)!).style.display = 'flex';
+                      e.currentTarget.style.display = 'none';
+                      const nextElement = e.currentTarget.nextElementSibling as HTMLElement | null;
+                      if (nextElement) {
+                        nextElement.style.display = 'flex';
+                      }
                     }}
                   />
                   <div className="hidden w-full h-full items-center justify-center text-gray-500">
                     <svg className="w-16 h-16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
                     </svg>
+                  </div>
+                  
+                  {/* Плашка "Инвертор" слева сверху */}
+                  <div className="absolute top-3 left-3 bg-blue-500 text-white text-xs font-semibold px-2 py-1 rounded">
+                    Инвертор
+                  </div>
+                  
+                  {/* Плашка бренда справа сверху */}
+                  <div className="absolute top-3 right-3 bg-gray-800 text-white text-xs font-semibold px-2 py-1 rounded">
+                    MDV
                   </div>
                 </div>
                 

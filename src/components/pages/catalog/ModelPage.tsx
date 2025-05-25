@@ -234,16 +234,28 @@ export default function ModelPage() {
               
               <div>
                 <h3 className="text-lg font-semibold mb-4">Технические характеристики</h3>
-                <div className="space-y-1">
-                  {selectedProductData.specs.map((spec, index) => (
-                    <div 
-                      key={index} 
-                      className={`flex justify-between items-start py-2 ${index % 2 === 0 ? 'bg-gray-50' : ''} px-3 rounded text-sm`}
-                    >
-                      <span className="text-gray-700 font-medium flex-1 pr-4">{spec.name}:</span>
-                      <span className="text-gray-900 font-semibold text-right flex-1">{spec.value}</span>
-                    </div>
-                  ))}
+                <div className="border rounded-lg bg-white shadow-sm">
+                  <div className="max-h-80 overflow-y-auto">
+                    {selectedProductData.specs.map((spec, index) => (
+                      <div 
+                        key={index} 
+                        className={`flex justify-between items-start py-3 px-4 border-b border-gray-100 last:border-b-0 ${
+                          index % 2 === 0 ? 'bg-gray-50' : 'bg-white'
+                        }`}
+                      >
+                        <span className="text-gray-700 font-medium text-sm leading-5 flex-1 pr-4">
+                          {spec.name}:
+                        </span>
+                        <span className="text-gray-900 font-semibold text-sm text-right flex-1 leading-5">
+                          {spec.value}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                  {/* Показываем количество характеристик */}
+                  <div className="px-4 py-2 bg-gray-50 border-t text-xs text-gray-500 text-center">
+                    Всего характеристик: {selectedProductData.specs.length}
+                  </div>
                 </div>
               </div>
             </div>
