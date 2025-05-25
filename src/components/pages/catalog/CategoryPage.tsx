@@ -1,17 +1,13 @@
 import { ArrowLeft } from 'lucide-react';
 import { useState } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
 import { products, Product } from '../../../data/productData';
 import ProductCard from './ProductCard';
 import ImageGallery from './ImageGallery';
 
-// Интерфейс для пропсов
-interface CategoryPageProps {
-  categoryId: string;
-  modelFilter?: string;
-  onBack: () => void;
-}
-
-const CategoryPage = ({ categoryId, modelFilter, onBack }: CategoryPageProps) => {
+const CategoryPage = () => {
+  const { categoryId, modelId } = useParams();
+  const navigate = useNavigate();
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   
   const getCategoryTitle = (catId: string): string => {
@@ -24,11 +20,11 @@ const CategoryPage = ({ categoryId, modelFilter, onBack }: CategoryPageProps) =>
   };
 
   // Получаем все продукты для данной категории
-  const allCategoryProducts = products[categoryId] || [];
+  const allCategoryProducts = products[categoryId || ''] || [];
   
   // Фильтруем продукты по модели
-  const categoryProducts = modelFilter 
-    ? allCategoryProducts.filter(product => product.name === modelFilter)
+  const categoryProducts = modelId 
+    ? allCategoryProducts.filter(product => product.name === modelId)
     : allCategoryProducts;
 
   // Обработчик выбора продукта
@@ -42,21 +38,30 @@ const CategoryPage = ({ categoryId, modelFilter, onBack }: CategoryPageProps) =>
     setSelectedProduct(null);
   };
 
+  // Обработчик возврата к категориям
+  const handleBack = () => {
+    if (modelId) {
+      navigate(`/catalog/${categoryId}`);
+    } else {
+      navigate('/catalog');
+    }
+  };
+
   // Определяем заголовок страницы
-  const pageTitle = modelFilter 
-    ? modelFilter 
-    : getCategoryTitle(categoryId);
+  const pageTitle = modelId 
+    ? modelId 
+    : getCategoryTitle(categoryId || '');
 
   // Определяем текст для кнопки "Назад"
   const backButtonText = selectedProduct 
     ? 'Назад к списку' 
-    : (modelFilter ? `Назад к ${getCategoryTitle(categoryId)}` : 'Назад к категориям');
+    : (modelId ? `Назад к ${getCategoryTitle(categoryId || '')}` : 'Назад к категориям');
 
   return (
     <div className="container mx-auto py-12 px-4">
       <div className="flex items-center mb-8">
         <button 
-          onClick={selectedProduct ? handleBackToProducts : onBack}
+          onClick={selectedProduct ? handleBackToProducts : handleBack}
           className="flex items-center text-blue-600 font-medium mr-4"
         >
           <ArrowLeft className="mr-2 h-5 w-5" />
