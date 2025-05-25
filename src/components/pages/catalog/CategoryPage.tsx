@@ -1,7 +1,6 @@
 import { ArrowLeft } from 'lucide-react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { products, Product } from '../../../data/productData';
-import ProductCard from './ProductCard';
 
 const CategoryPage = () => {
   const { categoryId } = useParams();
