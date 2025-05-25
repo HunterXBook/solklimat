@@ -1,10 +1,7 @@
 import { ArrowRight } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
-interface CatalogPageProps {
-  onCategorySelect: (categoryId: string) => void;
-}
-
-const CatalogPage = ({ onCategorySelect }: CatalogPageProps) => {
+const CatalogPage = () => {
   const categories = [
     {
       id: 'split',
@@ -32,10 +29,10 @@ const CatalogPage = ({ onCategorySelect }: CatalogPageProps) => {
       
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
         {categories.map((category) => (
-          <div 
+          <Link 
             key={category.id}
+            to={`/catalog/${category.id}`}
             className="bg-white rounded-lg shadow-md overflow-hidden cursor-pointer transform transition-transform hover:scale-105"
-            onClick={() => onCategorySelect(category.id)}
           >
             <div className="h-48 bg-gray-200 flex items-center justify-center">
               {/* Временный плейсхолдер для изображения */}
@@ -50,13 +47,13 @@ const CatalogPage = ({ onCategorySelect }: CatalogPageProps) => {
               <h3 className="text-xl font-semibold mb-2">{category.title}</h3>
               <p className="text-gray-600 mb-4">{category.description}</p>
               <div className="flex justify-end">
-                <button className="inline-flex items-center text-blue-600 font-medium">
+                <span className="inline-flex items-center text-blue-600 font-medium">
                   Перейти
                   <ArrowRight className="ml-2 h-5 w-5" />
-                </button>
+                </span>
               </div>
             </div>
-          </div>
+          </Link>
         ))}
       </div>
     </div>
