@@ -81,8 +81,8 @@ const CategoryPage = () => {
                     alt={firstProduct.name}
                     className="w-full h-full object-contain"
                     onError={(e) => {
-                      e.currentTarget.style.display = 'none';
-                      e.currentTarget.nextElementSibling!.style.display = 'flex';
+                      (e.currentTarget as HTMLElement).style.display = 'none';
+                      ((e.currentTarget.nextElementSibling as HTMLElement)!).style.display = 'flex';
                     }}
                   />
                   <div className="hidden w-full h-full items-center justify-center text-gray-500">
