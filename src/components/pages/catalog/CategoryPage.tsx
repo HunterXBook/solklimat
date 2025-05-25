@@ -6,7 +6,7 @@ import ProductCard from './ProductCard';
 import ImageGallery from './ImageGallery';
 
 const CategoryPage = () => {
-  const { categoryId, modelId } = useParams();
+  const { categoryId } = useParams();
   const navigate = useNavigate();
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [selectedBrand, setSelectedBrand] = useState<string | null>(null);
@@ -23,37 +23,27 @@ const CategoryPage = () => {
   // Получаем все продукты для данной категории
   const allCategoryProducts = products[categoryId || ''] || [];
   
-  // Получаем уникальные модели
-  const uniqueModels = Array.from(new Set(allCategoryProducts.map(product => product.name)));
+  // Функция для определения бренда
+  const getBrand = (productName: string): string => {
+    if (productName.startsWith('INTEGRA')) return 'MDV';
+    return productName.split(' ')[0];
+  };
+
+  // Получаем уникальные бренды из существующих продуктов
+  const existingBrands = Array.from(new Set(allCategoryProducts.map(product => getBrand(product.name))));
   
-  // Фильтруем продукты по модели
-  const modelProducts = modelId 
-    ? allCategoryProducts.filter(product => product.name === modelId)
-    : [];
+  // Добавляем фильтры для будущих брендов
+  const allBrands = ['MDV', 'Mitsubishi', 'Hisense'];
 
-  // Получаем уникальные бренды
-  const brands = Array.from(new Set(allCategoryProducts.map(product => {
-    const brand = product.name.split(' ')[0];
-    return brand === 'INTEGRA' ? 'MDV' : brand;
-  })));
-
-  // Фильтруем модели по бренду
-  const filteredModels = selectedBrand
-    ? uniqueModels.filter(modelName => {
-        const brand = modelName.split(' ')[0];
-        return brand === 'INTEGRA' ? selectedBrand === 'MDV' : brand === selectedBrand;
-      })
-    : uniqueModels;
+  // Фильтруем продукты по бренду
+  const filteredProducts = selectedBrand
+    ? allCategoryProducts.filter(product => getBrand(product.name) === selectedBrand)
+    : allCategoryProducts;
 
   // Обработчик выбора продукта
   const handleProductSelect = (productId: string) => {
-    const product = modelProducts.find(p => p.id === productId) || null;
+    const product = allCategoryProducts.find(p => p.id === productId) || null;
     setSelectedProduct(product);
-  };
-
-  // Обработчик выбора модели
-  const handleModelSelect = (modelName: string) => {
-    navigate(`/catalog/${categoryId}/${modelName}`);
   };
 
   // Обработчик возврата к списку продуктов
@@ -63,29 +53,23 @@ const CategoryPage = () => {
 
   // Обработчик возврата к категориям
   const handleBack = () => {
-    if (modelId) {
-      navigate(`/catalog/${categoryId}`);
-    } else {
-      navigate('/catalog');
-    }
+    navigate('/catalog');
   };
 
   // Определяем заголовок страницы
-  const pageTitle = modelId 
-    ? modelId 
-    : getCategoryTitle(categoryId || '');
+  const pageTitle = getCategoryTitle(categoryId || '');
 
   // Определяем текст для кнопки "Назад"
   const backButtonText = selectedProduct 
     ? 'Назад к списку' 
-    : (modelId ? `Назад к ${getCategoryTitle(categoryId || '')}` : 'Назад к категориям');
+    : 'Назад к категориям';
 
   return (
     <div className="container mx-auto py-12 px-4">
       <div className="flex items-center mb-8">
         <button 
           onClick={selectedProduct ? handleBackToProducts : handleBack}
-          className="flex items-center text-blue-600 font-medium mr-4"
+          className="flex items-center text-blue-600 font-medium mr-4 hover:text-blue-800 transition-colors"
         >
           <ArrowLeft className="mr-2 h-5 w-5" />
           {backButtonText}
@@ -113,6 +97,10 @@ const CategoryPage = () => {
               
               <div className="space-y-4 mb-6">
                 <div className="flex justify-between items-center">
+                  <span className="text-gray-600">Бренд:</span>
+                  <span className="font-medium">{getBrand(selectedProduct.name)}</span>
+                </div>
+                <div className="flex justify-between items-center">
                   <span className="text-gray-600">Цвет:</span>
                   <span className="font-medium">{selectedProduct.color}</span>
                 </div>
@@ -127,9 +115,9 @@ const CategoryPage = () => {
               </button>
 
               <div className="text-gray-600 space-y-4">
-                <p className="text-justify">Серия INTEGRA Pro Black от MDV — это новое поколение климатических систем, разработанных для профессионального охлаждения и обогрева помещений с использованием современных технологий.</p>
-                <p className="text-justify">Полностью инверторная сплит-система оснащена интеллектуальной системой охлаждения CoolFlash, встроенным Wi-Fi-модулем и функцией искусственного интеллекта. Алгоритм AI ECOMASTER анализирует привычки пользователя и параметры среды, автоматически подбирая оптимальные настройки для максимального комфорта при минимальном энергопотреблении.</p>
-                <p className="text-justify">Внутренний блок с матовым чёрным покрытием отличается лаконичным и стильным дизайном, гармонично вписываясь в современный интерьер. Система очистки воздуха включает биполярный ионизатор Air Magic, фотокаталитический и комбинированный фильтры, эффективно устраняющие вирусы и вредные микрочастицы.</p>
+                <p className="text-justify">Серия INTEGRA от MDV — это современные климатические системы, разработанные для профессионального охлаждения и обогрева помещений с использованием современных технологий.</p>
+                <p className="text-justify">Полностью инверторная сплит-система оснащена интеллектуальной системой охлаждения, встроенным Wi-Fi-модулем и функцией искусственного интеллекта. Алгоритм AI ECOMASTER анализирует привычки пользователя и параметры среды, автоматически подбирая оптимальные настройки для максимального комфорта при минимальном энергопотреблении.</p>
+                <p className="text-justify">Внутренний блок с матовым покрытием отличается лаконичным и стильным дизайном, гармонично вписываясь в современный интерьер. Система очистки воздуха включает биполярный ионизатор Air Magic, фотокаталитический и комбинированный фильтры, эффективно устраняющие вирусы и вредные микрочастицы.</p>
               </div>
             </div>
             
@@ -140,7 +128,7 @@ const CategoryPage = () => {
                 <ul className="space-y-2">
                   {selectedProduct.keyFeatures.map((feature, index) => (
                     <li key={index} className="flex items-start">
-                      <svg className="w-5 h-5 text-green-500 mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                      <svg className="w-5 h-5 text-green-500 mr-2 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
                       </svg>
                       <span>{feature}</span>
@@ -166,34 +154,8 @@ const CategoryPage = () => {
             </div>
           </div>
         </div>
-      ) : modelId ? (
-        // Список продуктов конкретной модели
-        modelProducts.length > 0 ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {modelProducts.map((product) => (
-              <ProductCard 
-                key={product.id}
-                id={product.id}
-                name={product.name}
-                model={product.model}
-                image={product.images[0]}
-                price={product.price}
-                color={product.color}
-                onSelect={handleProductSelect}
-              />
-            ))}
-          </div>
-        ) : (
-          <div className="bg-white rounded-xl shadow-md p-10 text-center">
-            <svg className="w-20 h-20 mx-auto mb-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
-            </svg>
-            <h3 className="text-2xl font-semibold mb-2">Модель не найдена</h3>
-            <p className="text-gray-600 mb-6">В данной категории нет такой модели.</p>
-          </div>
-        )
       ) : (
-        // Список моделей
+        // Список продуктов категории
         <>
           {/* Фильтры по бренду */}
           <div className="mb-8">
@@ -201,75 +163,60 @@ const CategoryPage = () => {
             <div className="flex flex-wrap gap-4">
               <button
                 onClick={() => setSelectedBrand(null)}
-                className={`px-4 py-2 rounded-full ${
+                className={`px-4 py-2 rounded-full transition-colors ${
                   !selectedBrand
                     ? 'bg-blue-600 text-white'
                     : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
                 }`}
               >
-                Все бренды
+                Все бренды ({allCategoryProducts.length})
               </button>
-              {brands.map((brand) => (
-                <button
-                  key={brand}
-                  onClick={() => setSelectedBrand(brand)}
-                  className={`px-4 py-2 rounded-full ${
-                    selectedBrand === brand
-                      ? 'bg-blue-600 text-white'
-                      : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-                  }`}
-                >
-                  {brand}
-                </button>
-              ))}
+              {allBrands.map((brand) => {
+                const brandCount = allCategoryProducts.filter(p => getBrand(p.name) === brand).length;
+                const isDisabled = brandCount === 0;
+                return (
+                  <button
+                    key={brand}
+                    onClick={() => !isDisabled && setSelectedBrand(brand)}
+                    disabled={isDisabled}
+                    className={`px-4 py-2 rounded-full transition-colors ${
+                      selectedBrand === brand
+                        ? 'bg-blue-600 text-white'
+                        : isDisabled
+                        ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
+                        : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                    }`}
+                  >
+                    {brand} ({brandCount})
+                  </button>
+                );
+              })}
             </div>
           </div>
 
-          {filteredModels.length > 0 ? (
+          {filteredProducts.length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {filteredModels.map((modelName) => {
-                const firstProduct = allCategoryProducts.find(p => p.name === modelName);
-                if (!firstProduct) return null;
-                
-                const brand = modelName.split(' ')[0];
-                const displayBrand = brand === 'INTEGRA' ? 'MDV' : brand;
-                
-                return (
-                  <div 
-                    key={modelName}
-                    onClick={() => handleModelSelect(modelName)}
-                    className="bg-white rounded-xl shadow-md overflow-hidden transition-transform duration-300 hover:shadow-lg hover:-translate-y-1 cursor-pointer relative"
-                  >
-                    <div className="absolute top-4 right-4 bg-blue-600 text-white px-3 py-1 rounded-full text-sm font-medium">
-                      {displayBrand}
-                    </div>
-                    <div className="relative h-48">
-                      <img 
-                        src={firstProduct.images[0]} 
-                        alt={modelName}
-                        className="w-full h-full object-contain p-4"
-                      />
-                    </div>
-                    <div className="p-6">
-                      <h3 className="text-xl font-semibold mb-2">{modelName}</h3>
-                      <div className="space-y-2 text-gray-600">
-                        <p>Цвет: {firstProduct.color}</p>
-                        <p className="text-lg font-semibold text-blue-600">
-                          от {firstProduct.price.toLocaleString()} ₽
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                );
-              })}
+              {filteredProducts.map((product) => (
+                <ProductCard 
+                  key={product.id}
+                  id={product.id}
+                  name={product.name}
+                  model={product.model}
+                  image={product.images[0]}
+                  price={product.price}
+                  color={product.color}
+                  brand={getBrand(product.name)}
+                  onSelect={handleProductSelect}
+                />
+              ))}
             </div>
           ) : (
             <div className="bg-white rounded-xl shadow-md p-10 text-center">
               <svg className="w-20 h-20 mx-auto mb-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
               </svg>
-              <h3 className="text-2xl font-semibold mb-2">Модели не найдены</h3>
-              <p className="text-gray-600 mb-6">По выбранному бренду модели не найдены.</p>
+              <h3 className="text-2xl font-semibold mb-2">Продукты не найдены</h3>
+              <p className="text-gray-600 mb-6">По выбранному бренду продукты не найдены.</p>
             </div>
           )}
         </>

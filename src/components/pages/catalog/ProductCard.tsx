@@ -7,6 +7,7 @@ interface ProductCardProps {
   image: string;
   price: number;
   color: string;
+  brand: string;
   onSelect: (id: string) => void;
 }
 
@@ -17,6 +18,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
   image,
   price,
   color,
+  brand,
   onSelect
 }) => {
   return (
@@ -30,8 +32,13 @@ const ProductCard: React.FC<ProductCardProps> = ({
           alt={`${name} ${model}`} 
           className="w-full h-56 object-contain bg-gray-50 p-4"
         />
+        {/* Тип системы слева сверху */}
         <div className="absolute top-3 left-3 bg-blue-500 text-white text-xs font-semibold px-2 py-1 rounded">
           Инвертор
+        </div>
+        {/* Бренд справа сверху */}
+        <div className="absolute top-3 right-3 bg-gray-800 text-white text-xs font-semibold px-2 py-1 rounded">
+          {brand}
         </div>
       </div>
       
