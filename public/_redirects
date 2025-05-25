@@ -1,5 +1,1 @@
-/* 
-  Redirects file for SPA hosting
-  All routes should redirect to index.html to support client-side routing
-*/
-/* /index.html 200
+/* /index.html 200 
