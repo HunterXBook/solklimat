@@ -2,20 +2,12 @@ import { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { ArrowLeft } from 'lucide-react';
 import { products, Product } from '../../../data/productData';
-import ProductCard from './ProductCard';
 import ImageGallery from './ImageGallery';
 
 export default function ModelPage() {
   const { categoryId, modelId } = useParams<{ categoryId: string; modelId: string }>();
   const navigate = useNavigate();
   const [selectedProduct, setSelectedProduct] = useState<string | null>(null);
-
-  // Функция для создания slug из названия серии
-  const createSeriesSlug = (seriesName: string): string => {
-    return seriesName.toLowerCase()
-      .replace(/\s+/g, '-')
-      .replace(/[^a-z0-9-]/g, '');
-  };
 
   // Функция для получения названия серии по slug
   const getSeriesNameFromSlug = (slug: string): string => {
@@ -108,7 +100,10 @@ export default function ModelPage() {
                           className="w-full h-full object-contain"
                           onError={(e) => {
                             e.currentTarget.style.display = 'none';
-                            e.currentTarget.nextElementSibling!.style.display = 'flex';
+                            const nextElement = e.currentTarget.nextElementSibling as HTMLElement | null;
+                            if (nextElement) {
+                              nextElement.style.display = 'flex';
+                            }
                           }}
                         />
                         <div className="hidden w-full h-full items-center justify-center text-gray-500">
