@@ -9,6 +9,7 @@ import ContactPage from './components/pages/ContactPage';
 import InstallationPage from './components/pages/installation/InstallationPage';
 import EncyclopediaPage from './components/pages/encyclopedia/EncyclopediaPage';
 import PrivacyPolicyPage from './components/pages/PrivacyPolicyPage';
+import PrivacyPolicyFullPage from './components/pages/PrivacyPolicyFullPage';
 
 function App() {
   return (
@@ -24,6 +25,7 @@ function App() {
           <Route path="/encyclopedia" element={<EncyclopediaPage />} />
           <Route path="/contact" element={<ContactPage />} />
           <Route path="/privacy-policy" element={<PrivacyPolicyPage />} />
+          <Route path="/privacy-policy-full" element={<PrivacyPolicyFullPage />} />
         </Routes>
       </main>
       <Footer />

@@ -1,4 +1,5 @@
 import { Phone, Mail, Send } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 const Footer = () => {
   return (
@@ -31,10 +32,20 @@ const Footer = () => {
           
           <div className="text-center">
             <h3 className="text-xl font-bold mb-4">ООО "СОЛКЛИМАТ"</h3>
-            <div className="text-gray-300">
+            <div className="text-gray-300 space-y-1">
               <p>ИНН: 5044079695</p>
               <p>КПП: 504401001</p>
               <p>ОГРН: 1115044002204</p>
+            </div>
+            
+            {/* Ссылка на политику конфиденциальности */}
+            <div className="mt-4 pt-3 border-t border-gray-600">
+              <Link 
+                to="/privacy-policy-full" 
+                className="text-blue-300 hover:text-blue-100 hover:underline transition-colors text-sm"
+              >
+                Политика конфиденциальности
+              </Link>
             </div>
           </div>
           
