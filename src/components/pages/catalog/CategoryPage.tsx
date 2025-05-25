@@ -32,10 +32,21 @@ const CategoryPage = () => {
   // Добавляем фильтры для будущих брендов
   const allBrands = ['MDV', 'Mitsubishi', 'Hisense'];
 
-  // Фильтруем продукты по бренду
-  const filteredProducts = selectedBrand
-    ? allCategoryProducts.filter(product => getBrand(product.name) === selectedBrand)
-    : allCategoryProducts;
+  // Группируем продукты по моделям
+  const groupedProducts = allCategoryProducts.reduce((acc: { [key: string]: Product[] }, product) => {
+    if (!acc[product.model]) {
+      acc[product.model] = [];
+    }
+    acc[product.model].push(product);
+    return acc;
+  }, {});
+
+  // Фильтруем модели по бренду
+  const filteredModels = selectedBrand
+    ? Object.entries(groupedProducts).filter(([_, products]) => 
+        products.some(product => getBrand(product.name) === selectedBrand)
+      )
+    : Object.entries(groupedProducts);
 
   // Обработчик выбора продукта
   const handleProductSelect = (productId: string) => {
@@ -166,10 +177,12 @@ const CategoryPage = () => {
                     : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
                 }`}
               >
-                Все бренды ({allCategoryProducts.length})
+                Все бренды ({Object.keys(groupedProducts).length})
               </button>
               {allBrands.map((brand) => {
-                const brandCount = allCategoryProducts.filter(p => getBrand(p.name) === brand).length;
+                const brandCount = Object.entries(groupedProducts).filter(([_, products]) => 
+                  products.some(product => getBrand(product.name) === brand)
+                ).length;
                 const isDisabled = brandCount === 0;
                 return (
                   <button
@@ -191,21 +204,24 @@ const CategoryPage = () => {
             </div>
           </div>
 
-          {filteredProducts.length > 0 ? (
+          {filteredModels.length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {filteredProducts.map((product) => (
-                <ProductCard 
-                  key={product.id}
-                  id={product.id}
-                  name={product.name}
-                  model={product.model}
-                  image={product.images[0]}
-                  price={product.price}
-                  color={product.color}
-                  brand={getBrand(product.name)}
-                  onSelect={handleProductSelect}
-                />
-              ))}
+              {filteredModels.map(([model, modelProducts]) => {
+                const firstProduct = modelProducts[0];
+                return (
+                  <ProductCard 
+                    key={model}
+                    id={firstProduct.id}
+                    name={firstProduct.name}
+                    model={model}
+                    image={firstProduct.images[0]}
+                    price={firstProduct.price}
+                    color={firstProduct.color}
+                    brand={getBrand(firstProduct.name)}
+                    onSelect={handleProductSelect}
+                  />
+                );
+              })}
             </div>
           ) : (
             <div className="bg-white rounded-xl shadow-md p-10 text-center">
