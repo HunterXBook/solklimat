@@ -1,4 +1,5 @@
 import { ArrowRight } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 const Banner = () => {
   return (
@@ -13,13 +14,13 @@ const Banner = () => {
             <p className="text-lg md:text-xl mb-8">
               Профессиональная установка и обслуживание кондиционеров в Солнечногорске
             </p>
-            <a 
-              href="/catalog" 
+            <Link 
+              to="/catalog" 
               className="inline-flex items-center bg-white text-blue-700 font-medium px-6 py-3 rounded-lg hover:bg-blue-50 transition-colors"
             >
               Выбрать кондиционер
               <ArrowRight className="ml-2 h-5 w-5" />
-            </a>
+            </Link>
           </div>
         </div>
         
