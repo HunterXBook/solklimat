@@ -7,7 +7,7 @@ const CatalogPage = () => {
       id: 'split',
       title: 'Сплит-системы',
       description: 'Классические кондиционеры для дома и офиса',
-      image: '/images/split-system.jpg'
+      image: '/images/products/integra-pro-indoor.png'
     },
     {
       id: 'multi-split',
