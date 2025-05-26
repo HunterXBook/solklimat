@@ -73,9 +73,14 @@ const ContactPage = () => {
               <label htmlFor="message" className="block text-sm font-medium mb-1">
                 Сообщение
               </label>
-              <p className="text-sm text-gray-600 mb-2">
+              <div style={{ 
+                fontSize: '14px', 
+                color: '#6B7280', 
+                marginBottom: '8px',
+                fontStyle: 'italic'
+              }}>
                 Например, укажите название модели кондиционера, которая Вас интересует
-              </p>
+              </div>
               <Textarea
                 id="message"
                 value={message}
