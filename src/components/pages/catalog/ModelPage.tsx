@@ -90,8 +90,18 @@ export default function ModelPage() {
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {seriesProducts.map((product: Product) => {
                   // Извлекаем мощность из модели для отображения
-                  const powerMatch = product.model.match(/(\d+)/);
-                  const power = powerMatch ? powerMatch[1] : '';
+                  let power = '';
+                  if (product.name === 'Mitsubishi Heavy Deluxe') {
+                    const modelNumber = product.model.split('/')[0];
+                    if (modelNumber.includes('20')) power = '7';
+                    else if (modelNumber.includes('25')) power = '9';
+                    else if (modelNumber.includes('35')) power = '12';
+                    else if (modelNumber.includes('50')) power = '18';
+                    else if (modelNumber.includes('60')) power = '24';
+                  } else {
+                    const powerMatch = product.model.match(/(\d+)/);
+                    power = powerMatch ? powerMatch[1] : '';
+                  }
                   
                   return (
                     <div
