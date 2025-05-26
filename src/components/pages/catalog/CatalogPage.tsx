@@ -35,8 +35,19 @@ const CatalogPage = () => {
             className="bg-white rounded-lg shadow-md overflow-hidden cursor-pointer transform transition-transform hover:scale-105"
           >
             <div className="h-48 bg-gray-200 flex items-center justify-center">
-              {/* Временный плейсхолдер для изображения */}
-              <div className="text-gray-500 text-center p-4">
+              <img 
+                src={category.image} 
+                alt={category.title}
+                className="w-full h-full object-contain"
+                onError={(e) => {
+                  e.currentTarget.style.display = 'none';
+                  const nextElement = e.currentTarget.nextElementSibling as HTMLElement | null;
+                  if (nextElement) {
+                    nextElement.style.display = 'flex';
+                  }
+                }}
+              />
+              <div className="hidden text-gray-500 text-center p-4">
                 <svg className="w-16 h-16 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
                 </svg>
