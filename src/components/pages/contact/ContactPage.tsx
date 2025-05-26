@@ -70,14 +70,12 @@ const ContactPage = () => {
             </div>
             
             <div>
-              <div className="flex justify-between items-center mb-1">
-                <label htmlFor="message" className="text-sm font-medium">
-                  Сообщение
-                </label>
-                <span className="text-xs text-gray-500 italic">
-                  Например, укажите название модели кондиционера, которая Вас интересует
-                </span>
-              </div>
+              <label htmlFor="message" className="block text-sm font-medium mb-1">
+                Сообщение
+              </label>
+              <p className="text-sm text-gray-600 mb-2">
+                Например, укажите название модели кондиционера, которая Вас интересует
+              </p>
               <Textarea
                 id="message"
                 value={message}
