@@ -13,13 +13,13 @@ const CatalogPage = () => {
       id: 'multi-split',
       title: 'Мультисплит-системы',
       description: 'Одновременное кондиционирование нескольких помещений',
-      image: '/images/multi-split.jpg'
+      image: '/images/products/integra-pro-black-indoor.png'
     },
     {
       id: 'semi-industrial',
       title: 'Полупромышленные системы',
       description: 'Мощные решения для больших помещений',
-      image: '/images/semi-industrial.jpg'
+      image: '/images/products/integra-pro-outdoor.png'
     }
   ];
 
