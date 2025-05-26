@@ -14,7 +14,8 @@ export default function ModelPage() {
     const slugToNameMap: { [key: string]: string } = {
       'integra-inverter': 'INTEGRA Inverter',
       'integra-pro': 'INTEGRA Pro',
-      'integra-pro-black': 'INTEGRA Pro Black'
+      'integra-pro-black': 'INTEGRA Pro Black',
+      'mitsubishi-heavy-deluxe': 'Mitsubishi Heavy Deluxe'
     };
     return slugToNameMap[slug] || slug;
   };

@@ -22,7 +22,9 @@ const CategoryPage = () => {
   const createSeriesSlug = (seriesName: string): string => {
     return seriesName.toLowerCase()
       .replace(/\s+/g, '-')
-      .replace(/[^a-z0-9-]/g, '');
+      .replace(/[^a-z0-9-]/g, '')
+      .replace(/-+/g, '-') // Заменяем множественные дефисы на один
+      .replace(/^-|-$/g, ''); // Удаляем дефисы в начале и конце
   };
   
   // Группируем продукты по сериям (по name)
