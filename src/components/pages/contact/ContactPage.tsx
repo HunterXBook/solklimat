@@ -71,7 +71,7 @@ const ContactPage = () => {
             
             <div>
               <label htmlFor="message" className="block text-sm font-medium mb-1">
-                Сообщение (например, какая модель кондиционера Вас интересует)
+                Сообщение <span className="text-gray-500 font-normal">(например, какая модель кондиционера Вас интересует)</span>
               </label>
               <Textarea
                 id="message"
