@@ -19,6 +19,11 @@ export default function ModelPage() {
     return slugToNameMap[slug] || slug;
   };
 
+  // Функция для обработки заказа
+  const handleOrderClick = () => {
+    navigate('/contact');
+  };
+
   if (!categoryId || !modelId) {
     return (
       <div className="container mx-auto px-4 py-8">
@@ -198,7 +203,10 @@ export default function ModelPage() {
                 </div>
               </div>
               
-              <button className="w-full bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 transition-colors font-medium mb-6">
+              <button 
+                onClick={handleOrderClick}
+                className="w-full bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 transition-colors font-medium mb-6"
+              >
                 Заказать
               </button>
 
