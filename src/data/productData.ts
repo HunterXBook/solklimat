@@ -755,6 +755,8 @@ export const products: Record<string, Product[]> = {
       model: 'SRK20ZSX-W/SRC20ZSX-W',
       images: [
         '/images/products/mitsu-deluxe-indoor.png',
+        '/images/products/mitsu-deluxe-indoor2.png',
+        '/images/products/mitsu-deluxe-indoor3.png',
         '/images/products/mitsu-deluxe-outdoor.png'
       ],
       price: 0,
@@ -783,6 +785,8 @@ export const products: Record<string, Product[]> = {
       model: 'SRK25ZSX-W/SRC25ZSX-W',
       images: [
         '/images/products/mitsu-deluxe-indoor.png',
+        '/images/products/mitsu-deluxe-indoor2.png',
+        '/images/products/mitsu-deluxe-indoor3.png',
         '/images/products/mitsu-deluxe-outdoor.png'
       ],
       price: 0,
@@ -811,6 +815,8 @@ export const products: Record<string, Product[]> = {
       model: 'SRK35ZSX-W/SRC35ZSX-W',
       images: [
         '/images/products/mitsu-deluxe-indoor.png',
+        '/images/products/mitsu-deluxe-indoor2.png',
+        '/images/products/mitsu-deluxe-indoor3.png',
         '/images/products/mitsu-deluxe-outdoor.png'
       ],
       price: 0,
@@ -839,6 +845,8 @@ export const products: Record<string, Product[]> = {
       model: 'SRK50ZSX-W/SRC50ZSX-W2',
       images: [
         '/images/products/mitsu-deluxe-indoor.png',
+        '/images/products/mitsu-deluxe-indoor2.png',
+        '/images/products/mitsu-deluxe-indoor3.png',
         '/images/products/mitsu-deluxe-outdoor.png'
       ],
       price: 0,
@@ -867,6 +875,8 @@ export const products: Record<string, Product[]> = {
       model: 'SRK60ZSX-W/SRC60ZSX-W1',
       images: [
         '/images/products/mitsu-deluxe-indoor.png',
+        '/images/products/mitsu-deluxe-indoor2.png',
+        '/images/products/mitsu-deluxe-indoor3.png',
         '/images/products/mitsu-deluxe-outdoor.png'
       ],
       price: 0,
