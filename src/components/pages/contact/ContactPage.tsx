@@ -71,10 +71,12 @@ const ContactPage = () => {
             
             <div>
               <div className="mb-1">
-                <label htmlFor="message" className="text-sm font-medium">
+                <label htmlFor="message" className="block text-sm font-medium mb-1">
                   Сообщение
                 </label>
-                <p className="text-sm text-gray-600 mt-1">Например: какая модель кондиционера Вас интересует</p>
+                <div className="bg-gray-100 p-2 rounded mb-2">
+                  <p className="text-sm text-gray-800">Например: какая модель кондиционера Вас интересует</p>
+                </div>
               </div>
               <Textarea
                 id="message"
