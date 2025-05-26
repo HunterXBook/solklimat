@@ -747,6 +747,147 @@ export const products: Record<string, Product[]> = {
         { name: 'Вес внутреннего блока (нетто/брутто), кг', value: '13 / 16,4' },
         { name: 'Вес наружного блока (нетто/брутто), кг', value: '41 / 44' }
       ]
+    },
+    // Mitsubishi Heavy Deluxe models
+    {
+      id: 'mitsubishi-heavy-deluxe-07',
+      name: 'Mitsubishi Heavy Deluxe',
+      model: 'SRK20ZSX-W/SRC20ZSX-W',
+      images: [
+        '/images/products/mitsu-deluxe-indoor.png',
+        '/images/products/mitsu-deluxe-outdoor.png'
+      ],
+      price: 0,
+      color: 'Белый',
+      keyFeatures: [
+        'Инверторное управление компрессором',
+        'Работа на охлаждение до -15°C',
+        'Работа на обогрев до -15°C',
+        'Низкий уровень шума',
+        'Класс энергоэффективности A'
+      ],
+      specs: [
+        { name: 'Модель внутреннего блока', value: 'SRK20ZSX-W' },
+        { name: 'Модель наружного блока', value: 'SRC20ZSX-W' },
+        { name: 'Тип управления компрессором', value: 'DC Inverter' },
+        { name: 'Номинальная холодопроизводительность, кВт', value: '2,0' },
+        { name: 'Номинальная теплопроизводительность, кВт', value: '2,2' },
+        { name: 'Электропитание, В/Гц/Ф', value: '220-240/50/1' },
+        { name: 'Класс энергоэффективности (охлаждение)', value: 'A' },
+        { name: 'Класс энергоэффективности (нагрев)', value: 'A' }
+      ]
+    },
+    {
+      id: 'mitsubishi-heavy-deluxe-09',
+      name: 'Mitsubishi Heavy Deluxe',
+      model: 'SRK25ZSX-W/SRC25ZSX-W',
+      images: [
+        '/images/products/mitsu-deluxe-indoor.png',
+        '/images/products/mitsu-deluxe-outdoor.png'
+      ],
+      price: 0,
+      color: 'Белый',
+      keyFeatures: [
+        'Инверторное управление компрессором',
+        'Работа на охлаждение до -15°C',
+        'Работа на обогрев до -15°C',
+        'Низкий уровень шума',
+        'Класс энергоэффективности A'
+      ],
+      specs: [
+        { name: 'Модель внутреннего блока', value: 'SRK25ZSX-W' },
+        { name: 'Модель наружного блока', value: 'SRC25ZSX-W' },
+        { name: 'Тип управления компрессором', value: 'DC Inverter' },
+        { name: 'Номинальная холодопроизводительность, кВт', value: '2,5' },
+        { name: 'Номинальная теплопроизводительность, кВт', value: '2,8' },
+        { name: 'Электропитание, В/Гц/Ф', value: '220-240/50/1' },
+        { name: 'Класс энергоэффективности (охлаждение)', value: 'A' },
+        { name: 'Класс энергоэффективности (нагрев)', value: 'A' }
+      ]
+    },
+    {
+      id: 'mitsubishi-heavy-deluxe-12',
+      name: 'Mitsubishi Heavy Deluxe',
+      model: 'SRK35ZSX-W/SRC35ZSX-W',
+      images: [
+        '/images/products/mitsu-deluxe-indoor.png',
+        '/images/products/mitsu-deluxe-outdoor.png'
+      ],
+      price: 0,
+      color: 'Белый',
+      keyFeatures: [
+        'Инверторное управление компрессором',
+        'Работа на охлаждение до -15°C',
+        'Работа на обогрев до -15°C',
+        'Низкий уровень шума',
+        'Класс энергоэффективности A'
+      ],
+      specs: [
+        { name: 'Модель внутреннего блока', value: 'SRK35ZSX-W' },
+        { name: 'Модель наружного блока', value: 'SRC35ZSX-W' },
+        { name: 'Тип управления компрессором', value: 'DC Inverter' },
+        { name: 'Номинальная холодопроизводительность, кВт', value: '3,5' },
+        { name: 'Номинальная теплопроизводительность, кВт', value: '3,8' },
+        { name: 'Электропитание, В/Гц/Ф', value: '220-240/50/1' },
+        { name: 'Класс энергоэффективности (охлаждение)', value: 'A' },
+        { name: 'Класс энергоэффективности (нагрев)', value: 'A' }
+      ]
+    },
+    {
+      id: 'mitsubishi-heavy-deluxe-18',
+      name: 'Mitsubishi Heavy Deluxe',
+      model: 'SRK50ZSX-W/SRC50ZSX-W2',
+      images: [
+        '/images/products/mitsu-deluxe-indoor.png',
+        '/images/products/mitsu-deluxe-outdoor.png'
+      ],
+      price: 0,
+      color: 'Белый',
+      keyFeatures: [
+        'Инверторное управление компрессором',
+        'Работа на охлаждение до -15°C',
+        'Работа на обогрев до -15°C',
+        'Низкий уровень шума',
+        'Класс энергоэффективности A'
+      ],
+      specs: [
+        { name: 'Модель внутреннего блока', value: 'SRK50ZSX-W' },
+        { name: 'Модель наружного блока', value: 'SRC50ZSX-W2' },
+        { name: 'Тип управления компрессором', value: 'DC Inverter' },
+        { name: 'Номинальная холодопроизводительность, кВт', value: '5,0' },
+        { name: 'Номинальная теплопроизводительность, кВт', value: '5,5' },
+        { name: 'Электропитание, В/Гц/Ф', value: '220-240/50/1' },
+        { name: 'Класс энергоэффективности (охлаждение)', value: 'A' },
+        { name: 'Класс энергоэффективности (нагрев)', value: 'A' }
+      ]
+    },
+    {
+      id: 'mitsubishi-heavy-deluxe-24',
+      name: 'Mitsubishi Heavy Deluxe',
+      model: 'SRK60ZSX-W/SRC60ZSX-W1',
+      images: [
+        '/images/products/mitsu-deluxe-indoor.png',
+        '/images/products/mitsu-deluxe-outdoor.png'
+      ],
+      price: 0,
+      color: 'Белый',
+      keyFeatures: [
+        'Инверторное управление компрессором',
+        'Работа на охлаждение до -15°C',
+        'Работа на обогрев до -15°C',
+        'Низкий уровень шума',
+        'Класс энергоэффективности A'
+      ],
+      specs: [
+        { name: 'Модель внутреннего блока', value: 'SRK60ZSX-W' },
+        { name: 'Модель наружного блока', value: 'SRC60ZSX-W1' },
+        { name: 'Тип управления компрессором', value: 'DC Inverter' },
+        { name: 'Номинальная холодопроизводительность, кВт', value: '6,0' },
+        { name: 'Номинальная теплопроизводительность, кВт', value: '6,5' },
+        { name: 'Электропитание, В/Гц/Ф', value: '220-240/50/1' },
+        { name: 'Класс энергоэффективности (охлаждение)', value: 'A' },
+        { name: 'Класс энергоэффективности (нагрев)', value: 'A' }
+      ]
     }
   ]
 };
