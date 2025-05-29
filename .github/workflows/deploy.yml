@@ -3,8 +3,6 @@ name: 🚀 Deploy Solklimat to Timeweb
 on:
   push:
     branches: [ main ]
-  pull_request:
-    branches: [ main ]
 
 jobs:
   deploy:
@@ -21,42 +19,40 @@ jobs:
         node-version: '18'
         cache: 'npm'
         
-    - name: 📦 Setup pnpm
-      uses: pnpm/action-setup@v2
-      with:
-        version: 8
-        
     - name: 💾 Install Dependencies
-      run: pnpm install --no-frozen-lockfile
+      run: npm ci
       
     - name: 🔨 Build Project
-      run: pnpm run build
+      run: npm run build
       
     - name: 📝 Create .htaccess for SPA routing
       run: |
         cat > dist/.htaccess << 'EOF'
         RewriteEngine On
-        # Handle React Router
         RewriteCond %{REQUEST_FILENAME} !-f
         RewriteCond %{REQUEST_FILENAME} !-d
+        RewriteCond %{REQUEST_URI} !^/assets/
+        RewriteCond %{REQUEST_URI} !^/images/
+        RewriteCond %{REQUEST_URI} !\.css$
+        RewriteCond %{REQUEST_URI} !\.js$
+        RewriteCond %{REQUEST_URI} !\.png$
+        RewriteCond %{REQUEST_URI} !\.jpg$
+        RewriteCond %{REQUEST_URI} !\.svg$
         RewriteRule . /index.html [L]
         
-        # Security headers
-        Header always set X-Content-Type-Options nosniff
-        Header always set X-Frame-Options DENY
-        Header always set X-XSS-Protection "1; mode=block"
-        
-        # Cache static files
-        <IfModule mod_expires.c>
-            ExpiresActive on
-            ExpiresByType text/css "access plus 1 year"
-            ExpiresByType application/javascript "access plus 1 year"
-            ExpiresByType image/png "access plus 1 year"
-            ExpiresByType image/jpg "access plus 1 year"
-            ExpiresByType image/jpeg "access plus 1 year"
-            ExpiresByType image/svg+xml "access plus 1 year"
+        # MIME типы
+        <IfModule mod_mime.c>
+            AddType application/javascript .js
+            AddType text/css .css
         </IfModule>
         EOF
+        
+    - name: 📋 Debug - List files before deploy
+      run: |
+        echo "=== Files in dist directory ==="
+        find dist -type f -exec ls -lh {} \;
+        echo "=== Total size ==="
+        du -sh dist
         
     - name: 🚀 Deploy to Timeweb via FTP
       uses: SamKirkland/FTP-Deploy-Action@v4.3.4
@@ -65,10 +61,12 @@ jobs:
         username: ${{ secrets.FTP_USERNAME }}
         password: ${{ secrets.FTP_PASSWORD }}
         local-dir: ./dist/
-        server-dir: ./public_html/
+        server-dir: ./solklimat/public_html/
+        dangerous-clean-slate: true
         exclude: |
           **/.git*
           **/.git*/**
           **/node_modules/**
+          **/cgi-bin/**
           **/.DS_Store
-          **/Thumbs.db 
+          **/Thumbs.db
