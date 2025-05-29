@@ -34,35 +34,23 @@ const InstallationPage = () => {
     <div className="container mx-auto py-12 px-4">
       <h1 className="text-3xl font-bold text-center mb-12">Монтаж кондиционеров</h1>
       
-      {/* Карточка стандартного монтажа */}
-      <div className="max-w-2xl mx-auto mb-16">
-        <div className="bg-white rounded-lg shadow-md overflow-hidden">
-          <div className="h-48 bg-gray-200 flex items-center justify-center">
-            {/* Временный плейсхолдер для изображения */}
-            <div className="text-gray-500 text-center p-4">
-              <svg className="w-16 h-16 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
-              </svg>
-              <p>Изображение стандартного монтажа</p>
-            </div>
-          </div>
-          <div className="p-6">
-            <h3 className="text-xl font-semibold mb-2">Стандартный монтаж</h3>
-            <p className="text-gray-600 mb-4">Самый простой и дешёвый способ установки кондиционера</p>
-            <div className="flex justify-between items-center">
-              <span className="text-lg font-bold text-blue-600">от 16 000 ₽</span>
-              <button className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors">
-                Подробнее
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-
       {/* Описание монтажа */}
       <div className="bg-white rounded-lg shadow-md p-8 mb-16">
         <h2 className="text-2xl font-bold mb-6 text-left">Монтаж описание</h2>
+        
+        {/* Информация о стандартном монтаже */}
+        <div className="bg-gradient-to-r from-blue-50 to-blue-100 border-l-4 border-blue-500 p-6 mb-8 rounded-r-lg">
+          <div className="flex items-center justify-between flex-wrap gap-4">
+            <div>
+              <h3 className="text-lg font-semibold text-blue-900 mb-2">Стандартный монтаж кондиционера</h3>
+              <p className="text-blue-800">Самый простой и экономичный способ установки климатической системы</p>
+            </div>
+            <div className="text-right">
+              <div className="text-3xl font-bold text-blue-600">от 16 000 ₽</div>
+              <div className="text-sm text-blue-700">включает основные работы</div>
+            </div>
+          </div>
+        </div>
         
         <div className="prose max-w-none text-left">
           <h3 className="text-xl font-semibold mb-4 text-left">Что определяет стоимость установки кондиционера</h3>
