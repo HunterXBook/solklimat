@@ -34,9 +34,8 @@ const InstallationPage = () => {
     <div className="container mx-auto py-12 px-4">
       <h1 className="text-3xl font-bold text-center mb-12">Монтаж кондиционеров</h1>
       
-      {/* Верхние информационные блоки */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-16">
-        {/* Стандартный монтаж */}
+      {/* Карточка стандартного монтажа */}
+      <div className="max-w-2xl mx-auto mb-16">
         <div className="bg-white rounded-lg shadow-md overflow-hidden">
           <div className="h-48 bg-gray-200 flex items-center justify-center">
             {/* Временный плейсхолдер для изображения */}
@@ -52,34 +51,55 @@ const InstallationPage = () => {
             <h3 className="text-xl font-semibold mb-2">Стандартный монтаж</h3>
             <p className="text-gray-600 mb-4">Самый простой и дешёвый способ установки кондиционера</p>
             <div className="flex justify-between items-center">
-              <span className="text-lg font-bold text-blue-600">от 8 000 ₽</span>
+              <span className="text-lg font-bold text-blue-600">от 16 000 ₽</span>
               <button className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors">
                 Подробнее
               </button>
             </div>
           </div>
         </div>
+      </div>
+
+      {/* Описание монтажа */}
+      <div className="bg-white rounded-lg shadow-md p-8 mb-16">
+        <h2 className="text-2xl font-bold mb-6 text-left">Монтаж описание</h2>
         
-        {/* Нестандартный монтаж */}
-        <div className="bg-white rounded-lg shadow-md overflow-hidden">
-          <div className="h-48 bg-gray-200 flex items-center justify-center">
-            {/* Временный плейсхолдер для изображения */}
-            <div className="text-gray-500 text-center p-4">
-              <svg className="w-16 h-16 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"></path>
-              </svg>
-              <p>Изображение нестандартного монтажа</p>
-            </div>
-          </div>
-          <div className="p-6">
-            <h3 className="text-xl font-semibold mb-2">Нестандартный монтаж</h3>
-            <p className="text-gray-600 mb-4">Индивидуальное решение с учётом особенностей помещения</p>
-            <div className="flex justify-between items-center">
-              <span className="text-lg font-bold text-blue-600">от 12 000 ₽</span>
-              <button className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors">
-                Подробнее
-              </button>
-            </div>
+        <div className="prose max-w-none text-left">
+          <h3 className="text-xl font-semibold mb-4 text-left">Что определяет стоимость установки кондиционера</h3>
+          <p className="mb-4 text-left">
+            Итоговая цена монтажа кондиционера зависит от нескольких ключевых параметров. Рассмотрим основные факторы, которые формируют стоимость работ:
+          </p>
+          
+          <ul className="list-disc pl-6 mb-6 space-y-2 text-left">
+            <li>
+              <strong>Особенности монтажа.</strong> К ним относятся: работы на большой высоте, увеличение длины трассы сверх стандартной, использование спецтехники и дополнительных материалов.
+            </li>
+            <li>
+              <strong>Сезонность услуг.</strong> В период активного спроса (весна-лето) цены увеличиваются на 15-25%. Зимой и осенью можно получить существенные скидки.
+            </li>
+            <li>
+              <strong>Тип климатического оборудования.</strong> Монтаж бытовых сплит-систем обходится дешевле, чем установка мульти-зональных или промышленных систем кондиционирования.
+            </li>
+          </ul>
+          
+          <h3 className="text-xl font-semibold mb-4 text-left">Как рассчитывается итоговая стоимость</h3>
+          <p className="mb-4 text-left">
+            Большинство климатических организаций используют двухуровневую систему тарификации:
+          </p>
+          
+          <ul className="list-disc pl-6 mb-6 space-y-2 text-left">
+            <li>
+              <strong>Базовый пакет установки</strong> — включает стандартный комплекс работ по монтажу оборудования.
+            </li>
+            <li>
+              <strong>Дополнительные опции</strong> — все работы и материалы сверх базового комплекта оплачиваются отдельно согласно прайс-листу.
+            </li>
+          </ul>
+
+          <div className="bg-blue-50 border-l-4 border-blue-500 p-4 mb-6">
+            <p className="text-blue-800">
+              <strong>Нестандартный монтаж:</strong> цена начинается от 16 000 ₽ и зависит от дополнительных услуг, указанных в прайс-листе ниже.
+            </p>
           </div>
         </div>
       </div>
