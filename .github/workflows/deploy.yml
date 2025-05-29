@@ -1,72 +1,50 @@
-name: 🚀 Deploy Solklimat to Timeweb
+name: Deploy to Timeweb
 
 on:
   push:
     branches: [ main ]
+  pull_request:
+    branches: [ main ]
 
 jobs:
-  deploy:
-    name: 🔨 Build and Deploy
+  build-and-deploy:
     runs-on: ubuntu-latest
     
     steps:
-    - name: 📥 Checkout Repository
+    - name: Checkout code
       uses: actions/checkout@v4
       
-    - name: 🟢 Setup Node.js 18
+    - name: Setup Node.js
       uses: actions/setup-node@v4
       with:
         node-version: '18'
         cache: 'npm'
         
-    - name: 💾 Install Dependencies
-      run: npm install
+    - name: Install pnpm
+      uses: pnpm/action-setup@v2
+      with:
+        version: 8
+        
+    - name: Install dependencies
+      run: pnpm install
       
-    - name: 🔨 Build Project
-      run: npm run build
+    - name: Build project
+      run: pnpm run build
       
-    - name: 📝 Create .htaccess for SPA routing
-      run: |
-        cat > dist/.htaccess << 'EOF'
-        RewriteEngine On
-        RewriteCond %{REQUEST_FILENAME} !-f
-        RewriteCond %{REQUEST_FILENAME} !-d
-        RewriteCond %{REQUEST_URI} !^/assets/
-        RewriteCond %{REQUEST_URI} !^/images/
-        RewriteCond %{REQUEST_URI} !\.css$
-        RewriteCond %{REQUEST_URI} !\.js$
-        RewriteCond %{REQUEST_URI} !\.png$
-        RewriteCond %{REQUEST_URI} !\.jpg$
-        RewriteCond %{REQUEST_URI} !\.svg$
-        RewriteRule . /index.html [L]
-        
-        # MIME типы
-        <IfModule mod_mime.c>
-            AddType application/javascript .js
-            AddType text/css .css
-        </IfModule>
-        EOF
-        
-    - name: 📋 Debug - List files before deploy
-      run: |
-        echo "=== Files in dist directory ==="
-        find dist -type f -exec ls -lh {} \;
-        echo "=== Total size ==="
-        du -sh dist
-        
-    - name: 🚀 Deploy to Timeweb via FTP
+    - name: Deploy via FTP
       uses: SamKirkland/FTP-Deploy-Action@v4.3.4
       with:
-        server: ${{ secrets.FTP_HOST }}
+        server: vh450.timeweb.ru
         username: ${{ secrets.FTP_USERNAME }}
         password: ${{ secrets.FTP_PASSWORD }}
+        protocol: ftp
+        port: 21
         local-dir: ./dist/
-        server-dir: ./solklimat/public_html/
-        dangerous-clean-slate: true
+        server-dir: /solklimat/public_html/
         exclude: |
           **/.git*
           **/.git*/**
           **/node_modules/**
-          **/cgi-bin/**
-          **/.DS_Store
-          **/Thumbs.db
+          **/.env
+        timeout: 120000
+        log-level: verbose
