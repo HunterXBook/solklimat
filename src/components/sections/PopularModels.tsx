@@ -13,12 +13,12 @@ const PopularModels = () => {
     splitProducts.find(p => p.id === 'integra-inverter-09') || splitProducts[1], 
     splitProducts.find(p => p.id === 'integra-inverter-12') || splitProducts[2],
     splitProducts.find(p => p.id === 'integra-pro-09') || splitProducts.find(p => p.name.includes('Pro')) || splitProducts[3],
-  ].filter((model): model is Product => Boolean(model) && typeof model === 'object' && 'id' in model && 'name' in model);
+  ].filter((model): model is Product => Boolean(model));
   
   // Если моделей меньше 4, дополняем оставшимися
   if (popularModels.length < 4) {
     const remaining = splitProducts
-      .filter(p => !popularModels.some(m => m.id === p.id))
+      .filter(p => !popularModels.includes(p))
       .slice(0, 4 - popularModels.length);
     popularModels = [...popularModels, ...remaining];
   }
@@ -44,18 +44,16 @@ const PopularModels = () => {
     return { text: 'ХИТ', color: 'bg-green-500' };
   };
 
-  // Функция для создания slug серии (не модели!)
-  const createSeriesSlug = (name: string): string => {
-    // Создаем slug из названия серии
-    if (name.includes('Pro Black')) {
-      return 'integra-pro-black';
-    } else if (name.includes('Pro')) {
-      return 'integra-pro';
-    } else if (name.includes('Mitsubishi Heavy')) {
-      return 'mitsubishi-heavy-deluxe';
-    } else {
-      return 'integra-inverter';
-    }
+  // Функция для получения полного названия модели с размером
+  const getFullModelName = (name: string, model: string): string => {
+    const sizeMatch = model.match(/(\d+)/);
+    const size = sizeMatch ? sizeMatch[1] : '';
+    return `${name} ${size}`;
+  };
+
+  // Функция для создания slug модели
+  const createModelSlug = (id: string): string => {
+    return id.toLowerCase().replace(/\s+/g, '-');
   };
 
   return (
@@ -91,7 +89,8 @@ const PopularModels = () => {
             
             const badge = getModelBadge(model.name);
             const area = getCoolingArea(model.model);
-            const seriesSlug = createSeriesSlug(model.name);
+            const fullModelName = getFullModelName(model.name, model.model);
+            const modelSlug = createModelSlug(model.id);
             
             return (
               <div 
@@ -128,9 +127,7 @@ const PopularModels = () => {
                     className="w-full h-full object-contain p-4 transition-all duration-500 group-hover:scale-110 group-hover:rotate-1"
                     onError={(e) => {
                       const target = e.currentTarget;
-                      if (target.src !== '/images/conditioner.png') {
-                        target.src = '/images/conditioner.png';
-                      }
+                      target.src = '/images/conditioner.png';
                       target.onerror = null;
                     }}
                   />
@@ -156,7 +153,7 @@ const PopularModels = () => {
                   
                   <div className="relative z-10">
                     <h3 className="font-bold text-lg mb-2 group-hover:text-blue-700 transition-colors duration-300">
-                      {model.name}
+                      {fullModelName}
                     </h3>
                     
                     <div className="space-y-2 mb-4">
@@ -175,19 +172,13 @@ const PopularModels = () => {
                       <div>
                         <p className="text-xs text-gray-500 mb-1">от</p>
                         <span className="font-bold text-xl text-blue-600 group-hover:text-blue-700 transition-colors duration-300">
-                          {typeof model.price === 'number' ? model.price.toLocaleString() : '0'} ₽
+                          {model.price?.toLocaleString() || '0'} ₽
                         </span>
                       </div>
                       
                       <Link 
-                        to={`/catalog/split/${seriesSlug}`}
+                        to={`/catalog/split/${modelSlug}`}
                         className="group/btn flex items-center text-blue-600 hover:text-white bg-blue-50 hover:bg-blue-600 px-4 py-2 rounded-lg font-medium text-sm transition-all duration-300 transform hover:scale-105"
-                        onClick={(e) => {
-                          if (!seriesSlug) {
-                            e.preventDefault();
-                            console.error('Invalid series slug');
-                          }
-                        }}
                       >
                         <span>Подробнее</span>
                         <ArrowRight className="ml-1 h-4 w-4 transition-transform duration-300 group-hover/btn:translate-x-1" />
