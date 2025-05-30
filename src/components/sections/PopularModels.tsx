@@ -1,15 +1,54 @@
 import { ArrowRight, Star, Zap, Snowflake, Shield } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import { products } from '../../data/productData';
+// import { products } from '../../data/productData';
+
+// Временные данные пока не найдём productData.ts
+const products = {
+  'split': [
+    {
+      id: 'temp-1',
+      name: 'INTEGRA Inverter',
+      model: 'MDSI-07HRDN8/MDOI-07HDN8', 
+      images: ['/images/products/placeholder.png'],
+      price: 44100,
+      specs: [{ name: 'Класс энергоэффективности (охлаждение)', value: 'A' }]
+    },
+    {
+      id: 'temp-2', 
+      name: 'INTEGRA Inverter',
+      model: 'MDSI-09HRDN8/MDOI-09HDN8',
+      images: ['/images/products/placeholder.png'],
+      price: 47100,
+      specs: [{ name: 'Класс энергоэффективности (охлаждение)', value: 'A' }]
+    },
+    {
+      id: 'temp-3',
+      name: 'INTEGRA Inverter', 
+      model: 'MDSI-12HRDN8/MDOI-12HDN8',
+      images: ['/images/products/placeholder.png'],
+      price: 58500,
+      specs: [{ name: 'Класс энергоэффективности (охлаждение)', value: 'A' }]
+    },
+    {
+      id: 'temp-4',
+      name: 'INTEGRA Pro',
+      model: 'MDSAI-09HRFN8/MDOAI-09HFN8', 
+      images: ['/images/products/placeholder.png'],
+      price: 62500,
+      specs: [{ name: 'Класс энергоэффективности (охлаждение)', value: 'A+++' }]
+    }
+  ]
+};
 
 const PopularModels = () => {
   // Выбираем популярные модели из реальных данных
+  const splitProducts = products['split'] || [];
   const popularModels = [
-    products.split[0], // INTEGRA Inverter 07
-    products.split[1], // INTEGRA Inverter 09  
-    products.split[2], // INTEGRA Inverter 12
-    products.split[5], // INTEGRA Pro 09
-  ];
+    splitProducts[0], // INTEGRA Inverter 07
+    splitProducts[1], // INTEGRA Inverter 09  
+    splitProducts[2], // INTEGRA Inverter 12
+    splitProducts[5], // INTEGRA Pro 09
+  ].filter(Boolean); // Убираем undefined элементы
 
   // Функция для получения площади охлаждения по мощности
   const getCoolingArea = (productName: string) => {
@@ -59,6 +98,9 @@ const PopularModels = () => {
         {/* Сетка продуктов */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           {popularModels.map((model, index) => {
+            // Проверяем что модель существует
+            if (!model) return null;
+            
             const badge = getModelBadge(model.name);
             const area = getCoolingArea(model.model);
             
@@ -92,13 +134,17 @@ const PopularModels = () => {
                   
                   {/* Основное изображение */}
                   <img 
-                    src={model.images[0]} 
+                    src={model.images?.[0] || '/images/products/placeholder.png'} 
                     alt={model.name}
                     className="w-full h-full object-contain p-4 transition-all duration-500 group-hover:scale-110 group-hover:rotate-1"
                     onError={(e) => {
                       // Fallback на placeholder если изображение не загружается
-                      e.currentTarget.style.display = 'none';
-                      e.currentTarget.nextElementSibling!.style.display = 'flex';
+                      const target = e.currentTarget;
+                      const nextSibling = target.nextElementSibling as HTMLElement;
+                      target.style.display = 'none';
+                      if (nextSibling) {
+                        nextSibling.style.display = 'flex';
+                      }
                     }}
                   />
                   
@@ -146,7 +192,7 @@ const PopularModels = () => {
                       <div className="flex items-center justify-between text-sm">
                         <span className="text-gray-600">Класс:</span>
                         <span className="font-medium text-green-600">
-                          {model.specs.find(s => s.name.includes('энергоэффективности (охлаждение)'))?.value || 'A'}
+                          {model.specs.find((spec) => spec.name.includes('энергоэффективности'))?.value || 'A'}
                         </span>
                       </div>
                     </div>
@@ -161,7 +207,7 @@ const PopularModels = () => {
                       </div>
                       
                       <Link 
-                        to={`/catalog/split/${model.model.toLowerCase().replace(/[^a-z0-9]/g, '-')}`}
+                        to="/catalog/split"
                         className="group/btn flex items-center text-blue-600 hover:text-white bg-blue-50 hover:bg-blue-600 px-4 py-2 rounded-lg font-medium text-sm transition-all duration-300 transform hover:scale-105"
                       >
                         <span>Подробнее</span>
