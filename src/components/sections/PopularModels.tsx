@@ -93,7 +93,6 @@ const PopularModels = () => {
             
             const badge = getModelBadge(model.name);
             const area = getCoolingArea(model.model);
-            const modelSlug = createModelSlug(model.model, model.name);
             
             return (
               <div 
