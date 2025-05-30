@@ -90,6 +90,61 @@ module.exports = {
             transform: 'translateY(-10%)',
             'animation-timing-function': 'cubic-bezier(0, 0, 0.2, 1)'
           }
+        },
+        'wiggle': {
+          '0%, 100%': { transform: 'rotate(-3deg)' },
+          '50%': { transform: 'rotate(3deg)' }
+        },
+        'scale-pulse': {
+          '0%, 100%': { transform: 'scale(1)' },
+          '50%': { transform: 'scale(1.05)' }
+        },
+        'glow-rotate': {
+          '0%': { 
+            transform: 'rotate(0deg)',
+            'box-shadow': '0 0 20px rgba(59, 130, 246, 0.5)'
+          },
+          '50%': { 
+            'box-shadow': '0 0 40px rgba(59, 130, 246, 0.8)'
+          },
+          '100%': { 
+            transform: 'rotate(360deg)',
+            'box-shadow': '0 0 20px rgba(59, 130, 246, 0.5)'
+          }
+        },
+        'slide-in-left': {
+          '0%': {
+            transform: 'translateX(-100%)',
+            opacity: '0'
+          },
+          '100%': {
+            transform: 'translateX(0)',
+            opacity: '1'
+          }
+        },
+        'slide-in-right': {
+          '0%': {
+            transform: 'translateX(100%)',
+            opacity: '0'
+          },
+          '100%': {
+            transform: 'translateX(0)',
+            opacity: '1'
+          }
+        },
+        'fade-in-scale': {
+          '0%': {
+            transform: 'scale(0.8)',
+            opacity: '0'
+          },
+          '100%': {
+            transform: 'scale(1)',
+            opacity: '1'
+          }
+        },
+        'rotate-slow': {
+          '0%': { transform: 'rotate(0deg)' },
+          '100%': { transform: 'rotate(360deg)' }
         }
   		},
   		animation: {
@@ -101,7 +156,14 @@ module.exports = {
         'glow-pulse': 'glow-pulse 2s ease-in-out infinite',
         'gradient-shift': 'gradient-shift 3s ease infinite',
         'shimmer': 'shimmer 2s ease-in-out infinite',
-        'bounce-gentle': 'bounce-gentle 2s infinite'
+        'bounce-gentle': 'bounce-gentle 2s infinite',
+        'wiggle': 'wiggle 1s ease-in-out infinite',
+        'scale-pulse': 'scale-pulse 2s ease-in-out infinite',
+        'glow-rotate': 'glow-rotate 4s linear infinite',
+        'slide-in-left': 'slide-in-left 0.6s ease-out',
+        'slide-in-right': 'slide-in-right 0.6s ease-out',
+        'fade-in-scale': 'fade-in-scale 0.5s ease-out',
+        'rotate-slow': 'rotate-slow 20s linear infinite'
   		},
       // Дополнительные утилиты для эффектов
       backdropBlur: {
@@ -114,7 +176,16 @@ module.exports = {
       boxShadow: {
         'glow': '0 0 20px rgba(59, 130, 246, 0.5)',
         'glow-lg': '0 0 40px rgba(59, 130, 246, 0.7)',
+        'glow-xl': '0 0 60px rgba(59, 130, 246, 0.8)',
         'inner-glow': 'inset 0 0 20px rgba(59, 130, 246, 0.2)',
+        'neon-blue': '0 0 5px #00bcd4, 0 0 10px #00bcd4, 0 0 15px #00bcd4',
+        'neon-cyan': '0 0 5px #06b6d4, 0 0 10px #06b6d4, 0 0 15px #06b6d4',
+        'soft-glow': '0 4px 20px rgba(59, 130, 246, 0.3)',
+        'intense-glow': '0 0 30px rgba(59, 130, 246, 0.9), 0 0 60px rgba(59, 130, 246, 0.6)'
+      },
+      dropShadow: {
+        'glow': '0 0 10px rgba(59, 130, 246, 0.8)',
+        'glow-lg': '0 0 20px rgba(59, 130, 246, 0.9)'
       }
   	}
   },
