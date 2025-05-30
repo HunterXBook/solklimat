@@ -13,12 +13,12 @@ const PopularModels = () => {
     splitProducts.find(p => p.id === 'integra-inverter-09') || splitProducts[1], 
     splitProducts.find(p => p.id === 'integra-inverter-12') || splitProducts[2],
     splitProducts.find(p => p.id === 'integra-pro-09') || splitProducts.find(p => p.name.includes('Pro')) || splitProducts[3],
-  ].filter((model): model is Product => Boolean(model));
+  ].filter((model): model is Product => Boolean(model) && typeof model === 'object' && 'id' in model && 'name' in model);
   
   // Если моделей меньше 4, дополняем оставшимися
   if (popularModels.length < 4) {
     const remaining = splitProducts
-      .filter(p => !popularModels.includes(p))
+      .filter(p => !popularModels.some(m => m.id === p.id))
       .slice(0, 4 - popularModels.length);
     popularModels = [...popularModels, ...remaining];
   }
@@ -128,7 +128,9 @@ const PopularModels = () => {
                     className="w-full h-full object-contain p-4 transition-all duration-500 group-hover:scale-110 group-hover:rotate-1"
                     onError={(e) => {
                       const target = e.currentTarget;
-                      target.src = '/images/conditioner.png';
+                      if (target.src !== '/images/conditioner.png') {
+                        target.src = '/images/conditioner.png';
+                      }
                       target.onerror = null;
                     }}
                   />
@@ -173,13 +175,19 @@ const PopularModels = () => {
                       <div>
                         <p className="text-xs text-gray-500 mb-1">от</p>
                         <span className="font-bold text-xl text-blue-600 group-hover:text-blue-700 transition-colors duration-300">
-                          {model.price?.toLocaleString() || '0'} ₽
+                          {typeof model.price === 'number' ? model.price.toLocaleString() : '0'} ₽
                         </span>
                       </div>
                       
                       <Link 
                         to={`/catalog/split/${seriesSlug}`}
                         className="group/btn flex items-center text-blue-600 hover:text-white bg-blue-50 hover:bg-blue-600 px-4 py-2 rounded-lg font-medium text-sm transition-all duration-300 transform hover:scale-105"
+                        onClick={(e) => {
+                          if (!seriesSlug) {
+                            e.preventDefault();
+                            console.error('Invalid series slug');
+                          }
+                        }}
                       >
                         <span>Подробнее</span>
                         <ArrowRight className="ml-1 h-4 w-4 transition-transform duration-300 group-hover/btn:translate-x-1" />
