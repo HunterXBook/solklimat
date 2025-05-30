@@ -177,7 +177,7 @@ const PopularModels = () => {
                       </div>
                       
                       <Link 
-                        to={`/catalog/split/model/${modelSlug}`}
+                        to={`/catalog/split/${modelSlug}`}
                         className="group/btn flex items-center text-blue-600 hover:text-white bg-blue-50 hover:bg-blue-600 px-4 py-2 rounded-lg font-medium text-sm transition-all duration-300 transform hover:scale-105"
                       >
                         <span>Подробнее</span>
