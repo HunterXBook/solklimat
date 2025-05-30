@@ -36,6 +36,56 @@ export default function ModelPage() {
   // Получаем продукты для текущей категории
   const categoryProducts = products[categoryId] || [];
   
+  // Сначала ищем модель по id
+  const productById = categoryProducts.find((p: Product) => p.id === modelId);
+  if (productById) {
+    // Показываем только одну модель (детальный вид)
+    return (
+      <div className="container mx-auto px-4 py-8">
+        <div className="flex items-center mb-8">
+          <button
+            onClick={() => navigate(`/catalog/${categoryId}`)}
+            className="flex items-center text-blue-600 hover:text-blue-800 transition-colors"
+          >
+            <ArrowLeft className="w-5 h-5 mr-2" />
+            Назад к категории
+          </button>
+        </div>
+        <h1 className="text-3xl font-bold mb-8">{productById.name}</h1>
+        <div className="bg-white rounded-xl shadow-lg p-8 grid grid-cols-1 lg:grid-cols-2 gap-8">
+          <div>
+            <ImageGallery images={productById.images} alt={productById.name} />
+          </div>
+          <div>
+            <div className="mb-4 text-xl font-semibold text-blue-600">{productById.price.toLocaleString()} ₽</div>
+            <div className="mb-4 text-gray-600">Модель: {productById.model}</div>
+            <h2 className="text-lg font-bold mb-2">Характеристики</h2>
+            <ul className="space-y-2 mb-4">
+              {productById.specs?.map((spec) => (
+                <li key={spec.name} className="flex justify-between border-b pb-1 text-sm">
+                  <span className="text-gray-500">{spec.name}</span>
+                  <span className="font-medium">{spec.value}</span>
+                </li>
+              ))}
+            </ul>
+            <h2 className="text-lg font-bold mb-2">Ключевые особенности</h2>
+            <ul className="list-disc list-inside text-gray-700 mb-4">
+              {productById.keyFeatures?.map((f, i) => (
+                <li key={i}>{f}</li>
+              ))}
+            </ul>
+            <button
+              onClick={handleOrderClick}
+              className="mt-4 bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors"
+            >
+              Заказать
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   // Получаем название серии из slug
   const seriesName = getSeriesNameFromSlug(modelId);
   
