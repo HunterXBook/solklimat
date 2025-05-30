@@ -44,19 +44,17 @@ const PopularModels = () => {
     return { text: 'ХИТ', color: 'bg-green-500' };
   };
 
-  // Функция для создания slug из модели
-  const createModelSlug = (model: string, name: string): string => {
-    // Извлекаем номер из модели типа "MDSI-07HRDN8/MDOI-07HDN8"
-    const match = model.match(/(\d+)/);
-    const number = match ? match[1] : '07';
-    
-    // Определяем тип модели
+  // Функция для создания slug серии (не модели!)
+  const createSeriesSlug = (name: string): string => {
+    // Создаем slug из названия серии
     if (name.includes('Pro Black')) {
-      return `integra-pro-black-${number}`;
+      return 'integra-pro-black';
     } else if (name.includes('Pro')) {
-      return `integra-pro-${number}`;
+      return 'integra-pro';
+    } else if (name.includes('Mitsubishi Heavy')) {
+      return 'mitsubishi-heavy-deluxe';
     } else {
-      return `integra-inverter-${number}`;
+      return 'integra-inverter';
     }
   };
 
@@ -93,6 +91,7 @@ const PopularModels = () => {
             
             const badge = getModelBadge(model.name);
             const area = getCoolingArea(model.model);
+            const seriesSlug = createSeriesSlug(model.name);
             
             return (
               <div 
@@ -130,17 +129,9 @@ const PopularModels = () => {
                     onError={(e) => {
                       const target = e.currentTarget;
                       target.src = '/images/conditioner.png';
-                      target.onerror = null; // Prevent infinite loop
+                      target.onerror = null;
                     }}
                   />
-                  
-                  {/* Placeholder для изображения */}
-                  <div className="hidden w-full h-full items-center justify-center text-gray-400">
-                    <div className="text-center">
-                      <Snowflake className="w-16 h-16 mx-auto mb-2 animate-spin" style={{ animationDuration: '3s' }} />
-                      <p className="text-sm">Кондиционер {model.name}</p>
-                    </div>
-                  </div>
 
                   {/* Градиентный оверлей при hover */}
                   <div className="absolute inset-0 bg-gradient-to-t from-blue-600/20 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
@@ -187,7 +178,7 @@ const PopularModels = () => {
                       </div>
                       
                       <Link 
-                        to={`/catalog/split/${createModelSlug(model.model, model.name)}`}
+                        to={`/catalog/split/${seriesSlug}`}
                         className="group/btn flex items-center text-blue-600 hover:text-white bg-blue-50 hover:bg-blue-600 px-4 py-2 rounded-lg font-medium text-sm transition-all duration-300 transform hover:scale-105"
                       >
                         <span>Подробнее</span>
