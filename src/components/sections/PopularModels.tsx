@@ -1,4 +1,4 @@
-import { ArrowRight, Star, Zap, Snowflake, Shield } from 'lucide-react';
+import { ArrowRight, Star, Zap, Shield } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { products } from '../../data/productData';
 import { Product } from '../../data/productData';
