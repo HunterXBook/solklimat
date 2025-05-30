@@ -1,57 +1,32 @@
 import { ArrowRight, Star, Zap, Snowflake, Shield } from 'lucide-react';
 import { Link } from 'react-router-dom';
-// import { products } from '../../data/productData';
-
-// Временные данные пока не найдём productData.ts
-const products = {
-  'split': [
-    {
-      id: 'temp-1',
-      name: 'INTEGRA Inverter',
-      model: 'MDSI-07HRDN8/MDOI-07HDN8', 
-      images: ['/images/products/placeholder.png'],
-      price: 44100,
-      specs: [{ name: 'Класс энергоэффективности (охлаждение)', value: 'A' }]
-    },
-    {
-      id: 'temp-2', 
-      name: 'INTEGRA Inverter',
-      model: 'MDSI-09HRDN8/MDOI-09HDN8',
-      images: ['/images/products/placeholder.png'],
-      price: 47100,
-      specs: [{ name: 'Класс энергоэффективности (охлаждение)', value: 'A' }]
-    },
-    {
-      id: 'temp-3',
-      name: 'INTEGRA Inverter', 
-      model: 'MDSI-12HRDN8/MDOI-12HDN8',
-      images: ['/images/products/placeholder.png'],
-      price: 58500,
-      specs: [{ name: 'Класс энергоэффективности (охлаждение)', value: 'A' }]
-    },
-    {
-      id: 'temp-4',
-      name: 'INTEGRA Pro',
-      model: 'MDSAI-09HRFN8/MDOAI-09HFN8', 
-      images: ['/images/products/placeholder.png'],
-      price: 62500,
-      specs: [{ name: 'Класс энергоэффективности (охлаждение)', value: 'A+++' }]
-    }
-  ]
-};
+import { products } from '../../data/productData';
+import { Product } from '../../data/productData';
 
 const PopularModels = () => {
   // Выбираем популярные модели из реальных данных
   const splitProducts = products['split'] || [];
-  const popularModels = [
-    splitProducts[0], // INTEGRA Inverter 07
-    splitProducts[1], // INTEGRA Inverter 09  
-    splitProducts[2], // INTEGRA Inverter 12
-    splitProducts[5], // INTEGRA Pro 09
-  ].filter(Boolean); // Убираем undefined элементы
+  
+  // Ищем конкретные модели, если не найдены - берём первые 4
+  let popularModels: Product[] = [
+    splitProducts.find(p => p.id === 'integra-inverter-07') || splitProducts[0],
+    splitProducts.find(p => p.id === 'integra-inverter-09') || splitProducts[1], 
+    splitProducts.find(p => p.id === 'integra-inverter-12') || splitProducts[2],
+    splitProducts.find(p => p.id === 'integra-pro-09') || splitProducts.find(p => p.name.includes('Pro')) || splitProducts[3],
+  ].filter((model): model is Product => Boolean(model));
+  
+  // Если моделей меньше 4, дополняем оставшимися
+  if (popularModels.length < 4) {
+    const remaining = splitProducts
+      .filter(p => !popularModels.includes(p))
+      .slice(0, 4 - popularModels.length);
+    popularModels = [...popularModels, ...remaining];
+  }
+  
+  popularModels = popularModels.slice(0, 4); // Максимум 4 модели
 
   // Функция для получения площади охлаждения по мощности
-  const getCoolingArea = (productName: string) => {
+  const getCoolingArea = (productName: string): string => {
     const powerMatch = productName.match(/(\d+)/);
     if (!powerMatch) return "до 25 м²";
     
@@ -64,10 +39,25 @@ const PopularModels = () => {
   };
 
   // Функция для определения бейджа модели
-  const getModelBadge = (productName: string) => {
+  const getModelBadge = (productName: string): { text: string; color: string } => {
     if (productName.includes('Pro')) return { text: 'ПРЕМИУМ', color: 'bg-purple-500' };
-    if (productName.includes('Black')) return { text: 'СТИЛЬ', color: 'bg-gray-800' };
     return { text: 'ХИТ', color: 'bg-green-500' };
+  };
+
+  // Функция для создания slug из модели
+  const createModelSlug = (model: string, name: string): string => {
+    // Извлекаем номер из модели типа "MDSI-07HRDN8/MDOI-07HDN8"
+    const match = model.match(/(\d+)/);
+    const number = match ? match[1] : '07';
+    
+    // Определяем тип модели
+    if (name.includes('Pro Black')) {
+      return `integra-pro-black-${number}`;
+    } else if (name.includes('Pro')) {
+      return `integra-pro-${number}`;
+    } else {
+      return `integra-inverter-${number}`;
+    }
   };
 
   return (
@@ -103,6 +93,7 @@ const PopularModels = () => {
             
             const badge = getModelBadge(model.name);
             const area = getCoolingArea(model.model);
+            const modelSlug = createModelSlug(model.model, model.name);
             
             return (
               <div 
@@ -134,17 +125,13 @@ const PopularModels = () => {
                   
                   {/* Основное изображение */}
                   <img 
-                    src={model.images?.[0] || '/images/products/placeholder.png'} 
+                    src={model.images?.[0] || '/images/conditioner.png'} 
                     alt={model.name}
                     className="w-full h-full object-contain p-4 transition-all duration-500 group-hover:scale-110 group-hover:rotate-1"
                     onError={(e) => {
-                      // Fallback на placeholder если изображение не загружается
                       const target = e.currentTarget;
-                      const nextSibling = target.nextElementSibling as HTMLElement;
-                      target.style.display = 'none';
-                      if (nextSibling) {
-                        nextSibling.style.display = 'flex';
-                      }
+                      target.src = '/images/conditioner.png';
+                      target.onerror = null; // Prevent infinite loop
                     }}
                   />
                   
@@ -189,12 +176,6 @@ const PopularModels = () => {
                         <span className="text-gray-600">Тип:</span>
                         <span className="font-medium">Сплит-система</span>
                       </div>
-                      <div className="flex items-center justify-between text-sm">
-                        <span className="text-gray-600">Класс:</span>
-                        <span className="font-medium text-green-600">
-                          {model.specs.find((spec) => spec.name.includes('энергоэффективности'))?.value || 'A'}
-                        </span>
-                      </div>
                     </div>
                     
                     {/* Цена и кнопка */}
@@ -202,12 +183,12 @@ const PopularModels = () => {
                       <div>
                         <p className="text-xs text-gray-500 mb-1">от</p>
                         <span className="font-bold text-xl text-blue-600 group-hover:text-blue-700 transition-colors duration-300">
-                          {model.price.toLocaleString()} ₽
+                          {model.price?.toLocaleString() || '0'} ₽
                         </span>
                       </div>
                       
                       <Link 
-                        to="/catalog/split"
+                        to={`/catalog/split/${createModelSlug(model.model, model.name)}`}
                         className="group/btn flex items-center text-blue-600 hover:text-white bg-blue-50 hover:bg-blue-600 px-4 py-2 rounded-lg font-medium text-sm transition-all duration-300 transform hover:scale-105"
                       >
                         <span>Подробнее</span>
