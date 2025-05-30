@@ -86,7 +86,7 @@ const Advantages = () => {
             <Zap className="w-6 h-6 text-orange-500 animate-bounce" />
           </div>
           
-          <h2 className="text-4xl md:text-5xl font-bold mb-6 animate-fade-in-up">
+          <h2 className="text-4xl md:text-5xl font-bold mb-6 animate-fade-in-up" style={{ animationDuration: '1.4s', animationTimingFunction: 'cubic-bezier(0.22, 1, 0.36, 1)' }}>
             <span className="bg-gradient-to-r from-gray-800 via-blue-800 to-purple-800 bg-clip-text text-transparent hover:from-blue-600 hover:to-purple-600 transition-all duration-1000 cursor-default">
               Наши преимущества
             </span>
@@ -108,10 +108,12 @@ const Advantages = () => {
           {advantages.map((advantage, index) => (
             <div 
               key={index}
-              className="group relative bg-white/80 backdrop-blur-sm rounded-3xl p-8 text-center transition-all duration-700 transform hover:scale-110 hover:-translate-y-4 hover:rotate-1 animate-fade-in-up cursor-pointer"
+              className="group relative bg-white/80 backdrop-blur-sm rounded-3xl p-8 text-center transition-all duration-1000 ease-out transform hover:scale-110 hover:-translate-y-4 hover:rotate-1 animate-fade-in-up cursor-pointer"
               style={{ 
                 animationDelay: `${0.6 + index * 0.2}s`,
-                boxShadow: '0 10px 40px rgba(0,0,0,0.1)'
+                boxShadow: '0 10px 40px rgba(0,0,0,0.1)',
+                animationDuration: '1.4s',
+                animationTimingFunction: 'cubic-bezier(0.22, 1, 0.36, 1)'
               }}
             >
               {/* Фоновый градиент при hover */}
