@@ -15,6 +15,17 @@ const CategoryPage = () => {
     }
   };
 
+  // Функция для определения бренда по названию серии
+  const getBrand = (seriesName: string): string => {
+    if (seriesName.includes('INTEGRA') || seriesName.includes('INFINI')) {
+      return 'MDV';
+    }
+    if (seriesName.includes('Mitsubishi')) {
+      return 'Mitsubishi Heavy';
+    }
+    return 'MDV'; // По умолчанию
+  };
+
   // Получаем все продукты для данной категории
   const allCategoryProducts = products[categoryId || ''] || [];
   
@@ -69,6 +80,7 @@ const CategoryPage = () => {
             const variantsCount = seriesProducts.length;
             const minPrice = Math.min(...seriesProducts.map(p => p.price));
             const maxPrice = Math.max(...seriesProducts.map(p => p.price));
+            const brand = getBrand(firstProduct.name);
             
             return (
               <div
@@ -102,7 +114,7 @@ const CategoryPage = () => {
                   
                   {/* Плашка бренда справа сверху */}
                   <div className="absolute top-3 right-3 bg-gray-800 text-white text-xs font-semibold px-2 py-1 rounded">
-                    MDV
+                    {brand}
                   </div>
                 </div>
                 

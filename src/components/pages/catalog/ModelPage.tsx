@@ -16,9 +16,21 @@ export default function ModelPage() {
       'integra-inverter': 'INTEGRA Inverter',
       'integra-pro': 'INTEGRA Pro',
       'integra-pro-black': 'INTEGRA Pro Black',
-      'mitsubishi-heavy-deluxe': 'Mitsubishi Heavy Deluxe'
+      'mitsubishi-heavy-deluxe': 'Mitsubishi Heavy Deluxe',
+      'infini-uvpro-inverter': 'INFINI UVpro Inverter'
     };
     return slugToNameMap[slug] || slug;
+  };
+
+  // Функция для определения бренда по названию серии
+  const getBrand = (seriesName: string): string => {
+    if (seriesName.includes('INTEGRA') || seriesName.includes('INFINI')) {
+      return 'MDV';
+    }
+    if (seriesName.includes('Mitsubishi')) {
+      return 'Mitsubishi Heavy';
+    }
+    return 'MDV'; // По умолчанию
   };
 
   // Функция для обработки заказа
@@ -118,6 +130,8 @@ export default function ModelPage() {
                     const powerMatch = product.model.match(/(\d+)/);
                     power = powerMatch ? powerMatch[1] : '';
                   }
+
+                  const brand = getBrand(product.name);
                   
                   return (
                     <div
@@ -151,7 +165,7 @@ export default function ModelPage() {
                         
                         {/* Плашка бренда справа сверху */}
                         <div className="absolute top-3 right-3 bg-gray-800 text-white text-xs font-semibold px-2 py-1 rounded">
-                          MDV
+                          {brand}
                         </div>
                       </div>
                       
@@ -238,16 +252,29 @@ export default function ModelPage() {
               </button>
 
               <div className="text-gray-600 space-y-4">
-                <p className="text-justify">
-                  Серия {selectedProductData.name} от MDV — это современные климатические системы, 
-                  разработанные для профессионального охлаждения и обогрева помещений с использованием 
-                  современных технологий.
-                </p>
-                <p className="text-justify">
-                  Полностью инверторная сплит-система оснащена интеллектуальной системой охлаждения 
-                  и функцией энергосбережения. Система автоматически подбирает оптимальные настройки 
-                  для максимального комфорта при минимальном энергопотреблении.
-                </p>
+                {selectedProductData.name === 'INFINI UVpro Inverter' ? (
+                  <>
+                    <p className="text-justify">
+                      Серия инверторных кондиционеров INFINI UVPro разработана для тех, кто ценит не только точный контроль климата, но и заботу о здоровье. Встроенная ультрафиолетовая лампа обеспечивает эффективную стерилизацию воздуха и внутренних элементов, снижая риск распространения вирусов и бактерий.
+                    </p>
+                    <p className="text-justify">
+                      Технология биполярной ионизации Air Magic усиливает обеззараживающее действие: в воздухе образуются положительные и отрицательные ионы, которые нейтрализуют вредные примеси. Дополнительную фильтрацию обеспечивают фотокаталитический и комбинированный фильтры, устраняющие формальдегиды, аммиак и другие неприятные запахи.
+                    </p>
+                  </>
+                ) : (
+                  <>
+                    <p className="text-justify">
+                      Серия {selectedProductData.name} от MDV — это современные климатические системы, 
+                      разработанные для профессионального охлаждения и обогрева помещений с использованием 
+                      современных технологий.
+                    </p>
+                    <p className="text-justify">
+                      Полностью инверторная сплит-система оснащена интеллектуальной системой охлаждения 
+                      и функцией энергосбережения. Система автоматически подбирает оптимальные настройки 
+                      для максимального комфорта при минимальном энергопотреблении.
+                    </p>
+                  </>
+                )}
               </div>
             </div>
             
@@ -269,29 +296,35 @@ export default function ModelPage() {
               
               <div>
                 <h3 className="text-lg font-semibold mb-4">Технические характеристики</h3>
-                <div className="border rounded-lg bg-white shadow-sm">
-                  <div className="max-h-[500px] overflow-y-auto">
-                    {selectedProductData.specs.map((spec, index) => (
-                      <div 
-                        key={index} 
-                        className={`flex justify-between items-start py-3 px-4 border-b border-gray-100 last:border-b-0 ${
-                          index % 2 === 0 ? 'bg-gray-50' : 'bg-white'
-                        }`}
-                      >
-                        <span className="text-gray-700 font-medium text-sm leading-5 flex-1 pr-4">
-                          {spec.name}:
-                        </span>
-                        <span className="text-gray-900 font-semibold text-sm text-right flex-1 leading-5">
-                          {spec.value}
-                        </span>
-                      </div>
-                    ))}
+                {selectedProductData.specs.length > 0 ? (
+                  <div className="border rounded-lg bg-white shadow-sm">
+                    <div className="max-h-[500px] overflow-y-auto">
+                      {selectedProductData.specs.map((spec, index) => (
+                        <div 
+                          key={index} 
+                          className={`flex justify-between items-start py-3 px-4 border-b border-gray-100 last:border-b-0 ${
+                            index % 2 === 0 ? 'bg-gray-50' : 'bg-white'
+                          }`}
+                        >
+                          <span className="text-gray-700 font-medium text-sm leading-5 flex-1 pr-4">
+                            {spec.name}:
+                          </span>
+                          <span className="text-gray-900 font-semibold text-sm text-right flex-1 leading-5">
+                            {spec.value}
+                          </span>
+                        </div>
+                      ))}
+                    </div>
+                    {/* Показываем количество характеристик */}
+                    <div className="px-4 py-2 bg-gray-50 border-t text-xs text-gray-500 text-center">
+                      Всего характеристик: {selectedProductData.specs.length}
+                    </div>
                   </div>
-                  {/* Показываем количество характеристик */}
-                  <div className="px-4 py-2 bg-gray-50 border-t text-xs text-gray-500 text-center">
-                    Всего характеристик: {selectedProductData.specs.length}
+                ) : (
+                  <div className="border rounded-lg bg-gray-50 p-6 text-center">
+                    <p className="text-gray-600">Технические характеристики будут добавлены позже</p>
                   </div>
-                </div>
+                )}
               </div>
             </div>
           </div>

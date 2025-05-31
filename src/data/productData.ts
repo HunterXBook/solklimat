@@ -898,6 +898,99 @@ export const products: Record<string, Product[]> = {
         { name: 'Класс энергоэффективности (охлаждение)', value: 'A' },
         { name: 'Класс энергоэффективности (нагрев)', value: 'A' }
       ]
+    },
+    // INFINI UVpro Inverter models
+    {
+      id: 'infini-uvpro-inverter-09',
+      name: 'INFINI UVpro Inverter',
+      model: 'MDSI-09HRUVN8/MDOI-09HUVN8',
+      images: [
+        '/images/products/infini-uvpro-indoor.png',
+        '/images/products/infini-uvpro-indoor-angle.png',
+        '/images/products/infini-uvpro-outdoor.png'
+      ],
+      price: 54300,
+      color: 'Белый',
+      keyFeatures: [
+        'Встроенная ультрафиолетовая лампа для стерилизации',
+        'Биполярная ионизация Air Magic',
+        'Фотокаталитический и комбинированный фильтры',
+        'Инверторное управление компрессором',
+        'Устранение формальдегидов, аммиака и неприятных запахов',
+        'Эффективная нейтрализация вирусов и бактерий'
+      ],
+      specs: [
+        // Технические характеристики будут добавлены позже
+      ]
+    },
+    {
+      id: 'infini-uvpro-inverter-12',
+      name: 'INFINI UVpro Inverter',
+      model: 'MDSI-12HRUVN8/MDOI-12HUVN8',
+      images: [
+        '/images/products/infini-uvpro-indoor.png',
+        '/images/products/infini-uvpro-indoor-angle.png',
+        '/images/products/infini-uvpro-outdoor.png'
+      ],
+      price: 61900,
+      color: 'Белый',
+      keyFeatures: [
+        'Встроенная ультрафиолетовая лампа для стерилизации',
+        'Биполярная ионизация Air Magic',
+        'Фотокаталитический и комбинированный фильтры',
+        'Инверторное управление компрессором',
+        'Устранение формальдегидов, аммиака и неприятных запахов',
+        'Эффективная нейтрализация вирусов и бактерий'
+      ],
+      specs: [
+        // Технические характеристики будут добавлены позже
+      ]
+    },
+    {
+      id: 'infini-uvpro-inverter-18',
+      name: 'INFINI UVpro Inverter',
+      model: 'MDSI-18HRUVN8/MDOI-18HUVN8',
+      images: [
+        '/images/products/infini-uvpro-indoor.png',
+        '/images/products/infini-uvpro-indoor-angle.png',
+        '/images/products/infini-uvpro-outdoor.png'
+      ],
+      price: 87500,
+      color: 'Белый',
+      keyFeatures: [
+        'Встроенная ультрафиолетовая лампа для стерилизации',
+        'Биполярная ионизация Air Magic',
+        'Фотокаталитический и комбинированный фильтры',
+        'Инверторное управление компрессором',
+        'Устранение формальдегидов, аммиака и неприятных запахов',
+        'Эффективная нейтрализация вирусов и бактерий'
+      ],
+      specs: [
+        // Технические характеристики будут добавлены позже
+      ]
+    },
+    {
+      id: 'infini-uvpro-inverter-24',
+      name: 'INFINI UVpro Inverter',
+      model: 'MDSI-24HRUVN8/MDOI-24HUVN8',
+      images: [
+        '/images/products/infini-uvpro-indoor.png',
+        '/images/products/infini-uvpro-indoor-angle.png',
+        '/images/products/infini-uvpro-outdoor.png'
+      ],
+      price: 112100,
+      color: 'Белый',
+      keyFeatures: [
+        'Встроенная ультрафиолетовая лампа для стерилизации',
+        'Биполярная ионизация Air Magic',
+        'Фотокаталитический и комбинированный фильтры',
+        'Инверторное управление компрессором',
+        'Устранение формальдегидов, аммиака и неприятных запахов',
+        'Эффективная нейтрализация вирусов и бактерий'
+      ],
+      specs: [
+        // Технические характеристики будут добавлены позже
+      ]
     }
   ]
 };
