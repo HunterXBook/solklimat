@@ -899,122 +899,9 @@ export const products: Record<string, Product[]> = {
         { name: 'Класс энергоэффективности (нагрев)', value: 'A' }
       ]
     },
-    // INFINI UVpro Inverter models (существующие модели MDSI/MDOI)
+    // INFINI UVpro Inverter models (обновленные характеристики)
     {
       id: 'infini-uvpro-inverter-09',
-      name: 'INFINI UVpro Inverter',
-      model: 'MDSI-09HRUVN8/MDOI-09HUVN8',
-      images: [
-        '/images/products/infini-uvpro-indoor.png',
-        '/images/products/infini-uvpro-indoor-angle.png',
-        '/images/products/infini-uvpro-outdoor.png'
-      ],
-      price: 54300,
-      color: 'Белый',
-      keyFeatures: [
-        'Встроенная ультрафиолетовая лампа для стерилизации',
-        'Биполярная ионизация Air Magic',
-        'Фотокаталитический и комбинированный фильтры',
-        'Инверторное управление компрессором',
-        'Устранение формальдегидов, аммиака и неприятных запахов',
-        'Эффективная нейтрализация вирусов и бактерий'
-      ],
-      specs: [
-        { name: 'Модель внутреннего блока', value: 'MDSI-09HRUVN8' },
-        { name: 'Модель наружного блока', value: 'MDOI-09HUVN8' },
-        { name: 'Тип управления компрессором', value: 'DC Inverter' },
-        { name: 'Электропитание, В/Гц/Ф', value: '220-240/50/1' },
-        { name: 'Тип хладагента', value: 'R32' },
-        { name: 'Цвет корпуса', value: 'Белый' }
-      ]
-    },
-    {
-      id: 'infini-uvpro-inverter-12',
-      name: 'INFINI UVpro Inverter',
-      model: 'MDSI-12HRUVN8/MDOI-12HUVN8',
-      images: [
-        '/images/products/infini-uvpro-indoor.png',
-        '/images/products/infini-uvpro-indoor-angle.png',
-        '/images/products/infini-uvpro-outdoor.png'
-      ],
-      price: 61900,
-      color: 'Белый',
-      keyFeatures: [
-        'Встроенная ультрафиолетовая лампа для стерилизации',
-        'Биполярная ионизация Air Magic',
-        'Фотокаталитический и комбинированный фильтры',
-        'Инверторное управление компрессором',
-        'Устранение формальдегидов, аммиака и неприятных запахов',
-        'Эффективная нейтрализация вирусов и бактерий'
-      ],
-      specs: [
-        { name: 'Модель внутреннего блока', value: 'MDSI-12HRUVN8' },
-        { name: 'Модель наружного блока', value: 'MDOI-12HUVN8' },
-        { name: 'Тип управления компрессором', value: 'DC Inverter' },
-        { name: 'Электропитание, В/Гц/Ф', value: '220-240/50/1' },
-        { name: 'Тип хладагента', value: 'R32' },
-        { name: 'Цвет корпуса', value: 'Белый' }
-      ]
-    },
-    {
-      id: 'infini-uvpro-inverter-18',
-      name: 'INFINI UVpro Inverter',
-      model: 'MDSI-18HRUVN8/MDOI-18HUVN8',
-      images: [
-        '/images/products/infini-uvpro-indoor.png',
-        '/images/products/infini-uvpro-indoor-angle.png',
-        '/images/products/infini-uvpro-outdoor.png'
-      ],
-      price: 87500,
-      color: 'Белый',
-      keyFeatures: [
-        'Встроенная ультрафиолетовая лампа для стерилизации',
-        'Биполярная ионизация Air Magic',
-        'Фотокаталитический и комбинированный фильтры',
-        'Инверторное управление компрессором',
-        'Устранение формальдегидов, аммиака и неприятных запахов',
-        'Эффективная нейтрализация вирусов и бактерий'
-      ],
-      specs: [
-        { name: 'Модель внутреннего блока', value: 'MDSI-18HRUVN8' },
-        { name: 'Модель наружного блока', value: 'MDOI-18HUVN8' },
-        { name: 'Тип управления компрессором', value: 'DC Inverter' },
-        { name: 'Электропитание, В/Гц/Ф', value: '220-240/50/1' },
-        { name: 'Тип хладагента', value: 'R32' },
-        { name: 'Цвет корпуса', value: 'Белый' }
-      ]
-    },
-    {
-      id: 'infini-uvpro-inverter-24',
-      name: 'INFINI UVpro Inverter',
-      model: 'MDSI-24HRUVN8/MDOI-24HUVN8',
-      images: [
-        '/images/products/infini-uvpro-indoor.png',
-        '/images/products/infini-uvpro-indoor-angle.png',
-        '/images/products/infini-uvpro-outdoor.png'
-      ],
-      price: 112100,
-      color: 'Белый',
-      keyFeatures: [
-        'Встроенная ультрафиолетовая лампа для стерилизации',
-        'Биполярная ионизация Air Magic',
-        'Фотокаталитический и комбинированный фильтры',
-        'Инверторное управление компрессором',
-        'Устранение формальдегидов, аммиака и неприятных запахов',
-        'Эффективная нейтрализация вирусов и бактерий'
-      ],
-      specs: [
-        { name: 'Модель внутреннего блока', value: 'MDSI-24HRUVN8' },
-        { name: 'Модель наружного блока', value: 'MDOI-24HUVN8' },
-        { name: 'Тип управления компрессором', value: 'DC Inverter' },
-        { name: 'Электропитание, В/Гц/Ф', value: '220-240/50/1' },
-        { name: 'Тип хладагента', value: 'R32' },
-        { name: 'Цвет корпуса', value: 'Белый' }
-      ]
-    },
-    // НОВЫЕ МОДЕЛИ INFINI UVpro Inverter (MDSAL/MDOAG из документа)
-    {
-      id: 'infini-uvpro-new-09',
       name: 'INFINI UVpro Inverter',
       model: 'MDSAL-09HRFN8/MDOAG-09HFN8',
       images: [
@@ -1075,7 +962,7 @@ export const products: Record<string, Product[]> = {
       ]
     },
     {
-      id: 'infini-uvpro-new-12',
+      id: 'infini-uvpro-inverter-12',
       name: 'INFINI UVpro Inverter',
       model: 'MDSAL-12HRFN8/MDOAG-12HFN8',
       images: [
@@ -1136,7 +1023,7 @@ export const products: Record<string, Product[]> = {
       ]
     },
     {
-      id: 'infini-uvpro-new-18',
+      id: 'infini-uvpro-inverter-18',
       name: 'INFINI UVpro Inverter',
       model: 'MDSAL-18HRFN8/MDOAG-18HFN8',
       images: [
@@ -1197,7 +1084,7 @@ export const products: Record<string, Product[]> = {
       ]
     },
     {
-      id: 'infini-uvpro-new-24',
+      id: 'infini-uvpro-inverter-24',
       name: 'INFINI UVpro Inverter',
       model: 'MDSAL-24HRFN8/MDOAG-24HFN8',
       images: [
