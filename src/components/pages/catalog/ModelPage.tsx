@@ -17,14 +17,15 @@ export default function ModelPage() {
       'integra-pro': 'INTEGRA Pro',
       'integra-pro-black': 'INTEGRA Pro Black',
       'mitsubishi-heavy-deluxe': 'Mitsubishi Heavy Deluxe',
-      'infini-uvpro-inverter': 'INFINI UVpro Inverter'
+      'infini-uvpro-inverter': 'INFINI UVpro Inverter',
+      'mdv-classic-inverter': 'MDV Classic Inverter'
     };
     return slugToNameMap[slug] || slug;
   };
 
   // Функция для определения бренда по названию серии
   const getBrand = (seriesName: string): string => {
-    if (seriesName.includes('INTEGRA') || seriesName.includes('INFINI')) {
+    if (seriesName.includes('INTEGRA') || seriesName.includes('INFINI') || seriesName.includes('MDV Classic')) {
       return 'MDV';
     }
     if (seriesName.includes('Mitsubishi')) {
@@ -266,6 +267,15 @@ export default function ModelPage() {
                     </p>
                     <p className="text-justify">
                       Технология биполярной ионизации Air Magic усиливает обеззараживающее действие: в воздухе образуются положительные и отрицательные ионы, которые нейтрализуют вредные примеси. Дополнительную фильтрацию обеспечивают фотокаталитический и комбинированный фильтры, устраняющие формальдегиды, аммиак и другие неприятные запахи.
+                    </p>
+                  </>
+                ) : selectedProductData.name === 'MDV Classic Inverter' ? (
+                  <>
+                    <p className="text-justify">
+                      Серия MDV Classic Inverter — это доступные инверторные сплит-системы с базовым функционалом для бытового использования. Оснащенные надежным компрессором GMCC с технологией DC Inverter, эти кондиционеры обеспечивают стабильную работу и экономное энергопотребление.
+                    </p>
+                    <p className="text-justify">
+                      Система включает фотокаталитический фильтр тонкой очистки с диоксидом титана, функцию Follow Me для точного контроля температуры и продвинутую технологию самоочистки за 4 шага. Защита от замораживания помещения при температуре 8°C и возможность Wi-Fi управления делают эти кондиционеры оптимальным выбором для комфортного климата в доме.
                     </p>
                   </>
                 ) : (
