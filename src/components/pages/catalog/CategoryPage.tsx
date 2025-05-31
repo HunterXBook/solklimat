@@ -26,6 +26,22 @@ const CategoryPage = () => {
     return 'MDV'; // По умолчанию
   };
 
+  // Функция для извлечения мощности из модели
+  const getPowerFromModel = (product: Product): string => {
+    if (product.name === 'Mitsubishi Heavy Deluxe') {
+      const modelNumber = product.model.split('/')[0];
+      if (modelNumber.includes('20')) return '07';
+      else if (modelNumber.includes('25')) return '09';
+      else if (modelNumber.includes('35')) return '12';
+      else if (modelNumber.includes('50')) return '18';
+      else if (modelNumber.includes('60')) return '24';
+    } else {
+      const powerMatch = product.model.match(/(\d+)/);
+      return powerMatch ? powerMatch[1] : '';
+    }
+    return '';
+  };
+
   // Получаем все продукты для данной категории
   const allCategoryProducts = products[categoryId || ''] || [];
   
@@ -82,6 +98,10 @@ const CategoryPage = () => {
             const maxPrice = Math.max(...seriesProducts.map(p => p.price));
             const brand = getBrand(firstProduct.name);
             
+            // Получаем диапазон мощностей
+            const powers = seriesProducts.map(p => getPowerFromModel(p)).filter(p => p).sort();
+            const powerRange = powers.length > 1 ? `${powers[0]}-${powers[powers.length - 1]}` : powers[0] || '';
+            
             return (
               <div
                 key={seriesSlug}
@@ -119,7 +139,9 @@ const CategoryPage = () => {
                 </div>
                 
                 <div className="p-6">
-                  <h3 className="text-xl font-semibold mb-2">{firstProduct.name}</h3>
+                  <h3 className="text-xl font-semibold mb-2">
+                    {firstProduct.name} {powerRange}
+                  </h3>
                   <p className="text-gray-600 mb-3">{variantsCount} вариант{variantsCount > 1 ? (variantsCount < 5 ? 'а' : 'ов') : ''} мощности</p>
                   
                   <div className="flex justify-between items-center mb-4">

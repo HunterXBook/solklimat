@@ -33,6 +33,22 @@ export default function ModelPage() {
     return 'MDV'; // По умолчанию
   };
 
+  // Функция для извлечения мощности из модели
+  const getPowerFromModel = (product: Product): string => {
+    if (product.name === 'Mitsubishi Heavy Deluxe') {
+      const modelNumber = product.model.split('/')[0];
+      if (modelNumber.includes('20')) return '07';
+      else if (modelNumber.includes('25')) return '09';
+      else if (modelNumber.includes('35')) return '12';
+      else if (modelNumber.includes('50')) return '18';
+      else if (modelNumber.includes('60')) return '24';
+    } else {
+      const powerMatch = product.model.match(/(\d+)/);
+      return powerMatch ? powerMatch[1] : '';
+    }
+    return '';
+  };
+
   // Функция для обработки заказа
   const handleOrderClick = () => {
     navigate('/contact');
@@ -118,18 +134,7 @@ export default function ModelPage() {
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {seriesProducts.map((product: Product) => {
                   // Извлекаем мощность из модели для отображения
-                  let power = '';
-                  if (product.name === 'Mitsubishi Heavy Deluxe') {
-                    const modelNumber = product.model.split('/')[0];
-                    if (modelNumber.includes('20')) power = '7';
-                    else if (modelNumber.includes('25')) power = '9';
-                    else if (modelNumber.includes('35')) power = '12';
-                    else if (modelNumber.includes('50')) power = '18';
-                    else if (modelNumber.includes('60')) power = '24';
-                  } else {
-                    const powerMatch = product.model.match(/(\d+)/);
-                    power = powerMatch ? powerMatch[1] : '';
-                  }
+                  const power = getPowerFromModel(product);
 
                   const brand = getBrand(product.name);
                   
@@ -171,7 +176,7 @@ export default function ModelPage() {
                       
                       <div className="p-6">
                         <h3 className="text-lg font-semibold mb-2">
-                          {product.name} {power ? `${power}` : ''}
+                          {product.name} {power}
                         </h3>
                         <p className="text-sm text-gray-600 mb-3">{product.model}</p>
                         
@@ -230,7 +235,9 @@ export default function ModelPage() {
                   alt={selectedProductData.name}
                 />
               </div>
-              <h2 className="text-2xl font-bold mb-2">{selectedProductData.name}</h2>
+              <h2 className="text-2xl font-bold mb-2">
+                {selectedProductData.name} {getPowerFromModel(selectedProductData)}
+              </h2>
               <p className="text-gray-500 mb-4">{selectedProductData.model}</p>
               
               <div className="space-y-4 mb-6">
