@@ -761,7 +761,7 @@ export const products: Record<string, Product[]> = {
         '/images/products/mitsu-deluxe-indoor3.png',
         '/images/products/mitsu-deluxe-outdoor.png'
       ],
-      price: 'От 135 000 ₽',
+      price: 'от 135 000 ₽',
       color: 'Белый',
       keyFeatures: [
         'Инверторное управление компрессором',
@@ -791,7 +791,7 @@ export const products: Record<string, Product[]> = {
         '/images/products/mitsu-deluxe-indoor3.png',
         '/images/products/mitsu-deluxe-outdoor.png'
       ],
-      price: 'От 135 000 ₽',
+      price: 'от 135 000 ₽',
       color: 'Белый',
       keyFeatures: [
         'Инверторное управление компрессором',
@@ -821,7 +821,7 @@ export const products: Record<string, Product[]> = {
         '/images/products/mitsu-deluxe-indoor3.png',
         '/images/products/mitsu-deluxe-outdoor.png'
       ],
-      price: 'От 135 000 ₽',
+      price: 'от 135 000 ₽',
       color: 'Белый',
       keyFeatures: [
         'Инверторное управление компрессором',
@@ -851,7 +851,7 @@ export const products: Record<string, Product[]> = {
         '/images/products/mitsu-deluxe-indoor3.png',
         '/images/products/mitsu-deluxe-outdoor.png'
       ],
-      price: 'От 135 000 ₽',
+      price: 'от 135 000 ₽',
       color: 'Белый',
       keyFeatures: [
         'Инверторное управление компрессором',
@@ -881,7 +881,7 @@ export const products: Record<string, Product[]> = {
         '/images/products/mitsu-deluxe-indoor3.png',
         '/images/products/mitsu-deluxe-outdoor.png'
       ],
-      price: 'От 135 000 ₽',
+      price: 'от 135 000 ₽',
       color: 'Белый',
       keyFeatures: [
         'Инверторное управление компрессором',
