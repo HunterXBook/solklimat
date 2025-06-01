@@ -18,7 +18,8 @@ export default function ModelPage() {
       'integra-pro-black': 'INTEGRA Pro Black',
       'mitsubishi-heavy-deluxe': 'Mitsubishi Heavy Deluxe',
       'infini-uvpro-inverter': 'INFINI UVpro Inverter',
-      'mdv-classic-inverter': 'MDV Classic Inverter'
+      'mdv-classic-inverter': 'MDV Classic Inverter',
+      'infini-standard-inverter': 'INFINI Standard Inverter'
     };
     return slugToNameMap[slug] || slug;
   };
@@ -267,6 +268,15 @@ export default function ModelPage() {
                     </p>
                     <p className="text-justify">
                       Технология биполярной ионизации Air Magic усиливает обеззараживающее действие: в воздухе образуются положительные и отрицательные ионы, которые нейтрализуют вредные примеси. Дополнительную фильтрацию обеспечивают фотокаталитический и комбинированный фильтры, устраняющие формальдегиды, аммиак и другие неприятные запахи.
+                    </p>
+                  </>
+                ) : selectedProductData.name === 'INFINI Standard Inverter' ? (
+                  <>
+                    <p className="text-justify">
+                      Серия инверторных кондиционеров INFINI Standard создана для тех, кто ценит надежность, функциональность и доступную цену. Система 3D DC-Inverter обеспечивает максимальную энергоэффективность и тихую работу, делая эту серию идеальным выбором для дома и офиса.
+                    </p>
+                    <p className="text-justify">
+                      Биполярный ионизатор Air Magic генерирует до 2 миллионов положительных и отрицательных ионов, эффективно уничтожая вирусы и бактерии в воздухе. Продвинутая 4-ступенчатая система самоочистки и фотокаталитический фильтр с диоксидом титана заботятся о чистоте воздуха и долговечности оборудования.
                     </p>
                   </>
                 ) : selectedProductData.name === 'MDV Classic Inverter' ? (
