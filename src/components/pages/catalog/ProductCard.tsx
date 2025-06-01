@@ -5,7 +5,7 @@ interface ProductCardProps {
   name: string;
   model: string;
   image: string;
-  price: number;
+  price: number | string;
   color: string;
   brand: string;
   onSelect: (id: string) => void;
@@ -52,7 +52,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
         </div>
         
         <div className="flex justify-between items-center">
-          <span className="text-xl font-bold text-blue-600">{price.toLocaleString()} ₽</span>
+          <span className="text-xl font-bold text-blue-600">{typeof price === 'number' ? `${price.toLocaleString()} ₽` : price}</span>
           <button 
             className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition-colors text-sm font-medium"
             onClick={(e) => {

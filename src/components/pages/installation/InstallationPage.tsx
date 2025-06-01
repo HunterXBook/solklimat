@@ -262,7 +262,7 @@ const InstallationPage = () => {
                   <tr key={index} className="hover:bg-gray-50">
                     <td className="border px-4 py-2 text-left">{item.power}</td>
                     <td className="border px-4 py-2 text-left">{item.area}</td>
-                    <td className="border px-4 py-2 text-left">{item.price.toLocaleString()} ₽</td>
+                    <td className="border px-4 py-2 text-left">{typeof item.price === 'number' ? `${item.price.toLocaleString()} ₽` : item.price}</td>
                   </tr>
                 ))}
               </tbody>
@@ -339,7 +339,7 @@ const InstallationPage = () => {
                 <tr key={item.id} className="hover:bg-gray-50">
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 text-left">{item.id}</td>
                   <td className="px-6 py-4 text-sm text-gray-900 text-left">{item.service}</td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 text-left font-medium">{item.price.toLocaleString()}</td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 text-left font-medium">{typeof item.price === 'number' ? item.price.toLocaleString() : item.price}</td>
                 </tr>
               ))}
             </tbody>

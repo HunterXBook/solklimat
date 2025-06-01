@@ -94,8 +94,18 @@ const CategoryPage = () => {
           {Object.entries(groupedBySeries).map(([seriesSlug, seriesProducts]) => {
             const firstProduct = seriesProducts[0];
             const variantsCount = seriesProducts.length;
-            const minPrice = Math.min(...seriesProducts.map(p => p.price));
-            const maxPrice = Math.max(...seriesProducts.map(p => p.price));
+            const numericPrices = seriesProducts.map(p => p.price).filter(p => typeof p === 'number') as number[];
+            const stringPrices = seriesProducts.map(p => p.price).filter(p => typeof p === 'string') as string[];
+            let minPrice: number | string = 0;
+            let maxPrice: number | string = 0;
+            if (stringPrices.length > 0) {
+              // Если хотя бы одна цена строка, отображаем первую строковую цену
+              minPrice = stringPrices[0];
+              maxPrice = stringPrices[0];
+            } else if (numericPrices.length > 0) {
+              minPrice = Math.min(...numericPrices);
+              maxPrice = Math.max(...numericPrices);
+            }
             const brand = getBrand(firstProduct.name);
             
             // Получаем диапазон мощностей
@@ -150,8 +160,8 @@ const CategoryPage = () => {
                     </div>
                     <div className="font-bold text-blue-600">
                       {minPrice === maxPrice 
-                        ? `${minPrice.toLocaleString()} ₽`
-                        : `от ${minPrice.toLocaleString()} ₽`
+                        ? (typeof minPrice === 'number' ? `${minPrice.toLocaleString()} ₽` : minPrice)
+                        : (typeof minPrice === 'number' ? `от ${minPrice.toLocaleString()} ₽` : minPrice)
                       }
                     </div>
                   </div>

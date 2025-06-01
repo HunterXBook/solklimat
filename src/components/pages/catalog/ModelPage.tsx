@@ -207,7 +207,7 @@ export default function ModelPage() {
 
                         <div className="flex justify-between items-center">
                           <span className="text-2xl font-bold text-blue-600">
-                            {product.price.toLocaleString()} ₽
+                            {typeof product.price === 'number' ? `${product.price.toLocaleString()} ₽` : product.price}
                           </span>
                           <span className="text-blue-600 font-medium hover:text-blue-800">
                             Подробнее →
@@ -249,7 +249,7 @@ export default function ModelPage() {
                 </div>
                 <div className="flex justify-between items-center">
                   <span className="text-gray-600">Цена:</span>
-                  <span className="text-2xl font-bold text-blue-600">{selectedProductData.price.toLocaleString()} ₽</span>
+                  <span className="text-2xl font-bold text-blue-600">{typeof selectedProductData.price === 'number' ? `${selectedProductData.price.toLocaleString()} ₽` : selectedProductData.price}</span>
                 </div>
               </div>
               

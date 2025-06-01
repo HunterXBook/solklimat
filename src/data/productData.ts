@@ -8,7 +8,7 @@ export interface Product {
   name: string;
   model: string;
   images: string[];
-  price: number;
+  price: number | string;
   color: string;
   specs: ProductSpec[];
   keyFeatures: string[];
@@ -499,6 +499,8 @@ export const products: Record<string, Product[]> = {
         { name: 'Диаметр газовой трубы, мм (дюйм)', value: '12,7 (1/2)' },
         { name: 'Размер внутреннего блока (Ш×В×Г), мм', value: '1055×330×231' },
         { name: 'Размер наружного блока (Ш×В×Г), мм', value: '890×673×342' },
+        { name: 'Размер внутреннего блока в упаковке (Ш×В×Г), мм', value: '1130×405×310' },
+        { name: 'Размер наружного блока в упаковке (Ш×В×Г), мм', value: '995×740×398' },
         { name: 'Вес внутреннего блока (нетто/брутто), кг', value: '13 / 16,4' },
         { name: 'Вес наружного блока (нетто/брутто), кг', value: '41 / 44' }
       ]
@@ -759,7 +761,7 @@ export const products: Record<string, Product[]> = {
         '/images/products/mitsu-deluxe-indoor3.png',
         '/images/products/mitsu-deluxe-outdoor.png'
       ],
-      price: 0,
+      price: 'От 135 000 ₽',
       color: 'Белый',
       keyFeatures: [
         'Инверторное управление компрессором',
@@ -789,7 +791,7 @@ export const products: Record<string, Product[]> = {
         '/images/products/mitsu-deluxe-indoor3.png',
         '/images/products/mitsu-deluxe-outdoor.png'
       ],
-      price: 0,
+      price: 'От 135 000 ₽',
       color: 'Белый',
       keyFeatures: [
         'Инверторное управление компрессором',
@@ -819,7 +821,7 @@ export const products: Record<string, Product[]> = {
         '/images/products/mitsu-deluxe-indoor3.png',
         '/images/products/mitsu-deluxe-outdoor.png'
       ],
-      price: 0,
+      price: 'От 135 000 ₽',
       color: 'Белый',
       keyFeatures: [
         'Инверторное управление компрессором',
@@ -849,7 +851,7 @@ export const products: Record<string, Product[]> = {
         '/images/products/mitsu-deluxe-indoor3.png',
         '/images/products/mitsu-deluxe-outdoor.png'
       ],
-      price: 0,
+      price: 'От 135 000 ₽',
       color: 'Белый',
       keyFeatures: [
         'Инверторное управление компрессором',
@@ -879,7 +881,7 @@ export const products: Record<string, Product[]> = {
         '/images/products/mitsu-deluxe-indoor3.png',
         '/images/products/mitsu-deluxe-outdoor.png'
       ],
-      price: 0,
+      price: 'От 135 000 ₽',
       color: 'Белый',
       keyFeatures: [
         'Инверторное управление компрессором',
