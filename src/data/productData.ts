@@ -16,10 +16,7 @@ export interface Product {
 
 export const products: Record<string, Product[]> = {
   'split': [
-        
-    {
-{
-// INTEGRA Inverter models
+    // INTEGRA Inverter models
     {
       id: 'integra-inverter-07',
       name: 'INTEGRA Inverter',
