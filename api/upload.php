@@ -141,8 +141,8 @@ function handleCommit() {
     $category = array_keys($newProducts)[0];
     $products = $newProducts[$category];
     
-    // Генерируем код новых продуктов
-    $newProductsCode = "";
+    // Генерируем код новых продуктов с BOM для UTF-8
+    $newProductsCode = "\xEF\xBB\xBF"; // UTF-8 BOM
     foreach ($products as $product) {
         $newProductsCode .= generateProductCode($product) . ",\n";
     }
@@ -184,11 +184,12 @@ function handleCommit() {
             substr($currentContent, $closePos);
     }
     
-    // Коммитим изменения
+    // Коммитим изменения с явным указанием UTF-8
     $commitData = [
         'message' => 'Добавлены новые кондиционеры: ' . $products[0]['name'] . ' через админ-панель',
         'content' => base64_encode($newContent),
-        'sha' => $sha
+        'sha' => $sha,
+        'encoding' => 'utf-8'
     ];
     
     $ch = curl_init($fileUrl);
