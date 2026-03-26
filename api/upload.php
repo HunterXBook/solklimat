@@ -163,16 +163,26 @@ function handleCommit() {
         $productLines[] = generateProductCode($product);
     }
     
-    $insertMarker = "'{$category}': [";
-    if (strpos($currentContent, $insertMarker) === false) {
-        $insertPos = strrpos($currentContent, '}');
+    // Находим позицию для вставки - перед закрывающей скобкой массива категории
+    $categoryPattern = "/('{$category}':\s*\[)([\s\S]*?)(\],?\s*$)/m";
+    
+    if (preg_match($categoryPattern, $currentContent, $matches, PREG_OFFSET_CAPTURE)) {
+        // Категория существует - добавляем в конец массива
+        $insertPos = $matches[3][1]; // позиция закрывающей скобки
+        $newContent = substr($currentContent, 0, $insertPos) . 
+            (trim($matches[2][0]) ? ",\n" : "") .
+            implode(",\n", $productLines) .
+            substr($currentContent, $insertPos);
+    } else {
+        // Категории нет - создаем новую перед закрывающей скобкой products
+        $insertPos = strrpos($currentContent, '};');
+        if ($insertPos === false) {
+            $insertPos = strrpos($currentContent, '}');
+        }
         $newContent = substr($currentContent, 0, $insertPos) . 
             "  '{$category}': [\n" .
             implode(",\n", $productLines) . "\n  ],\n" .
             substr($currentContent, $insertPos);
-    } else {
-        $pattern = "/('{$category}': \[)(.*?)(\])/s";
-        $newContent = preg_replace($pattern, '$1$2' . ",\n" . implode(",\n", $productLines) . '$3', $currentContent, 1);
     }
     
     $commitData = [
