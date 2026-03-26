@@ -5,9 +5,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
 import { Phone, Mail, Send, Clock, Loader2, CheckCircle } from 'lucide-react';
 
-// Telegram Bot Config
-const BOT_TOKEN = '8763856112:AAEGUeaIVf_6xY9_qMgXKLTZrUwH6gcyEe0';
-const CHAT_ID = '8430897822';
+// Обратная связь через PHP прокси
 
 const ContactPage = () => {
   const [name, setName] = useState('');
