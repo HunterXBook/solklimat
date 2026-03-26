@@ -35,38 +35,29 @@ const ContactPage = () => {
   };
 
   const sendToTelegram = async () => {
-    const text = `📩 <b>Новая заявка с сайта СОЛКЛИМАТ</b>
-
-👤 <b>Имя:</b> ${name || 'Не указано'}
-📞 <b>Телефон:</b> ${phone}
-📧 <b>Email:</b> ${email || 'Не указан'}
-💬 <b>Сообщение:</b> ${message || 'Нет'}
-
-🌐 <b>Источник:</b> solclimate.ru
-🕐 <b>Время:</b> ${new Date().toLocaleString('ru-RU')}`;
-
     try {
-      console.log('Отправка в Telegram...');
-      const response = await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
+      console.log('Отправка через прокси...');
+      const response = await fetch('/api/send-form.php', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          chat_id: CHAT_ID,
-          text: text,
-          parse_mode: 'HTML'
+          name: name,
+          phone: phone,
+          email: email,
+          message: message
         })
       });
       
       const data = await response.json();
-      console.log('Ответ Telegram:', data);
+      console.log('Ответ:', data);
       
       if (!response.ok) {
-        setDebugInfo(`Ошибка API: ${JSON.stringify(data)}`);
+        setDebugInfo(`Ошибка: ${JSON.stringify(data)}`);
       }
       
       return response.ok;
     } catch (error) {
-      console.error('Telegram error:', error);
+      console.error('Ошибка:', error);
       setDebugInfo(`Ошибка сети: ${error}`);
       return false;
     }
