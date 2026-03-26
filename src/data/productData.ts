@@ -24,7 +24,29 @@ export const products: Record<string, Product[]> = {
       images: [
         '/images/products/integra-inverter-indoor-new.png',
         '/images/products/integra-inverter-outdoor-new.png'
+      ,
+    {
+      id: 'integrainverter-07',
+      name: 'IntegraInverter',
+      model: 'MDSI001',
+      images: [
+        '/images/products/product-1774535221.jpg',
+        '/images/products/-ntegra-nverter-1774535232.jpg'
       ],
+      price: 10000,
+      color: 'Белый',
+      keyFeatures: [
+        'Инверторное управление компрессором',
+        'Низкий уровень шума',
+        'Класс энергоэффективности A'
+      ],
+      specs: [
+        { name: 'Модель внутреннего блока', value: 'MDSI001' },
+        { name: 'Мощность охлаждения', value: '2,05' },
+        { name: 'Энергоэффективность', value: 'A' },
+        { name: 'Уровень шума', value: '22дБ' }
+      ]
+    }],
       price: 44100,
       color: 'Белый',
       keyFeatures: [
