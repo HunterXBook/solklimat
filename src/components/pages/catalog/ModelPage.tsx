@@ -23,7 +23,24 @@ export default function ModelPage() {
       'mdv-classic-inverter': 'MDV Classic Inverter',
       'infini-standard-inverter': 'INFINI Standard Inverter'
     };
-    return slugToNameMap[slug] || slug;
+    
+    // Прямое совпадение
+    if (slugToNameMap[slug]) {
+      return slugToNameMap[slug];
+    }
+    
+    // Поиск среди всех продуктов (case-insensitive)
+    const allProducts = Object.values(products).flat();
+    const matchedProduct = allProducts.find(p => 
+      p.name.toLowerCase().replace(/\s+/g, '-') === slug.toLowerCase()
+    );
+    
+    if (matchedProduct) {
+      return matchedProduct.name;
+    }
+    
+    // Возвращаем slug с заглавной буквы как fallback
+    return slug.charAt(0).toUpperCase() + slug.slice(1);
   };
 
   // Функция для определения бренда по названию серии
