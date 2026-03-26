@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Phone, Mail, Send, Clock, Loader2, CheckCircle } from 'lucide-react';
 
 // Обратная связь через PHP прокси
+const API_URL = '/api/send-form.php';
 
 const ContactPage = () => {
   const [name, setName] = useState('');
