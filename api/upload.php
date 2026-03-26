@@ -12,16 +12,51 @@ if (!$GITHUB_TOKEN) {
     echo json_encode(['error' => 'GITHUB_TOKEN not configured']);
     exit;
 }
+
 $REPO_OWNER = 'HunterXBook';
 $REPO_NAME = 'solklimat';
 
-// Проверка авторизации
-$headers = getallheaders();
-$auth_header = $headers['Authorization'] ?? '';
+// Проверка авторизации - поддержка разных способов
+$auth_header = '';
+
+// Способ 1: $_SERVER (самый надежный с .htaccess)
+if (isset($_SERVER['HTTP_AUTHORIZATION'])) {
+    $auth_header = $_SERVER['HTTP_AUTHORIZATION'];
+} elseif (isset($_SERVER['REDIRECT_HTTP_AUTHORIZATION'])) {
+    $auth_header = $_SERVER['REDIRECT_HTTP_AUTHORIZATION'];
+}
+
+// Способ 2: apache_request_headers
+if (empty($auth_header) && function_exists('apache_request_headers')) {
+    $headers = apache_request_headers();
+    foreach ($headers as $key => $value) {
+        if (strtolower($key) === 'authorization') {
+            $auth_header = $value;
+            break;
+        }
+    }
+}
+
+// Способ 3: getallheaders
+if (empty($auth_header) && function_exists('getallheaders')) {
+    $headers = getallheaders();
+    foreach ($headers as $key => $value) {
+        if (strtolower($key) === 'authorization') {
+            $auth_header = $value;
+            break;
+        }
+    }
+}
+
+if (empty($auth_header)) {
+    http_response_code(401);
+    echo json_encode(['error' => 'Unauthorized', 'debug' => 'No authorization header found']);
+    exit;
+}
 
 if (!str_starts_with($auth_header, 'Bearer ')) {
     http_response_code(401);
-    echo json_encode(['error' => 'Unauthorized']);
+    echo json_encode(['error' => 'Unauthorized', 'debug' => 'Invalid auth format']);
     exit;
 }
 
@@ -62,13 +97,11 @@ function handleUpload() {
         return;
     }
 
-    // Генерируем имя файла
     $ext = pathinfo($file['name'], PATHINFO_EXTENSION);
     $filename = strtolower(preg_replace('/[^a-z0-9]/', '-', $_POST['product_name'] ?? 'product'));
     $filename .= '-' . time() . '.' . $ext;
     
-    // Путь для сохранения
-    $uploadDir = __DIR__ . '/../public/images/products/';
+    $uploadDir = __DIR__ . '/../images/products/';
     if (!is_dir($uploadDir)) {
         mkdir($uploadDir, 0755, true);
     }
@@ -99,7 +132,6 @@ function handleCommit() {
         return;
     }
     
-    // Получаем текущий файл productData.ts
     $fileUrl = "https://api.github.com/repos/{$REPO_OWNER}/{$REPO_NAME}/contents/src/data/productData.ts";
     
     $ch = curl_init($fileUrl);
@@ -122,33 +154,27 @@ function handleCommit() {
     $currentContent = base64_decode($fileInfo['content']);
     $sha = $fileInfo['sha'];
     
-    // Добавляем новые продукты в существующий объект products
     $newProducts = $data['products'];
     $category = array_keys($newProducts)[0];
     $products = $newProducts[$category];
     
-    // Формируем строки для добавления
     $productLines = [];
     foreach ($products as $product) {
         $productLines[] = generateProductCode($product);
     }
     
-    // Находим место для вставки (перед закрывающей скобкой объекта products)
     $insertMarker = "'{$category}': [";
     if (strpos($currentContent, $insertMarker) === false) {
-        // Категории нет — добавляем новую
         $insertPos = strrpos($currentContent, '}');
         $newContent = substr($currentContent, 0, $insertPos) . 
             "  '{$category}': [\n" .
             implode(",\n", $productLines) . "\n  ],\n" .
             substr($currentContent, $insertPos);
     } else {
-        // Категория есть — добавляем в существующую
         $pattern = "/('{$category}': \[)(.*?)(\])/s";
         $newContent = preg_replace($pattern, '$1$2' . ",\n" . implode(",\n", $productLines) . '$3', $currentContent, 1);
     }
     
-    // Коммитим изменения
     $commitData = [
         'message' => 'Добавлены новые кондиционеры через админ-панель',
         'content' => base64_encode($newContent),
