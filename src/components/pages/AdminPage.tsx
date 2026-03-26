@@ -166,9 +166,9 @@ const AdminPage = () => {
 
   const [generatedCode, setGeneratedCode] = useState('');
 
-  const generateTypeScriptCode = () => {
+  const handleCommit = async () => {
     setIsCommitting(true);
-    setCommitStatus('Генерация кода...');
+    setCommitStatus('Отправка на GitHub...');
     
     // Генерируем продукты
     const products = form.variants.map((variant, idx) => ({
@@ -189,7 +189,58 @@ const AdminPage = () => {
       ].filter(s => s.value)
     }));
 
-    // Формируем TypeScript код
+    try {
+      const response = await fetch(`${API_URL}?action=commit`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer solklimatadmin1975'
+        },
+        body: JSON.stringify({
+          products: {
+            [form.systemType]: products
+          }
+        })
+      });
+      
+      const data = await response.json();
+      
+      if (data.success) {
+        setCommitStatus('✓ ' + data.message);
+        // Очищаем форму
+        setForm(initialForm);
+        setGeneratedCode('');
+      } else {
+        setCommitStatus('✗ Ошибка: ' + (data.error || 'Неизвестная ошибка'));
+      }
+    } catch (error) {
+      setCommitStatus('✗ Ошибка сети');
+    } finally {
+      setIsCommitting(false);
+    }
+  };
+
+  const generateTypeScriptCode = () => {
+    // Генерируем продукты для показа
+    const products = form.variants.map((variant, idx) => ({
+      id: `${form.name.toLowerCase().replace(/\s+/g, '-')}-${variant.power || idx}`,
+      name: form.name,
+      model: variant.model,
+      images: form.images.filter(img => img),
+      price: parseInt(variant.price) || 0,
+      color: form.color,
+      keyFeatures: form.keyFeatures.filter(f => f),
+      specs: [
+        { name: 'Модель внутреннего блока', value: variant.model.split('/')[0] || '' },
+        { name: 'Модель наружного блока', value: variant.model.split('/')[1] || '' },
+        { name: 'Мощность охлаждения', value: variant.coolingCapacity },
+        { name: 'Энергоэффективность', value: variant.efficiency },
+        { name: 'Уровень шума', value: variant.noiseLevel },
+        ...form.specs
+      ].filter(s => s.value)
+    }));
+
+    // Формируем TypeScript код для показа
     let code = `  '${form.systemType}': [\n`;
     
     products.forEach(product => {
@@ -220,8 +271,6 @@ const AdminPage = () => {
     code += `  ]`;
     
     setGeneratedCode(code);
-    setCommitStatus('✓ Код сгенерирован! Скопируйте и вставьте в src/data/productData.ts');
-    setIsCommitting(false);
   };
 
   const isExpanded = (section: string) => expandedSections.includes(section);
@@ -512,25 +561,36 @@ const AdminPage = () => {
         )}
       </div>
 
-      {/* Генерация кода */}
+      {/* Отправка на сайт */}
       <div className="bg-white rounded-lg shadow-md p-6">
-        <Button 
-          onClick={generateTypeScriptCode}
-          disabled={isCommitting || !form.name || form.variants.some(v => !v.model)}
-          className="w-full bg-green-600 hover:bg-green-700 h-14 text-lg"
-        >
-          {isCommitting ? (
-            <>
-              <Loader2 className="h-5 w-5 mr-2 animate-spin" />
-              Генерация...
-            </>
-          ) : (
-            <>
-              <Upload className="h-5 w-5 mr-2" />
-              Сгенерировать код
-            </>
-          )}
-        </Button>
+        <div className="grid grid-cols-2 gap-4">
+          <Button 
+            onClick={handleCommit}
+            disabled={isCommitting || !form.name || form.variants.some(v => !v.model)}
+            className="bg-green-600 hover:bg-green-700 h-14 text-lg"
+          >
+            {isCommitting ? (
+              <>
+                <Loader2 className="h-5 w-5 mr-2 animate-spin" />
+                Отправка...
+              </>
+            ) : (
+              <>
+                <Upload className="h-5 w-5 mr-2" />
+                Отправить на сайт
+              </>
+            )}
+          </Button>
+          
+          <Button 
+            onClick={generateTypeScriptCode}
+            disabled={!form.name}
+            variant="outline"
+            className="h-14 text-lg"
+          >
+            Показать код
+          </Button>
+        </div>
         
         {commitStatus && (
           <div className={`mt-4 p-4 rounded-lg ${commitStatus.startsWith('✓') ? 'bg-green-100 text-green-800' : commitStatus.startsWith('✗') ? 'bg-red-100 text-red-800' : 'bg-blue-100 text-blue-800'}`}>
@@ -541,7 +601,7 @@ const AdminPage = () => {
         {generatedCode && (
           <div className="mt-4">
             <div className="flex items-center justify-between mb-2">
-              <h3 className="font-semibold">Скопируйте этот код:</h3>
+              <h3 className="font-semibold">Сгенерированный код:</h3>
               <Button 
                 onClick={() => {
                   navigator.clipboard.writeText(generatedCode);
@@ -553,19 +613,9 @@ const AdminPage = () => {
                 Копировать
               </Button>
             </div>
-            <pre className="bg-gray-900 text-green-400 p-4 rounded-lg overflow-x-auto text-sm max-h-96 overflow-y-auto">
+            <pre className="bg-gray-900 text-green-400 p-4 rounded-lg overflow-x-auto text-sm max-h-48 overflow-y-auto">
               {generatedCode}
             </pre>
-            <div className="mt-4 p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
-              <p className="text-sm text-yellow-800">
-                <strong>Что делать дальше:</strong><br/>
-                1. Скопируйте код выше<br/>
-                2. Откройте файл <code>src/data/productData.ts</code> на GitHub<br/>
-                3. Найдите категорию <code>'{form.systemType}'</code><br/>
-                4. Вставьте код в массив (перед закрывающей скобкой ] )<br/>
-                5. Сохраните коммит — запустится деплой
-              </p>
-            </div>
           </div>
         )}
       </div>
