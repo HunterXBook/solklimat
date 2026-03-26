@@ -170,12 +170,23 @@ const AdminPage = () => {
     setIsCommitting(true);
     setCommitStatus('Отправка на GitHub...');
     
+    // Проверяем что изображения загружены
+    const validImages = form.images.filter(img => img && img.trim() !== '');
+    console.log('Images before send:', form.images);
+    console.log('Valid images:', validImages);
+    
+    if (validImages.length === 0) {
+      setCommitStatus('✗ Ошибка: не загружены фото. Загрузите фото перед отправкой.');
+      setIsCommitting(false);
+      return;
+    }
+    
     // Генерируем продукты
     const products = form.variants.map((variant, idx) => ({
       id: `${form.name.toLowerCase().replace(/\s+/g, '-')}-${variant.power || idx}`,
       name: form.name,
       model: variant.model,
-      images: form.images.filter(img => img),
+      images: validImages,
       price: parseInt(variant.price) || 0,
       color: form.color,
       keyFeatures: form.keyFeatures.filter(f => f),
