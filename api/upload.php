@@ -74,7 +74,9 @@ switch ($action) {
         handleUpload();
         break;
     case 'commit':
-        handleCommit();
+        // Временно отключено - нужно исправить генерацию кода
+        http_response_code(503);
+        echo json_encode(['error' => 'Commit temporarily disabled. Please copy JSON manually.']);
         break;
     default:
         http_response_code(400);
