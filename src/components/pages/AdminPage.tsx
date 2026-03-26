@@ -1,10 +1,11 @@
-import { useState, useEffect } from 'react';
-import { Plus, Trash2, Copy, Check, ChevronDown, ChevronUp, Lock } from 'lucide-react';
+import { useState, useEffect, useRef } from 'react';
+import { Plus, Trash2, Copy, Check, ChevronDown, ChevronUp, Lock, Upload, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 
 const ADMIN_PASSWORD = 'solklimatadmin1975';
+const API_URL = '/api/upload.php';
 
 interface ProductVariant {
   id: string;
@@ -57,9 +58,14 @@ const AdminPage = () => {
   const [password, setPassword] = useState('');
   const [passwordError, setPasswordError] = useState(false);
   const [form, setForm] = useState<ProductForm>(initialForm);
-  const [generatedJson, setGeneratedJson] = useState('');
-  const [copied, setCopied] = useState(false);
+  const [isUploading, setIsUploading] = useState(false);
+  const [isCommitting, setIsCommitting] = useState(false);
+  const [uploadStatus, setUploadStatus] = useState('');
+  const [commitStatus, setCommitStatus] = useState('');
   const [expandedSections, setExpandedSections] = useState<string[]>(['basic', 'variants']);
+  
+  const indoorFileRef = useRef<HTMLInputElement>(null);
+  const outdoorFileRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     const saved = sessionStorage.getItem('adminAuth');
@@ -78,6 +84,140 @@ const AdminPage = () => {
       setPasswordError(true);
     }
   };
+
+  const toggleSection = (section: string) => {
+    setExpandedSections(prev => 
+      prev.includes(section) 
+        ? prev.filter(s => s !== section)
+        : [...prev, section]
+    );
+  };
+
+  const uploadImage = async (file: File, type: 'indoor' | 'outdoor') => {
+    setIsUploading(true);
+    setUploadStatus(`Загрузка ${type === 'indoor' ? 'внутреннего' : 'наружного'} блока...`);
+    
+    const formData = new FormData();
+    formData.append('image', file);
+    formData.append('product_name', form.name || 'product');
+    
+    try {
+      const response = await fetch(`${API_URL}?action=upload`, {
+        method: 'POST',
+        headers: {
+          'Authorization': 'Bearer solklimatadmin1975'
+        },
+        body: formData
+      });
+      
+      const data = await response.json();
+      
+      if (data.success) {
+        setForm(prev => ({
+          ...prev,
+          images: type === 'indoor' 
+            ? [data.url, prev.images[1]]
+            : [prev.images[0], data.url]
+        }));
+        setUploadStatus('✓ Фото загружено: ' + data.url);
+        return data.url;
+      } else {
+        setUploadStatus('✗ Ошибка: ' + data.error);
+        return null;
+      }
+    } catch (error) {
+      setUploadStatus('✗ Ошибка сети');
+      return null;
+    } finally {
+      setIsUploading(false);
+    }
+  };
+
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>, type: 'indoor' | 'outdoor') => {
+    const file = e.target.files?.[0];
+    if (file) {
+      await uploadImage(file, type);
+    }
+  };
+
+  const addVariant = () => {
+    setForm(prev => ({
+      ...prev,
+      variants: [...prev.variants, { ...initialVariant, id: String(prev.variants.length + 1) }]
+    }));
+  };
+
+  const removeVariant = (index: number) => {
+    if (form.variants.length <= 1) return;
+    setForm(prev => ({
+      ...prev,
+      variants: prev.variants.filter((_, i) => i !== index)
+    }));
+  };
+
+  const updateVariant = (index: number, field: keyof ProductVariant, value: string) => {
+    setForm(prev => ({
+      ...prev,
+      variants: prev.variants.map((v, i) => 
+        i === index ? { ...v, [field]: value } : v
+      )
+    }));
+  };
+
+  const commitToGitHub = async () => {
+    setIsCommitting(true);
+    setCommitStatus('Создание коммита...');
+    
+    // Генерируем продукты
+    const products = form.variants.map((variant, idx) => ({
+      id: `${form.name.toLowerCase().replace(/\s+/g, '-')}-${variant.power || idx}`,
+      name: form.name,
+      model: variant.model,
+      images: form.images.filter(img => img),
+      price: parseInt(variant.price) || 0,
+      color: form.color,
+      keyFeatures: form.keyFeatures.filter(f => f),
+      specs: [
+        { name: 'Модель внутреннего блока', value: variant.model.split('/')[0] || '' },
+        { name: 'Модель наружного блока', value: variant.model.split('/')[1] || '' },
+        { name: 'Мощность охлаждения', value: variant.coolingCapacity },
+        { name: 'Энергоэффективность', value: variant.efficiency },
+        { name: 'Уровень шума', value: variant.noiseLevel },
+        ...form.specs
+      ].filter(s => s.value)
+    }));
+
+    try {
+      const response = await fetch(`${API_URL}?action=commit`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer solklimatadmin1975'
+        },
+        body: JSON.stringify({
+          products: {
+            [form.systemType]: products
+          }
+        })
+      });
+      
+      const data = await response.json();
+      
+      if (data.success) {
+        setCommitStatus('✓ Успешно! Изменения отправлены на сайт. Ожидайте деплоя (~2 минуты)');
+        // Очищаем форму
+        setForm(initialForm);
+      } else {
+        setCommitStatus('✗ Ошибка: ' + (data.error || 'Неизвестная ошибка'));
+      }
+    } catch (error) {
+      setCommitStatus('✗ Ошибка сети при коммите');
+    } finally {
+      setIsCommitting(false);
+    }
+  };
+
+  const isExpanded = (section: string) => expandedSections.includes(section);
 
   if (!isAuthenticated) {
     return (
@@ -111,76 +251,10 @@ const AdminPage = () => {
     );
   }
 
-  const toggleSection = (section: string) => {
-    setExpandedSections(prev => 
-      prev.includes(section) 
-        ? prev.filter(s => s !== section)
-        : [...prev, section]
-    );
-  };
-
-  const addVariant = () => {
-    setForm(prev => ({
-      ...prev,
-      variants: [...prev.variants, { ...initialVariant, id: String(prev.variants.length + 1) }]
-    }));
-  };
-
-  const removeVariant = (index: number) => {
-    if (form.variants.length <= 1) return;
-    setForm(prev => ({
-      ...prev,
-      variants: prev.variants.filter((_, i) => i !== index)
-    }));
-  };
-
-  const updateVariant = (index: number, field: keyof ProductVariant, value: string) => {
-    setForm(prev => ({
-      ...prev,
-      variants: prev.variants.map((v, i) => 
-        i === index ? { ...v, [field]: value } : v
-      )
-    }));
-  };
-
-  const generateJson = () => {
-    const products = form.variants.map((variant, idx) => ({
-      id: `${form.name.toLowerCase().replace(/\s+/g, '-')}-${variant.power || idx}`,
-      name: form.name,
-      model: variant.model,
-      images: form.images.filter(img => img),
-      price: parseInt(variant.price) || 0,
-      color: form.color,
-      keyFeatures: form.keyFeatures.filter(f => f),
-      specs: [
-        { name: 'Модель внутреннего блока', value: variant.model.split('/')[0] || '' },
-        { name: 'Модель наружного блока', value: variant.model.split('/')[1] || '' },
-        { name: 'Мощность охлаждения', value: variant.coolingCapacity },
-        { name: 'Энергоэффективность', value: variant.efficiency },
-        { name: 'Уровень шума', value: variant.noiseLevel },
-        ...form.specs
-      ].filter(s => s.value)
-    }));
-
-    const output = {
-      [form.systemType]: products
-    };
-
-    setGeneratedJson(JSON.stringify(output, null, 2));
-  };
-
-  const copyToClipboard = () => {
-    navigator.clipboard.writeText(generatedJson);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
-  };
-
-  const isExpanded = (section: string) => expandedSections.includes(section);
-
   return (
     <div className="container mx-auto py-8 px-4 max-w-4xl">
-      <h1 className="text-3xl font-bold mb-2">Админ-панель: Добавление кондиционера</h1>
-      <p className="text-gray-600 mb-8">Заполните форму и скопируйте JSON для добавления в каталог</p>
+      <h1 className="text-3xl font-bold mb-2">Добавление кондиционера</h1>
+      <p className="text-gray-600 mb-8">Заполните форму и нажмите «Отправить на сайт»</p>
 
       {/* Основная информация */}
       <div className="bg-white rounded-lg shadow-md mb-6">
@@ -246,29 +320,66 @@ const AdminPage = () => {
               </div>
             </div>
 
-            <div>
-              <label className="block text-sm font-medium mb-1">URL фото внутреннего блока</label>
-              <Input
-                value={form.images[0]}
-                onChange={(e) => setForm(prev => ({ 
-                  ...prev, 
-                  images: [e.target.value, prev.images[1]] 
-                }))}
-                placeholder="/images/products/model-indoor.png"
-              />
+            {/* Загрузка фото */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label className="block text-sm font-medium mb-1">Фото внутреннего блока</label>
+                <div className="flex gap-2">
+                  <input
+                    type="file"
+                    ref={indoorFileRef}
+                    onChange={(e) => handleFileChange(e, 'indoor')}
+                    accept="image/*"
+                    className="hidden"
+                  />
+                  <Button 
+                    type="button"
+                    variant="outline"
+                    onClick={() => indoorFileRef.current?.click()}
+                    disabled={isUploading}
+                    className="flex-1"
+                  >
+                    <Upload className="h-4 w-4 mr-2" />
+                    Выбрать файл
+                  </Button>
+                </div>
+                {form.images[0] && (
+                  <p className="text-xs text-green-600 mt-1">✓ {form.images[0]}</p>
+                )}
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium mb-1">Фото наружного блока</label>
+                <div className="flex gap-2">
+                  <input
+                    type="file"
+                    ref={outdoorFileRef}
+                    onChange={(e) => handleFileChange(e, 'outdoor')}
+                    accept="image/*"
+                    className="hidden"
+                  />
+                  <Button 
+                    type="button"
+                    variant="outline"
+                    onClick={() => outdoorFileRef.current?.click()}
+                    disabled={isUploading}
+                    className="flex-1"
+                  >
+                    <Upload className="h-4 w-4 mr-2" />
+                    Выбрать файл
+                  </Button>
+                </div>
+                {form.images[1] && (
+                  <p className="text-xs text-green-600 mt-1">✓ {form.images[1]}</p>
+                )}
+              </div>
             </div>
 
-            <div>
-              <label className="block text-sm font-medium mb-1">URL фото наружного блока</label>
-              <Input
-                value={form.images[1]}
-                onChange={(e) => setForm(prev => ({ 
-                  ...prev, 
-                  images: [prev.images[0], e.target.value] 
-                }))}
-                placeholder="/images/products/model-outdoor.png"
-              />
-            </div>
+            {uploadStatus && (
+              <p className={`text-sm ${uploadStatus.startsWith('✓') ? 'text-green-600' : uploadStatus.startsWith('✗') ? 'text-red-600' : 'text-blue-600'}`}>
+                {uploadStatus}
+              </p>
+            )}
 
             <div>
               <label className="block text-sm font-medium mb-1">Ключевые особенности (по одной на строку)</label>
@@ -394,44 +505,41 @@ const AdminPage = () => {
         )}
       </div>
 
-      {/* Генерация JSON */}
-      <div className="bg-white rounded-lg shadow-md mb-6 p-4">
+      {/* Отправка на сайт */}
+      <div className="bg-white rounded-lg shadow-md p-6">
         <Button 
-          onClick={generateJson}
-          className="w-full bg-blue-600 hover:bg-blue-700 h-12 text-lg"
+          onClick={commitToGitHub}
+          disabled={isCommitting || !form.name || form.variants.some(v => !v.model)}
+          className="w-full bg-green-600 hover:bg-green-700 h-14 text-lg"
         >
-          Сгенерировать JSON
+          {isCommitting ? (
+            <>
+              <Loader2 className="h-5 w-5 mr-2 animate-spin" />
+              Отправка...
+            </>
+          ) : (
+            <>
+              <Upload className="h-5 w-5 mr-2" />
+              Отправить на сайт
+            </>
+          )}
         </Button>
-      </div>
-
-      {/* Результат */}
-      {generatedJson && (
-        <div className="bg-gray-900 rounded-lg shadow-md p-4">
-          <div className="flex items-center justify-between mb-3">
-            <h3 className="text-white font-semibold">Скопируйте этот код:</h3>
-            <Button 
-              onClick={copyToClipboard}
-              variant="outline"
-              className="bg-gray-800 text-white border-gray-700 hover:bg-gray-700"
-            >
-              {copied ? <Check className="h-4 w-4 mr-2" /> : <Copy className="h-4 w-4 mr-2" />}
-              {copied ? 'Скопировано!' : 'Копировать'}
-            </Button>
+        
+        {commitStatus && (
+          <div className={`mt-4 p-4 rounded-lg ${commitStatus.startsWith('✓') ? 'bg-green-100 text-green-800' : commitStatus.startsWith('✗') ? 'bg-red-100 text-red-800' : 'bg-blue-100 text-blue-800'}`}>
+            {commitStatus}
           </div>
-          <pre className="bg-gray-800 text-green-400 p-4 rounded-lg overflow-x-auto text-sm">
-            {generatedJson}
-          </pre>
-          <div className="mt-4 p-3 bg-yellow-100 border border-yellow-300 rounded-lg">
-            <p className="text-sm text-yellow-800">
-              <strong>Что делать дальше:</strong><br/>
-              1. Скопируйте код выше<br/>
-              2. Откройте файл <code>src/data/productData.ts</code><br/>
-              3. Добавьте содержимое в объект <code>products</code><br/>
-              4. Сохраните и отправьте изменения
-            </p>
-          </div>
+        )}
+        
+        <div className="mt-4 p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
+          <p className="text-sm text-yellow-800">
+            <strong>Что произойдёт:</strong><br/>
+            1. Данные отправятся в GitHub<br/>
+            2. Запустится автоматический деплой (~2 минуты)<br/>
+            3. Кондиционер появится на сайте
+          </p>
         </div>
-      )}
+      </div>
     </div>
   );
 };
