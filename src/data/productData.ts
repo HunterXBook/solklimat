@@ -16,7 +16,28 @@ export interface Product {
 
 export const products: Record<string, Product[]> = {
   'split': [
-    // INTEGRA Inverter models
+        {
+      id: 'fdsjkfhdsf-11',
+      name: 'FDSJKFHDSF',
+      model: 'fd',
+      images: [
+        '/images/products/-----------1774565082.png',
+      ],
+      price: 10000000000,
+      color: 'Белый',
+      keyFeatures: [
+        'Инверторное управление компрессором',
+        'Низкий уровень шума',
+        'Класс энергоэффективности A',
+      ],
+      specs: [
+        { name: 'Модель внутреннего блока', value: 'fd' },
+        { name: 'Мощность охлаждения', value: '1' },
+        { name: 'Энергоэффективность', value: 'A' },
+        { name: 'Уровень шума', value: '11' },
+      ]
+    },
+// INTEGRA Inverter models
     {
       id: 'integra-inverter-07',
       name: 'INTEGRA Inverter',
