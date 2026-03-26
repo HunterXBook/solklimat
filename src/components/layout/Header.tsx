@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Menu, X } from 'lucide-react';
+import { Menu, X, Phone } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
 
 const Header = () => {
@@ -11,8 +11,17 @@ const Header = () => {
   };
 
   const isActive = (path: string) => {
-    return location.pathname === path;
+    return location.pathname === path || location.pathname.startsWith(path + '/');
   };
+
+  // Голубые цвета для меню
+  const menuItemClass = (path: string) => `
+    px-4 py-2 rounded-lg transition-all duration-200
+    ${isActive(path) 
+      ? 'bg-sky-100 text-sky-700 font-semibold' 
+      : 'text-sky-600 hover:bg-sky-50 hover:text-sky-700'
+    }
+  `;
 
   return (
     <header className="bg-white shadow-md">
@@ -30,45 +39,43 @@ const Header = () => {
           
           {/* Навигация для десктопа - центрированная */}
           <nav className="hidden md:flex items-center justify-center flex-1 mx-4">
-            <div className="flex space-x-8">
+            <div className="flex space-x-2">
               <Link 
                 to="/" 
-                className={`text-gray-700 hover:text-blue-600 ${isActive('/') ? 'font-semibold text-blue-600' : ''}`}
+                className={menuItemClass('/')}
               >
                 Главная
               </Link>
               <Link 
                 to="/catalog" 
-                className={`text-gray-700 hover:text-blue-600 ${isActive('/catalog') ? 'font-semibold text-blue-600' : ''}`}
+                className={menuItemClass('/catalog')}
               >
                 Каталог
               </Link>
               <Link 
                 to="/installation" 
-                className={`text-gray-700 hover:text-blue-600 ${isActive('/installation') ? 'font-semibold text-blue-600' : ''}`}
+                className={menuItemClass('/installation')}
               >
                 Монтаж
               </Link>
               <Link 
                 to="/encyclopedia" 
-                className={`text-gray-700 hover:text-blue-600 ${isActive('/encyclopedia') ? 'font-semibold text-blue-600' : ''}`}
+                className={menuItemClass('/encyclopedia')}
               >
-                Энциклопедия климата
-              </Link>
-              <Link 
-                to="/contact" 
-                className={`text-gray-700 hover:text-blue-600 ${isActive('/contact') ? 'font-semibold text-blue-600' : ''}`}
-              >
-                Связаться с нами
+                Энциклопедия
               </Link>
             </div>
           </nav>
           
-          {/* Телефон */}
+          {/* Кнопка связаться */}
           <div className="hidden md:block">
-            <a href="tel:+79636006006" className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700">
-              +7 (963) 600-60-06
-            </a>
+            <Link 
+              to="/contact"
+              className="bg-blue-600 text-white px-6 py-2.5 rounded-lg hover:bg-blue-700 transition-colors font-medium flex items-center gap-2"
+            >
+              <Phone className="h-4 w-4" />
+              Связаться с нами
+            </Link>
           </div>
           
           {/* Кнопка меню для мобильных устройств */}
@@ -82,45 +89,43 @@ const Header = () => {
         {/* Мобильное меню */}
         {isMenuOpen && (
           <div className="md:hidden mt-4 pb-4">
-            <nav className="flex flex-col space-y-4">
+            <nav className="flex flex-col space-y-2">
               <Link 
                 to="/" 
-                className={`text-gray-700 hover:text-blue-600 ${isActive('/') ? 'font-semibold text-blue-600' : ''}`}
+                className={`px-4 py-2 rounded-lg ${isActive('/') ? 'bg-sky-100 text-sky-700 font-semibold' : 'text-sky-600 hover:bg-sky-50'}`}
                 onClick={() => setIsMenuOpen(false)}
               >
                 Главная
               </Link>
               <Link 
                 to="/catalog" 
-                className={`text-gray-700 hover:text-blue-600 ${isActive('/catalog') ? 'font-semibold text-blue-600' : ''}`}
+                className={`px-4 py-2 rounded-lg ${isActive('/catalog') ? 'bg-sky-100 text-sky-700 font-semibold' : 'text-sky-600 hover:bg-sky-50'}`}
                 onClick={() => setIsMenuOpen(false)}
               >
                 Каталог
               </Link>
               <Link 
                 to="/installation" 
-                className={`text-gray-700 hover:text-blue-600 ${isActive('/installation') ? 'font-semibold text-blue-600' : ''}`}
+                className={`px-4 py-2 rounded-lg ${isActive('/installation') ? 'bg-sky-100 text-sky-700 font-semibold' : 'text-sky-600 hover:bg-sky-50'}`}
                 onClick={() => setIsMenuOpen(false)}
               >
                 Монтаж
               </Link>
               <Link 
                 to="/encyclopedia" 
-                className={`text-gray-700 hover:text-blue-600 ${isActive('/encyclopedia') ? 'font-semibold text-blue-600' : ''}`}
+                className={`px-4 py-2 rounded-lg ${isActive('/encyclopedia') ? 'bg-sky-100 text-sky-700 font-semibold' : 'text-sky-600 hover:bg-sky-50'}`}
                 onClick={() => setIsMenuOpen(false)}
               >
-                Энциклопедия климата
+                Энциклопедия
               </Link>
               <Link 
                 to="/contact" 
-                className={`text-gray-700 hover:text-blue-600 ${isActive('/contact') ? 'font-semibold text-blue-600' : ''}`}
+                className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 inline-flex items-center gap-2 w-fit"
                 onClick={() => setIsMenuOpen(false)}
               >
+                <Phone className="h-4 w-4" />
                 Связаться с нами
               </Link>
-              <a href="tel:+79636006006" className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 inline-block w-fit">
-                +7 (963) 600-60-06
-              </a>
             </nav>
           </div>
         )}
