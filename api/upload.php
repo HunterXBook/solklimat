@@ -204,34 +204,32 @@ function handleCommit() {
 }
 
 function generateProductCode($product) {
-    $specs = array_map(function($spec) {
-        return "        { name: '{$spec['name']}', value: '{$spec['value']}' }";
-    }, $product['specs'] ?? []);
-    
-    $keyFeatures = array_map(function($feature) {
-        return "        '{$feature}'";
-    }, $product['keyFeatures'] ?? []);
-    
-    $images = array_map(function($img) {
-        return "        '{$img}'";
-    }, $product['images'] ?? []);
-    
-    return <<<CODE
-    {
-      id: '{$product['id']}',
-      name: '{$product['name']}',
-      model: '{$product['model']}',
-      images: [
-{$images}
-      ],
-      price: {$product['price']},
-      color: '{$product['color']}',
-      keyFeatures: [
-{$keyFeatures}
-      ],
-      specs: [
-{$specs}
-      ]
+    $specsStr = '';
+    foreach ($product['specs'] ?? [] as $spec) {
+        $specsStr .= "        { name: '" . addslashes($spec['name']) . "', value: '" . addslashes($spec['value']) . "' },\n";
     }
-CODE;
+    $specsStr = rtrim($specsStr, ",\n");
+    
+    $keyFeaturesStr = '';
+    foreach ($product['keyFeatures'] ?? [] as $feature) {
+        $keyFeaturesStr .= "        '" . addslashes($feature) . "',\n";
+    }
+    $keyFeaturesStr = rtrim($keyFeaturesStr, ",\n");
+    
+    $imagesStr = '';
+    foreach ($product['images'] ?? [] as $img) {
+        $imagesStr .= "        '" . addslashes($img) . "',\n";
+    }
+    $imagesStr = rtrim($imagesStr, ",\n");
+    
+    return "    {\n" .
+        "      id: '" . addslashes($product['id']) . "',\n" .
+        "      name: '" . addslashes($product['name']) . "',\n" .
+        "      model: '" . addslashes($product['model']) . "',\n" .
+        "      images: [\n" . $imagesStr . "\n      ],\n" .
+        "      price: " . intval($product['price']) . ",\n" .
+        "      color: '" . addslashes($product['color']) . "',\n" .
+        "      keyFeatures: [\n" . $keyFeaturesStr . "\n      ],\n" .
+        "      specs: [\n" . $specsStr . "\n      ]\n" .
+        "    }";
 }
