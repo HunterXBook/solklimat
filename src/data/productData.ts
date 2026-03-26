@@ -16,7 +16,27 @@ export interface Product {
 
 export const products: Record<string, Product[]> = {
   'split': [
-    // INTEGRA Inverter models
+        {
+      id: 'integratest-01',
+      name: 'Integratest',
+      model: 'Integratest',
+      images: [
+      ],
+      price: 100000,
+      color: 'Белый',
+      keyFeatures: [
+        'Инверторное управление компрессором',
+        'Низкий уровень шума',
+        'Класс энергоэффективности A',
+      ],
+      specs: [
+        { name: 'Модель внутреннего блока', value: 'Integratest' },
+        { name: 'Мощность охлаждения', value: '2' },
+        { name: 'Энергоэффективность', value: 'A' },
+        { name: 'Уровень шума', value: '22' },
+      ]
+    },
+// INTEGRA Inverter models
     {
       id: 'integra-inverter-07',
       name: 'INTEGRA Inverter',
