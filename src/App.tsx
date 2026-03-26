@@ -10,6 +10,7 @@ import InstallationPage from './components/pages/installation/InstallationPage';
 import EncyclopediaPage from './components/pages/encyclopedia/EncyclopediaPage';
 import PrivacyPolicyPage from './components/pages/PrivacyPolicyPage';
 import PrivacyPolicyFullPage from './components/pages/PrivacyPolicyFullPage';
+import AdminPage from './components/pages/AdminPage';
 
 function App() {
   return (
@@ -26,6 +27,7 @@ function App() {
           <Route path="/contact" element={<ContactPage />} />
           <Route path="/privacy-policy" element={<PrivacyPolicyPage />} />
           <Route path="/privacy-policy-full" element={<PrivacyPolicyFullPage />} />
+          <Route path="/admin" element={<AdminPage />} />
         </Routes>
       </main>
       <Footer />
