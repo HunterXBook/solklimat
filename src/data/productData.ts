@@ -24,7 +24,29 @@ export const products: Record<string, Product[]> = {
       images: [
         '/images/products/integra-inverter-indoor-new.png',
         '/images/products/integra-inverter-outdoor-new.png'
+      ,
+    {
+      id: 'integratest-IntegraTest',
+      name: 'IntegraTest',
+      model: 'IntegraTest',
+      images: [
+        '/images/products/-ntegra-est-1774535953.jpg',
+        '/images/products/-ntegra-est-1774535963.jpg'
       ],
+      price: 54545454,
+      color: 'Белый',
+      keyFeatures: [
+        'Инверторное управление компрессором',
+        'Низкий уровень шума',
+        'Класс энергоэффективности A'
+      ],
+      specs: [
+        { name: 'Модель внутреннего блока', value: 'IntegraTest' },
+        { name: 'Мощность охлаждения', value: 'IntegraTest' },
+        { name: 'Энергоэффективность', value: 'A' },
+        { name: 'Уровень шума', value: 'IntegraTest' }
+      ]
+    }],
       price: 44100,
       color: 'Белый',
       keyFeatures: [
