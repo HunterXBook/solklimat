@@ -15,8 +15,6 @@ const allProducts = [
 interface FilterState {
   systemType: string[];
   brand: string[];
-  power: string[];
-  priceRange: string;
 }
 
 // Бренды
@@ -38,9 +36,7 @@ const CatalogPage = () => {
   // Состояние фильтров
   const [filters, setFilters] = useState<FilterState>({
     systemType: [],
-    brand: [],
-    power: [],
-    priceRange: 'all'
+    brand: []
   });
 
   // Состояние аккордеона
@@ -82,20 +78,9 @@ const CatalogPage = () => {
     return 'split';
   };
 
-  const getPowerCategory = (power: string): string => {
-    const p = parseInt(power);
-    if (p <= 9) return '07-09';
-    if (p <= 12) return '12';
-    if (p <= 18) return '18';
-    if (p <= 24) return '24';
-    return 'other';
-  };
-
   // Фильтрация продуктов
   const filteredProducts = useMemo(() => {
     return allProducts.filter(product => {
-      const power = getPowerFromModel(product);
-      const powerCat = getPowerCategory(power);
       const brand = getBrand(product.name);
       const systemType = getSystemType(product);
 
@@ -107,30 +92,6 @@ const CatalogPage = () => {
       // Фильтр по бренду
       if (filters.brand.length > 0 && !filters.brand.includes(brand)) {
         return false;
-      }
-
-      // Фильтр по мощности
-      if (filters.power.length > 0 && !filters.power.includes(powerCat)) {
-        return false;
-      }
-
-      // Фильтр по цене
-      if (filters.priceRange !== 'all') {
-        const price = typeof product.price === 'number' ? product.price : 0;
-        switch (filters.priceRange) {
-          case 'under30':
-            if (price >= 30000) return false;
-            break;
-          case '30to50':
-            if (price < 30000 || price >= 50000) return false;
-            break;
-          case '50to80':
-            if (price < 50000 || price >= 80000) return false;
-            break;
-          case 'over80':
-            if (price < 80000) return false;
-            break;
-        }
       }
 
       return true;
@@ -177,16 +138,10 @@ const CatalogPage = () => {
     });
   };
 
-  const setPriceRange = (range: string) => {
-    setFilters(prev => ({ ...prev, priceRange: range }));
-  };
-
   const clearFilters = () => {
     setFilters({
       systemType: [],
-      brand: [],
-      power: [],
-      priceRange: 'all'
+      brand: []
     });
   };
 
@@ -202,13 +157,6 @@ const CatalogPage = () => {
     return acc;
   }, {} as Record<string, number>);
 
-  const powerCounts = {
-    '07-09': allProducts.filter(p => getPowerCategory(getPowerFromModel(p)) === '07-09').length,
-    '12': allProducts.filter(p => getPowerCategory(getPowerFromModel(p)) === '12').length,
-    '18': allProducts.filter(p => getPowerCategory(getPowerFromModel(p)) === '18').length,
-    '24': allProducts.filter(p => getPowerCategory(getPowerFromModel(p)) === '24').length,
-  };
-
   return (
     <div className="container mx-auto py-12 px-4">
       <h1 className="text-3xl font-bold text-center mb-4">Каталог кондиционеров</h1>
@@ -223,7 +171,7 @@ const CatalogPage = () => {
                 <Filter className="h-5 w-5 text-blue-600" />
                 <h3 className="font-semibold">Фильтры</h3>
               </div>
-              {(filters.systemType.length > 0 || filters.brand.length > 0 || filters.power.length > 0 || filters.priceRange !== 'all') && (
+              {(filters.systemType.length > 0 || filters.brand.length > 0) && (
                 <button 
                   onClick={clearFilters}
                   className="text-sm text-blue-600 hover:text-blue-800"
@@ -279,7 +227,7 @@ const CatalogPage = () => {
             </div>
 
             {/* Бренд */}
-            <div className="mb-4 border-b pb-4">
+            <div>
               <button 
                 onClick={() => toggleAccordion('brand')}
                 className="w-full flex items-center justify-between py-2 text-left font-medium"
@@ -301,126 +249,6 @@ const CatalogPage = () => {
                       <span className="text-xs text-gray-500 bg-gray-100 px-2 py-0.5 rounded">{brandCounts[brand.id] || 0}</span>
                     </label>
                   ))}
-                </div>
-              )}
-            </div>
-
-            {/* Мощность */}
-            <div className="mb-4 border-b pb-4">
-              <button 
-                onClick={() => toggleAccordion('power')}
-                className="w-full flex items-center justify-between py-2 text-left font-medium"
-              >
-                <span>Мощность (BTU)</span>
-                <ChevronDown className={`h-4 w-4 transition-transform ${openAccordion === 'power' ? 'rotate-180' : ''}`} />
-              </button>
-              {openAccordion === 'power' && (
-                <div className="mt-2 space-y-2">
-                  <label className="flex items-center gap-2 cursor-pointer hover:bg-gray-50 p-1 rounded">
-                    <input 
-                      type="checkbox" 
-                      checked={filters.power.includes('07-09')}
-                      onChange={() => toggleFilter('power', '07-09')}
-                      className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
-                    />
-                    <span className="text-sm flex-1">7 000 - 9 000</span>
-                    <span className="text-xs text-gray-500 bg-gray-100 px-2 py-0.5 rounded">{powerCounts['07-09']}</span>
-                  </label>
-                  <label className="flex items-center gap-2 cursor-pointer hover:bg-gray-50 p-1 rounded">
-                    <input 
-                      type="checkbox" 
-                      checked={filters.power.includes('12')}
-                      onChange={() => toggleFilter('power', '12')}
-                      className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
-                    />
-                    <span className="text-sm flex-1">12 000</span>
-                    <span className="text-xs text-gray-500 bg-gray-100 px-2 py-0.5 rounded">{powerCounts['12']}</span>
-                  </label>
-                  <label className="flex items-center gap-2 cursor-pointer hover:bg-gray-50 p-1 rounded">
-                    <input 
-                      type="checkbox" 
-                      checked={filters.power.includes('18')}
-                      onChange={() => toggleFilter('power', '18')}
-                      className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
-                    />
-                    <span className="text-sm flex-1">18 000</span>
-                    <span className="text-xs text-gray-500 bg-gray-100 px-2 py-0.5 rounded">{powerCounts['18']}</span>
-                  </label>
-                  <label className="flex items-center gap-2 cursor-pointer hover:bg-gray-50 p-1 rounded">
-                    <input 
-                      type="checkbox" 
-                      checked={filters.power.includes('24')}
-                      onChange={() => toggleFilter('power', '24')}
-                      className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
-                    />
-                    <span className="text-sm flex-1">24 000</span>
-                    <span className="text-xs text-gray-500 bg-gray-100 px-2 py-0.5 rounded">{powerCounts['24']}</span>
-                  </label>
-                </div>
-              )}
-            </div>
-
-            {/* Цена */}
-            <div>
-              <button 
-                onClick={() => toggleAccordion('price')}
-                className="w-full flex items-center justify-between py-2 text-left font-medium"
-              >
-                <span>Цена</span>
-                <ChevronDown className={`h-4 w-4 transition-transform ${openAccordion === 'price' ? 'rotate-180' : ''}`} />
-              </button>
-              {openAccordion === 'price' && (
-                <div className="mt-2 space-y-2">
-                  <label className="flex items-center gap-2 cursor-pointer hover:bg-gray-50 p-1 rounded">
-                    <input 
-                      type="radio" 
-                      name="price"
-                      checked={filters.priceRange === 'all'}
-                      onChange={() => setPriceRange('all')}
-                      className="border-gray-300 text-blue-600 focus:ring-blue-500"
-                    />
-                    <span className="text-sm">Все цены</span>
-                  </label>
-                  <label className="flex items-center gap-2 cursor-pointer hover:bg-gray-50 p-1 rounded">
-                    <input 
-                      type="radio" 
-                      name="price"
-                      checked={filters.priceRange === 'under30'}
-                      onChange={() => setPriceRange('under30')}
-                      className="border-gray-300 text-blue-600 focus:ring-blue-500"
-                    />
-                    <span className="text-sm">До 30 000 ₽</span>
-                  </label>
-                  <label className="flex items-center gap-2 cursor-pointer hover:bg-gray-50 p-1 rounded">
-                    <input 
-                      type="radio" 
-                      name="price"
-                      checked={filters.priceRange === '30to50'}
-                      onChange={() => setPriceRange('30to50')}
-                      className="border-gray-300 text-blue-600 focus:ring-blue-500"
-                    />
-                    <span className="text-sm">30 000 - 50 000 ₽</span>
-                  </label>
-                  <label className="flex items-center gap-2 cursor-pointer hover:bg-gray-50 p-1 rounded">
-                    <input 
-                      type="radio" 
-                      name="price"
-                      checked={filters.priceRange === '50to80'}
-                      onChange={() => setPriceRange('50to80')}
-                      className="border-gray-300 text-blue-600 focus:ring-blue-500"
-                    />
-                    <span className="text-sm">50 000 - 80 000 ₽</span>
-                  </label>
-                  <label className="flex items-center gap-2 cursor-pointer hover:bg-gray-50 p-1 rounded">
-                    <input 
-                      type="radio" 
-                      name="price"
-                      checked={filters.priceRange === 'over80'}
-                      onChange={() => setPriceRange('over80')}
-                      className="border-gray-300 text-blue-600 focus:ring-blue-500"
-                    />
-                    <span className="text-sm">От 80 000 ₽</span>
-                  </label>
                 </div>
               )}
             </div>

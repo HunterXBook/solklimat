@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { X, Loader2, CheckCircle } from 'lucide-react';
+import { X, Loader2, CheckCircle, Phone } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
@@ -134,6 +134,27 @@ const OrderModal = ({ isOpen, onClose, productName, productModel, productPrice }
 
         {/* Content */}
         <div className="p-6">
+          {/* Контактная информация */}
+          <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
+            <div className="flex items-start gap-3">
+              <Phone className="h-5 w-5 text-blue-600 mt-0.5 flex-shrink-0" />
+              <div>
+                <p className="text-sm text-blue-900 font-medium mb-1">
+                  Позвоните нам напрямую
+                </p>
+                <p className="text-sm text-blue-700 mb-2">
+                  Или оставьте данные — мы свяжемся с вами
+                </p>
+                <a 
+                  href="tel:+79636006006" 
+                  className="text-lg font-bold text-blue-600 hover:text-blue-800 transition-colors"
+                >
+                  +7 (963) 600-60-06
+                </a>
+              </div>
+            </div>
+          </div>
+
           {isSuccess ? (
             <div className="text-center py-8">
               <CheckCircle className="h-16 w-16 text-green-500 mx-auto mb-4" />
