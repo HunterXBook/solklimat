@@ -17,6 +17,7 @@ const ContactPage = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
   const [error, setError] = useState('');
+  const [debugInfo, setDebugInfo] = useState('');
 
   // Phone mask
   const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -45,6 +46,7 @@ const ContactPage = () => {
 🕐 <b>Время:</b> ${new Date().toLocaleString('ru-RU')}`;
 
     try {
+      console.log('Отправка в Telegram...');
       const response = await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -54,9 +56,18 @@ const ContactPage = () => {
           parse_mode: 'HTML'
         })
       });
+      
+      const data = await response.json();
+      console.log('Ответ Telegram:', data);
+      
+      if (!response.ok) {
+        setDebugInfo(`Ошибка API: ${JSON.stringify(data)}`);
+      }
+      
       return response.ok;
     } catch (error) {
       console.error('Telegram error:', error);
+      setDebugInfo(`Ошибка сети: ${error}`);
       return false;
     }
   };
@@ -64,6 +75,7 @@ const ContactPage = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
+    setDebugInfo('');
     
     if (!phone || phone.length < 10) {
       setError('Пожалуйста, введите корректный номер телефона');
@@ -84,7 +96,7 @@ const ContactPage = () => {
       setMessage('');
       setTimeout(() => setIsSuccess(false), 5000);
     } else {
-      setError('Ошибка отправки. Пожалуйста, позвоните нам напрямую.');
+      setError('Ошибка отправки. Попробуйте позвонить нам напрямую: +7 (963) 600-60-06');
     }
   };
 
@@ -107,6 +119,12 @@ const ContactPage = () => {
           {error && (
             <div className="mb-4 p-4 bg-red-50 border border-red-200 rounded-lg text-red-800">
               {error}
+              {debugInfo && (
+                <details className="mt-2 text-xs">
+                  <summary>Технические детали</summary>
+                  <pre className="mt-2 p-2 bg-red-100 rounded overflow-auto">{debugInfo}</pre>
+                </details>
+              )}
             </div>
           )}
           
