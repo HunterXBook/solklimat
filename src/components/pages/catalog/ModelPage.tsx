@@ -3,12 +3,14 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { ArrowLeft } from 'lucide-react';
 import { products, Product } from '../../../data/productData';
 import ImageGallery from './ImageGallery';
+import OrderModal from '@/components/ui/OrderModal';
 
 export default function ModelPage() {
   const { categoryId, modelId } = useParams<{ categoryId: string; modelId: string }>();
   const navigate = useNavigate();
   const [selectedProduct, setSelectedProduct] = useState<string | null>(null);
   const [seriesNameOverride, setSeriesNameOverride] = useState<string | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   // Функция для получения названия серии по slug
   const getSeriesNameFromSlug = (slug: string): string => {
@@ -53,7 +55,7 @@ export default function ModelPage() {
 
   // Функция для обработки заказа
   const handleOrderClick = () => {
-    navigate('/contact');
+    setIsModalOpen(true);
   };
 
   if (!categoryId || !modelId) {
@@ -205,12 +207,28 @@ export default function ModelPage() {
                           </div>
                         </div>
 
-                        <div className="flex justify-between items-center">
+                        <div className="flex justify-between items-center mb-4">
                           <span className="text-2xl font-bold text-blue-600">
                             {typeof product.price === 'number' ? `${product.price.toLocaleString()} ₽` : product.price}
                           </span>
-                          <span className="text-blue-600 font-medium hover:text-blue-800">
-                            Подробнее →
+                        </div>
+                        
+                        <div className="flex gap-3">
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setSelectedProduct(product.id);
+                              setTimeout(() => setIsModalOpen(true), 0);
+                            }}
+                            className="flex-1 bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition-colors font-medium text-sm"
+                          >
+                            Заказать
+                          </button>
+                          <span className="inline-flex items-center text-blue-600 font-medium hover:text-blue-800 text-sm">
+                            Подробнее
+                            <svg className="ml-1 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7"></path>
+                            </svg>
                           </span>
                         </div>
                       </div>
@@ -357,6 +375,15 @@ export default function ModelPage() {
           </div>
         </div>
       ) : null}
+
+      {/* Модальное окно заказа */}
+      <OrderModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        productName={selectedProductData ? `${selectedProductData.name} ${getPowerFromModel(selectedProductData)}` : seriesName}
+        productModel={selectedProductData?.model}
+        productPrice={selectedProductData?.price}
+      />
     </div>
   );
 }

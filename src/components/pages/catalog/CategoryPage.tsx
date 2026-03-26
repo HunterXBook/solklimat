@@ -1,10 +1,14 @@
 import { ArrowLeft } from 'lucide-react';
 import { useParams, useNavigate } from 'react-router-dom';
+import { useState } from 'react';
 import { products, Product } from '../../../data/productData';
+import OrderModal from '@/components/ui/OrderModal';
 
 const CategoryPage = () => {
   const { categoryId } = useParams();
   const navigate = useNavigate();
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedProduct, setSelectedProduct] = useState<{name: string, model?: string, price?: string | number} | null>(null);
   
   const getCategoryTitle = (catId: string): string => {
     switch (catId) {
@@ -72,6 +76,13 @@ const CategoryPage = () => {
   // Обработчик возврата к категориям
   const handleBack = () => {
     navigate('/catalog');
+  };
+
+  // Обработчик открытия модального окна заказа
+  const handleOrderClick = (e: React.MouseEvent, productName: string, productModel?: string, price?: string | number) => {
+    e.stopPropagation();
+    setSelectedProduct({ name: productName, model: productModel, price });
+    setIsModalOpen(true);
   };
 
   const pageTitle = getCategoryTitle(categoryId || '');
@@ -173,10 +184,16 @@ const CategoryPage = () => {
                     </div>
                   </div>
 
-                  <div className="flex justify-end">
-                    <span className="inline-flex items-center text-blue-600 font-medium hover:text-blue-800">
-                      Выбрать модель
-                      <svg className="ml-2 h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <div className="flex gap-3">
+                    <button
+                      onClick={(e) => handleOrderClick(e, `${firstProduct.name} ${powerRange}`, undefined, minPrice === maxPrice ? minPrice : undefined)}
+                      className="flex-1 bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition-colors font-medium text-sm"
+                    >
+                      Заказать
+                    </button>
+                    <span className="inline-flex items-center text-blue-600 font-medium hover:text-blue-800 text-sm">
+                      Подробнее
+                      <svg className="ml-1 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7"></path>
                       </svg>
                     </span>
@@ -186,6 +203,15 @@ const CategoryPage = () => {
             );
           })}
         </div>
+
+        {/* Модальное окно заказа */}
+        <OrderModal
+          isOpen={isModalOpen}
+          onClose={() => setIsModalOpen(false)}
+          productName={selectedProduct?.name || ''}
+          productModel={selectedProduct?.model}
+          productPrice={selectedProduct?.price}
+        />
       ) : (
         <div className="bg-white rounded-xl shadow-md p-10 text-center">
           <svg className="w-20 h-20 mx-auto mb-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">

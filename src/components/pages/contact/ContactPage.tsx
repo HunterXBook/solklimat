@@ -3,22 +3,89 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
-import { Phone, Mail, Send, Clock } from 'lucide-react';
+import { Phone, Mail, Send, Clock, Loader2, CheckCircle } from 'lucide-react';
+
+// Telegram Bot Config
+const BOT_TOKEN = '8763856112:AAEGUeaIVf_6xY9_qMgXKLTZrUwH6gcyEe0';
+const CHAT_ID = '8430897822';
 
 const ContactPage = () => {
   const [name, setName] = useState('');
   const [phone, setPhone] = useState('');
   const [email, setEmail] = useState('');
   const [message, setMessage] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+  const [isSuccess, setIsSuccess] = useState(false);
+  const [error, setError] = useState('');
 
-  const handleSubmit = (e: React.FormEvent) => {
+  // Phone mask
+  const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    let value = e.target.value.replace(/\D/g, '');
+    if (value.length > 0 && value[0] === '7') value = value.slice(1);
+    if (value.length > 10) value = value.slice(0, 10);
+    
+    let formatted = '+7';
+    if (value.length > 0) formatted += ' (' + value.slice(0, 3);
+    if (value.length >= 3) formatted += ') ' + value.slice(3, 6);
+    if (value.length >= 6) formatted += '-' + value.slice(6, 8);
+    if (value.length >= 8) formatted += '-' + value.slice(8, 10);
+    
+    setPhone(formatted);
+  };
+
+  const sendToTelegram = async () => {
+    const text = `📩 <b>Новая заявка с сайта СОЛКЛИМАТ</b>
+
+👤 <b>Имя:</b> ${name || 'Не указано'}
+📞 <b>Телефон:</b> ${phone}
+📧 <b>Email:</b> ${email || 'Не указан'}
+💬 <b>Сообщение:</b> ${message || 'Нет'}
+
+🌐 <b>Источник:</b> solclimate.ru
+🕐 <b>Время:</b> ${new Date().toLocaleString('ru-RU')}`;
+
+    try {
+      const response = await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          chat_id: CHAT_ID,
+          text: text,
+          parse_mode: 'HTML'
+        })
+      });
+      return response.ok;
+    } catch (error) {
+      console.error('Telegram error:', error);
+      return false;
+    }
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // В реальном проекте здесь был бы код для отправки формы
-    alert('Сообщение отправлено!');
-    setName('');
-    setPhone('');
-    setEmail('');
-    setMessage('');
+    setError('');
+    
+    if (!phone || phone.length < 10) {
+      setError('Пожалуйста, введите корректный номер телефона');
+      return;
+    }
+
+    setIsLoading(true);
+    
+    const success = await sendToTelegram();
+    
+    setIsLoading(false);
+    
+    if (success) {
+      setIsSuccess(true);
+      setName('');
+      setPhone('');
+      setEmail('');
+      setMessage('');
+      setTimeout(() => setIsSuccess(false), 5000);
+    } else {
+      setError('Ошибка отправки. Пожалуйста, позвоните нам напрямую.');
+    }
   };
 
   return (
@@ -29,6 +96,20 @@ const ContactPage = () => {
         {/* Контактная форма - занимает 3/5 на десктопе */}
         <div className="lg:col-span-3 bg-white p-6 rounded-lg shadow-md">
           <h2 className="text-2xl font-semibold mb-6">Напишите нам</h2>
+          
+          {isSuccess && (
+            <div className="mb-4 p-4 bg-green-50 border border-green-200 rounded-lg flex items-center gap-3">
+              <CheckCircle className="h-5 w-5 text-green-600" />
+              <span className="text-green-800">Заявка отправлена! Мы свяжемся с вами в ближайшее время.</span>
+            </div>
+          )}
+          
+          {error && (
+            <div className="mb-4 p-4 bg-red-50 border border-red-200 rounded-lg text-red-800">
+              {error}
+            </div>
+          )}
+          
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
               <label htmlFor="name" className="block text-sm font-medium mb-1">
@@ -39,18 +120,17 @@ const ContactPage = () => {
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 placeholder="Иван Иванов"
-                required
               />
             </div>
             
             <div>
               <label htmlFor="phone" className="block text-sm font-medium mb-1">
-                Телефон
+                Телефон *
               </label>
               <Input
                 id="phone"
                 value={phone}
-                onChange={(e) => setPhone(e.target.value)}
+                onChange={handlePhoneChange}
                 placeholder="+7 (___) ___-__-__"
                 required
               />
@@ -87,12 +167,22 @@ const ContactPage = () => {
                 onChange={(e) => setMessage(e.target.value)}
                 placeholder="Опишите ваш вопрос или запрос..."
                 rows={5}
-                required
               />
             </div>
             
-            <Button type="submit" className="w-full bg-blue-600 hover:bg-blue-700">
-              Отправить сообщение
+            <Button 
+              type="submit" 
+              className="w-full bg-blue-600 hover:bg-blue-700"
+              disabled={isLoading}
+            >
+              {isLoading ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  Отправка...
+                </>
+              ) : (
+                'Отправить сообщение'
+              )}
             </Button>
             
             <p className="text-sm text-gray-600 mt-2 text-center">
