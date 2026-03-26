@@ -1,7 +1,7 @@
 import { useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ChevronDown, Filter, Phone } from 'lucide-react';
-import { products, Product } from '../../data/productData';
+import { products, Product } from '../../../data/productData';
 import OrderModal from '@/components/ui/OrderModal';
 
 // Все товары из всех категорий
