@@ -1,8 +1,10 @@
-import { useState } from 'react';
-import { Plus, Trash2, Copy, Check, ChevronDown, ChevronUp } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { Plus, Trash2, Copy, Check, ChevronDown, ChevronUp, Lock } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
+
+const ADMIN_PASSWORD = 'solklimatadmin1975';
 
 interface ProductVariant {
   id: string;
@@ -51,10 +53,63 @@ const initialForm: ProductForm = {
 };
 
 const AdminPage = () => {
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [password, setPassword] = useState('');
+  const [passwordError, setPasswordError] = useState(false);
   const [form, setForm] = useState<ProductForm>(initialForm);
   const [generatedJson, setGeneratedJson] = useState('');
   const [copied, setCopied] = useState(false);
   const [expandedSections, setExpandedSections] = useState<string[]>(['basic', 'variants']);
+
+  useEffect(() => {
+    const saved = sessionStorage.getItem('adminAuth');
+    if (saved === 'true') {
+      setIsAuthenticated(true);
+    }
+  }, []);
+
+  const handleLogin = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (password === ADMIN_PASSWORD) {
+      setIsAuthenticated(true);
+      sessionStorage.setItem('adminAuth', 'true');
+      setPasswordError(false);
+    } else {
+      setPasswordError(true);
+    }
+  };
+
+  if (!isAuthenticated) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-100">
+        <div className="bg-white rounded-lg shadow-md p-8 w-full max-w-md">
+          <div className="flex items-center justify-center mb-6">
+            <div className="bg-blue-100 p-3 rounded-full">
+              <Lock className="h-8 w-8 text-blue-600" />
+            </div>
+          </div>
+          <h1 className="text-2xl font-bold text-center mb-2">Админ-панель</h1>
+          <p className="text-gray-600 text-center mb-6">Введите пароль для доступа</p>
+          
+          <form onSubmit={handleLogin} className="space-y-4">
+            <Input
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              placeholder="Пароль"
+              className="w-full"
+            />
+            {passwordError && (
+              <p className="text-red-500 text-sm text-center">Неверный пароль</p>
+            )}
+            <Button type="submit" className="w-full bg-blue-600 hover:bg-blue-700">
+              Войти
+            </Button>
+          </form>
+        </div>
+      </div>
+    );
+  }
 
   const toggleSection = (section: string) => {
     setExpandedSections(prev => 
