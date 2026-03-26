@@ -1,32 +1,21 @@
 <?php
-// API для загрузки фото и автоматического коммита в GitHub
+// API для загрузки фото
+// Автокоммит временно отключен - нужно ручное копирование JSON
+
 header('Content-Type: application/json');
 header('Access-Control-Allow-Origin: *');
 header('Access-Control-Allow-Methods: POST');
 header('Access-Control-Allow-Headers: Content-Type, Authorization');
 
-// GitHub Token - должен быть установлен в переменной окружения
-$GITHUB_TOKEN = getenv('GITHUB_TOKEN');
-if (!$GITHUB_TOKEN) {
-    http_response_code(500);
-    echo json_encode(['error' => 'GITHUB_TOKEN not configured']);
-    exit;
-}
-
-$REPO_OWNER = 'HunterXBook';
-$REPO_NAME = 'solklimat';
-
-// Проверка авторизации - поддержка разных способов
+// Проверка авторизации
 $auth_header = '';
 
-// Способ 1: $_SERVER (самый надежный с .htaccess)
 if (isset($_SERVER['HTTP_AUTHORIZATION'])) {
     $auth_header = $_SERVER['HTTP_AUTHORIZATION'];
 } elseif (isset($_SERVER['REDIRECT_HTTP_AUTHORIZATION'])) {
     $auth_header = $_SERVER['REDIRECT_HTTP_AUTHORIZATION'];
 }
 
-// Способ 2: apache_request_headers
 if (empty($auth_header) && function_exists('apache_request_headers')) {
     $headers = apache_request_headers();
     foreach ($headers as $key => $value) {
@@ -37,26 +26,15 @@ if (empty($auth_header) && function_exists('apache_request_headers')) {
     }
 }
 
-// Способ 3: getallheaders
-if (empty($auth_header) && function_exists('getallheaders')) {
-    $headers = getallheaders();
-    foreach ($headers as $key => $value) {
-        if (strtolower($key) === 'authorization') {
-            $auth_header = $value;
-            break;
-        }
-    }
-}
-
 if (empty($auth_header)) {
     http_response_code(401);
-    echo json_encode(['error' => 'Unauthorized', 'debug' => 'No authorization header found']);
+    echo json_encode(['error' => 'Unauthorized']);
     exit;
 }
 
 if (!str_starts_with($auth_header, 'Bearer ')) {
     http_response_code(401);
-    echo json_encode(['error' => 'Unauthorized', 'debug' => 'Invalid auth format']);
+    echo json_encode(['error' => 'Invalid auth format']);
     exit;
 }
 
@@ -74,9 +52,8 @@ switch ($action) {
         handleUpload();
         break;
     case 'commit':
-        // Временно отключено - нужно исправить генерацию кода
-        http_response_code(503);
-        echo json_encode(['error' => 'Commit temporarily disabled. Please copy JSON manually.']);
+        // Автокоммит отключен - возвращаем JSON для ручного копирования
+        handleGenerateJson();
         break;
     default:
         http_response_code(400);
@@ -123,9 +100,7 @@ function handleUpload() {
     }
 }
 
-function handleCommit() {
-    global $GITHUB_TOKEN, $REPO_OWNER, $REPO_NAME;
-    
+function handleGenerateJson() {
     $data = json_decode(file_get_contents('php://input'), true);
     
     if (!$data || !isset($data['products'])) {
@@ -134,114 +109,55 @@ function handleCommit() {
         return;
     }
     
-    $fileUrl = "https://api.github.com/repos/{$REPO_OWNER}/{$REPO_NAME}/contents/src/data/productData.ts";
+    // Генерируем TypeScript код
+    $output = generateTypeScriptCode($data['products']);
     
-    $ch = curl_init($fileUrl);
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-    curl_setopt($ch, CURLOPT_HTTPHEADER, [
-        "Authorization: token {$GITHUB_TOKEN}",
-        "Accept: application/vnd.github.v3+json",
-        "User-Agent: Solklimat-Admin"
+    echo json_encode([
+        'success' => true,
+        'typescript' => $output,
+        'message' => 'Скопируйте этот код и вставьте в src/data/productData.ts'
     ]);
-    $response = curl_exec($ch);
-    curl_close($ch);
-    
-    $fileInfo = json_decode($response, true);
-    if (!isset($fileInfo['content'])) {
-        http_response_code(500);
-        echo json_encode(['error' => 'Failed to fetch file', 'details' => $fileInfo]);
-        return;
-    }
-    
-    $currentContent = base64_decode($fileInfo['content']);
-    $sha = $fileInfo['sha'];
-    
-    $newProducts = $data['products'];
-    $category = array_keys($newProducts)[0];
-    $products = $newProducts[$category];
-    
-    $productLines = [];
-    foreach ($products as $product) {
-        $productLines[] = generateProductCode($product);
-    }
-    
-    // Находим позицию для вставки - перед закрывающей скобкой массива категории
-    $categoryPattern = "/('{$category}':\s*\[)([\s\S]*?)(\],?\s*$)/m";
-    
-    if (preg_match($categoryPattern, $currentContent, $matches, PREG_OFFSET_CAPTURE)) {
-        // Категория существует - добавляем в конец массива
-        $insertPos = $matches[3][1]; // позиция закрывающей скобки
-        $newContent = substr($currentContent, 0, $insertPos) . 
-            (trim($matches[2][0]) ? ",\n" : "") .
-            implode(",\n", $productLines) .
-            substr($currentContent, $insertPos);
-    } else {
-        // Категории нет - создаем новую перед закрывающей скобкой products
-        $insertPos = strrpos($currentContent, '};');
-        if ($insertPos === false) {
-            $insertPos = strrpos($currentContent, '}');
-        }
-        $newContent = substr($currentContent, 0, $insertPos) . 
-            "  '{$category}': [\n" .
-            implode(",\n", $productLines) . "\n  ],\n" .
-            substr($currentContent, $insertPos);
-    }
-    
-    $commitData = [
-        'message' => 'Добавлены новые кондиционеры через админ-панель',
-        'content' => base64_encode($newContent),
-        'sha' => $sha
-    ];
-    
-    $ch = curl_init($fileUrl);
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-    curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'PUT');
-    curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($commitData));
-    curl_setopt($ch, CURLOPT_HTTPHEADER, [
-        "Authorization: token {$GITHUB_TOKEN}",
-        "Accept: application/vnd.github.v3+json",
-        "Content-Type: application/json",
-        "User-Agent: Solklimat-Admin"
-    ]);
-    $response = curl_exec($ch);
-    $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-    curl_close($ch);
-    
-    if ($httpCode === 200 || $httpCode === 201) {
-        echo json_encode(['success' => true, 'message' => 'Changes committed successfully']);
-    } else {
-        http_response_code(500);
-        echo json_encode(['error' => 'Failed to commit', 'details' => json_decode($response, true)]);
-    }
 }
 
-function generateProductCode($product) {
-    $specsStr = '';
-    foreach ($product['specs'] ?? [] as $spec) {
-        $specsStr .= "        { name: '" . addslashes($spec['name']) . "', value: '" . addslashes($spec['value']) . "' },\n";
-    }
-    $specsStr = rtrim($specsStr, ",\n");
+function generateTypeScriptCode($products) {
+    $category = array_keys($products)[0];
+    $items = $products[$category];
     
-    $keyFeaturesStr = '';
-    foreach ($product['keyFeatures'] ?? [] as $feature) {
-        $keyFeaturesStr .= "        '" . addslashes($feature) . "',\n";
-    }
-    $keyFeaturesStr = rtrim($keyFeaturesStr, ",\n");
+    $code = "  '{$category}': [\n";
     
-    $imagesStr = '';
-    foreach ($product['images'] ?? [] as $img) {
-        $imagesStr .= "        '" . addslashes($img) . "',\n";
+    foreach ($items as $product) {
+        $code .= "    {\n";
+        $code .= "      id: '" . addslashes($product['id']) . "',\n";
+        $code .= "      name: '" . addslashes($product['name']) . "',\n";
+        $code .= "      model: '" . addslashes($product['model']) . "',\n";
+        
+        // Images
+        $code .= "      images: [\n";
+        foreach ($product['images'] as $img) {
+            $code .= "        '" . addslashes($img) . "',\n";
+        }
+        $code .= "      ],\n";
+        
+        $code .= "      price: " . intval($product['price']) . ",\n";
+        $code .= "      color: '" . addslashes($product['color']) . "',\n";
+        
+        // Key features
+        $code .= "      keyFeatures: [\n";
+        foreach ($product['keyFeatures'] as $feature) {
+            $code .= "        '" . addslashes($feature) . "',\n";
+        }
+        $code .= "      ],\n";
+        
+        // Specs
+        $code .= "      specs: [\n";
+        foreach ($product['specs'] as $spec) {
+            $code .= "        { name: '" . addslashes($spec['name']) . "', value: '" . addslashes($spec['value']) . "' },\n";
+        }
+        $code .= "      ]\n";
+        $code .= "    },\n";
     }
-    $imagesStr = rtrim($imagesStr, ",\n");
     
-    return "    {\n" .
-        "      id: '" . addslashes($product['id']) . "',\n" .
-        "      name: '" . addslashes($product['name']) . "',\n" .
-        "      model: '" . addslashes($product['model']) . "',\n" .
-        "      images: [\n" . $imagesStr . "\n      ],\n" .
-        "      price: " . intval($product['price']) . ",\n" .
-        "      color: '" . addslashes($product['color']) . "',\n" .
-        "      keyFeatures: [\n" . $keyFeaturesStr . "\n      ],\n" .
-        "      specs: [\n" . $specsStr . "\n      ]\n" .
-        "    }";
+    $code .= "  ]";
+    
+    return $code;
 }

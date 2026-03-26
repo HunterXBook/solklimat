@@ -164,9 +164,11 @@ const AdminPage = () => {
     }));
   };
 
-  const commitToGitHub = async () => {
+  const [generatedCode, setGeneratedCode] = useState('');
+
+  const generateTypeScriptCode = () => {
     setIsCommitting(true);
-    setCommitStatus('Создание коммита...');
+    setCommitStatus('Генерация кода...');
     
     // Генерируем продукты
     const products = form.variants.map((variant, idx) => ({
@@ -187,34 +189,39 @@ const AdminPage = () => {
       ].filter(s => s.value)
     }));
 
-    try {
-      const response = await fetch(`${API_URL}?action=commit`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': 'Bearer solklimatadmin1975'
-        },
-        body: JSON.stringify({
-          products: {
-            [form.systemType]: products
-          }
-        })
+    // Формируем TypeScript код
+    let code = `  '${form.systemType}': [\n`;
+    
+    products.forEach(product => {
+      code += `    {\n`;
+      code += `      id: '${product.id}',\n`;
+      code += `      name: '${product.name}',\n`;
+      code += `      model: '${product.model}',\n`;
+      code += `      images: [\n`;
+      product.images.forEach(img => {
+        code += `        '${img}',\n`;
       });
-      
-      const data = await response.json();
-      
-      if (data.success) {
-        setCommitStatus('✓ Успешно! Изменения отправлены на сайт. Ожидайте деплоя (~2 минуты)');
-        // Очищаем форму
-        setForm(initialForm);
-      } else {
-        setCommitStatus('✗ Ошибка: ' + (data.error || 'Неизвестная ошибка'));
-      }
-    } catch (error) {
-      setCommitStatus('✗ Ошибка сети при коммите');
-    } finally {
-      setIsCommitting(false);
-    }
+      code += `      ],\n`;
+      code += `      price: ${product.price},\n`;
+      code += `      color: '${product.color}',\n`;
+      code += `      keyFeatures: [\n`;
+      product.keyFeatures.forEach(f => {
+        code += `        '${f}',\n`;
+      });
+      code += `      ],\n`;
+      code += `      specs: [\n`;
+      product.specs.forEach(s => {
+        code += `        { name: '${s.name}', value: '${s.value}' },\n`;
+      });
+      code += `      ]\n`;
+      code += `    },\n`;
+    });
+    
+    code += `  ]`;
+    
+    setGeneratedCode(code);
+    setCommitStatus('✓ Код сгенерирован! Скопируйте и вставьте в src/data/productData.ts');
+    setIsCommitting(false);
   };
 
   const isExpanded = (section: string) => expandedSections.includes(section);
@@ -505,22 +512,22 @@ const AdminPage = () => {
         )}
       </div>
 
-      {/* Отправка на сайт */}
+      {/* Генерация кода */}
       <div className="bg-white rounded-lg shadow-md p-6">
         <Button 
-          onClick={commitToGitHub}
+          onClick={generateTypeScriptCode}
           disabled={isCommitting || !form.name || form.variants.some(v => !v.model)}
           className="w-full bg-green-600 hover:bg-green-700 h-14 text-lg"
         >
           {isCommitting ? (
             <>
               <Loader2 className="h-5 w-5 mr-2 animate-spin" />
-              Отправка...
+              Генерация...
             </>
           ) : (
             <>
               <Upload className="h-5 w-5 mr-2" />
-              Отправить на сайт
+              Сгенерировать код
             </>
           )}
         </Button>
@@ -531,14 +538,36 @@ const AdminPage = () => {
           </div>
         )}
         
-        <div className="mt-4 p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
-          <p className="text-sm text-yellow-800">
-            <strong>Что произойдёт:</strong><br/>
-            1. Данные отправятся в GitHub<br/>
-            2. Запустится автоматический деплой (~2 минуты)<br/>
-            3. Кондиционер появится на сайте
-          </p>
-        </div>
+        {generatedCode && (
+          <div className="mt-4">
+            <div className="flex items-center justify-between mb-2">
+              <h3 className="font-semibold">Скопируйте этот код:</h3>
+              <Button 
+                onClick={() => {
+                  navigator.clipboard.writeText(generatedCode);
+                  setCommitStatus('✓ Код скопирован!');
+                }}
+                variant="outline"
+                size="sm"
+              >
+                Копировать
+              </Button>
+            </div>
+            <pre className="bg-gray-900 text-green-400 p-4 rounded-lg overflow-x-auto text-sm max-h-96 overflow-y-auto">
+              {generatedCode}
+            </pre>
+            <div className="mt-4 p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
+              <p className="text-sm text-yellow-800">
+                <strong>Что делать дальше:</strong><br/>
+                1. Скопируйте код выше<br/>
+                2. Откройте файл <code>src/data/productData.ts</code> на GitHub<br/>
+                3. Найдите категорию <code>'{form.systemType}'</code><br/>
+                4. Вставьте код в массив (перед закрывающей скобкой ] )<br/>
+                5. Сохраните коммит — запустится деплой
+              </p>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
