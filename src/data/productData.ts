@@ -16,7 +16,29 @@ export interface Product {
 
 export const products: Record<string, Product[]> = {
   'split': [
-        {
+        
+    {
+      id: 'dsdsd-dsd',
+      name: 'dsdsd',
+      model: 'dsd',
+      images: [
+        '/images/products/product-1774538166.jpg',
+      ],
+      price: 1111111,
+      color: 'Белый',
+      keyFeatures: [
+        'Инверторное управление компрессором',
+        'Низкий уровень шума',
+        'Класс энергоэффективности A',
+      ],
+      specs: [
+        { name: 'Модель внутреннего блока', value: 'dsd' },
+        { name: 'Мощность охлаждения', value: '11' },
+        { name: 'Энергоэффективность', value: 'A' },
+        { name: 'Уровень шума', value: '11' },
+      ]
+    },
+{
       id: 'integratest-01',
       name: 'Integratest',
       model: 'Integratest',
