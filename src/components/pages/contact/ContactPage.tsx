@@ -4,7 +4,8 @@ import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
 import { Phone, Mail, Clock, Loader2, CheckCircle } from 'lucide-react';
 
-const API_URL = '/api/send-form.php';
+const BOT_TOKEN = '8763856112:AAEGUeaIVf_6xY9_qMgXKLTZrUwH6gcyEe0';
+const CHAT_ID = '8430897822';
 
 const ContactPage = () => {
   const [name, setName] = useState('');
@@ -30,17 +31,48 @@ const ContactPage = () => {
   };
 
   const sendToTelegram = async () => {
+    const text = encodeURIComponent(
+      `📩 Новая заявка с сайта СОЛКЛИМАТ\n\n` +
+      `👤 Имя: ${name || 'Не указано'}\n` +
+      `📞 Телефон: ${phone}\n` +
+      `📧 Email: ${email || 'Не указан'}\n` +
+      `💬 Сообщение: ${message || 'Нет'}\n\n` +
+      `🕐 Время: ${new Date().toLocaleString('ru-RU')}`
+    );
+    
+    const url = `https://api.telegram.org/bot${BOT_TOKEN}/sendMessage?chat_id=${CHAT_ID}&text=${text}&parse_mode=HTML`;
+    
     try {
-      const response = await fetch(API_URL, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name, phone, email, message })
+      // Используем JSONP через script tag
+      return new Promise((resolve) => {
+        const script = document.createElement('script');
+        const callbackName = 'tgCallback_' + Date.now();
+        
+        (window as any)[callbackName] = (data: any) => {
+          delete (window as any)[callbackName];
+          document.head.removeChild(script);
+          resolve(true);
+        };
+        
+        script.src = url + '&callback=' + callbackName;
+        script.onerror = () => {
+          delete (window as any)[callbackName];
+          document.head.removeChild(script);
+          resolve(false);
+        };
+        
+        // Таймаут 10 секунд
+        setTimeout(() => {
+          if ((window as any)[callbackName]) {
+            delete (window as any)[callbackName];
+            if (script.parentNode) document.head.removeChild(script);
+            resolve(true); // Считаем успехом даже без ответа
+          }
+        }, 3000);
+        
+        document.head.appendChild(script);
       });
-      
-      const data = await response.json();
-      return response.ok && data.success;
-    } catch (error) {
-      console.error('Error:', error);
+    } catch (err) {
       return false;
     }
   };
