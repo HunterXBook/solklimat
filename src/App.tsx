@@ -5,7 +5,7 @@ import HomePage from './components/pages/HomePage';
 import CatalogPage from './components/pages/catalog/CatalogPage';
 import CategoryPage from './components/pages/catalog/CategoryPage';
 import ModelPage from './components/pages/catalog/ModelPage';
-import ContactPage from './components/pages/ContactPage';
+import ContactPage from './components/pages/contact/ContactPage';
 import InstallationPage from './components/pages/installation/InstallationPage';
 import EncyclopediaPage from './components/pages/encyclopedia/EncyclopediaPage';
 import PrivacyPolicyPage from './components/pages/PrivacyPolicyPage';
