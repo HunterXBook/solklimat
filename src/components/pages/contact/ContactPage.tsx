@@ -4,9 +4,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
 import { Phone, Mail, Clock, Loader2, CheckCircle } from 'lucide-react';
 
-// Telegram Bot Config
-const BOT_TOKEN = '8763856112:AAEGUeaIVf_6xY9_qMgXKLTZrUwH6gcyEe0';
-const CHAT_ID = '8430897822';
+const API_URL = '/api/send-form.php';
 
 const ContactPage = () => {
   const [name, setName] = useState('');
@@ -17,7 +15,6 @@ const ContactPage = () => {
   const [isSuccess, setIsSuccess] = useState(false);
   const [error, setError] = useState('');
 
-  // Phone mask
   const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     let value = e.target.value.replace(/\D/g, '');
     if (value.length > 0 && value[0] === '7') value = value.slice(1);
@@ -33,30 +30,17 @@ const ContactPage = () => {
   };
 
   const sendToTelegram = async () => {
-    const text = `📩 <b>Новая заявка с сайта СОЛКЛИМАТ</b>
-
-👤 <b>Имя:</b> ${name || 'Не указано'}
-📞 <b>Телефон:</b> ${phone}
-📧 <b>Email:</b> ${email || 'Не указан'}
-💬 <b>Сообщение:</b> ${message || 'Нет'}
-
-🌐 <b>Источник:</b> solclimate.ru
-🕐 <b>Время:</b> ${new Date().toLocaleString('ru-RU')}`;
-
     try {
-      const response = await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
+      const response = await fetch(API_URL, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          chat_id: CHAT_ID,
-          text: text,
-          parse_mode: 'HTML'
-        })
+        body: JSON.stringify({ name, phone, email, message })
       });
       
-      return response.ok;
+      const data = await response.json();
+      return response.ok && data.success;
     } catch (error) {
-      console.error('Telegram error:', error);
+      console.error('Error:', error);
       return false;
     }
   };
@@ -71,9 +55,7 @@ const ContactPage = () => {
     }
 
     setIsLoading(true);
-    
     const success = await sendToTelegram();
-    
     setIsLoading(false);
     
     if (success) {
@@ -84,7 +66,7 @@ const ContactPage = () => {
       setMessage('');
       setTimeout(() => setIsSuccess(false), 5000);
     } else {
-      setError('Ошибка отправки. Попробуйте позвонить нам напрямую: +7 (963) 600-60-06');
+      setError('Ошибка отправки. Позвоните нам: +7 (963) 600-60-06');
     }
   };
 
@@ -93,7 +75,6 @@ const ContactPage = () => {
       <h1 className="text-3xl font-bold text-center mb-8">Связаться с нами</h1>
       
       <div className="grid grid-cols-1 lg:grid-cols-5 gap-8">
-        {/* Контактная форма */}
         <div className="lg:col-span-3 bg-white p-6 rounded-lg shadow-md">
           <h2 className="text-2xl font-semibold mb-6">Напишите нам</h2>
           
@@ -137,7 +118,6 @@ const ContactPage = () => {
           </form>
         </div>
         
-        {/* Контакты */}
         <div className="lg:col-span-2">
           <div className="bg-white rounded-lg shadow-md p-6">
             <h3 className="text-xl font-semibold mb-4">Наши контакты</h3>
