@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
-import { Phone, Mail, Clock, Loader2, CheckCircle } from 'lucide-react';
+import { Phone, Loader2, CheckCircle } from 'lucide-react';
 
 // Telegram Bot Config
 const BOT_TOKEN = '8763856112:AAEGUeaIVf_6xY9_qMgXKLTZrUwH6gcyEe0';
