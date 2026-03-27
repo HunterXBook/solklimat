@@ -31,7 +31,7 @@ jobs:
     - name: Build project
       run: pnpm run build
       
-    - name: Deploy via FTP
+    - name: Deploy frontend via FTP
       uses: SamKirkland/FTP-Deploy-Action@v4.3.4
       with:
         server: vh450.timeweb.ru
@@ -46,5 +46,18 @@ jobs:
           **/.git*/**
           **/node_modules/**
           **/.env
+        timeout: 120000
+        log-level: verbose
+        
+    - name: Deploy API files via FTP
+      uses: SamKirkland/FTP-Deploy-Action@v4.3.4
+      with:
+        server: vh450.timeweb.ru
+        username: ${{ secrets.FTP_USERNAME }}
+        password: ${{ secrets.FTP_PASSWORD }}
+        protocol: ftp
+        port: 21
+        local-dir: ./api/
+        server-dir: /solklimat/public_html/api/
         timeout: 120000
         log-level: verbose
