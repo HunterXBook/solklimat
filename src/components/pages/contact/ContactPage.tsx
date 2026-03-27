@@ -24,7 +24,7 @@ export default function ContactPage() {
     return result;
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
+const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
     
@@ -34,6 +34,34 @@ export default function ContactPage() {
     }
 
     setLoading(true);
+    
+    try {
+      const body = new FormData();
+      body.append('name', formData.name);
+      body.append('phone', formData.phone);
+      body.append('email', formData.email);
+      body.append('message', formData.message);
+
+      const response = await fetch('/api/send-form.php', {
+        method: 'POST',
+        body
+      });
+      
+      const result = await response.json();
+      
+      if (result.ok) {
+        setSuccess(true);
+        setFormData({ name: '', phone: '', email: '', message: '' });
+        setTimeout(() => setSuccess(false), 5000);
+      } else {
+        throw new Error('Failed');
+      }
+    } catch {
+      setError('Ошибка отправки. Позвоните: +7 (963) 600-60-06');
+    }
+    
+    setLoading(false);
+};
     
     const text = `📩 Новая заявка
 👤 Имя: ${formData.name || 'Не указано'}
