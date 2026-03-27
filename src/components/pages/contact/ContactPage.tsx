@@ -4,7 +4,8 @@ import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
 import { Phone, Loader2, CheckCircle } from 'lucide-react';
 
-const API_URL = '/api/send-form.php';
+const BOT_TOKEN = '8763856112:AAEGUeaIVf_6xY9_qMgXKLTZrUwH6gcyEe0';
+const CHAT_ID = '8430897822';
 
 export default function ContactPage() {
   const [formData, setFormData] = useState({ name: '', phone: '', email: '', message: '' });
@@ -34,24 +35,31 @@ export default function ContactPage() {
 
     setLoading(true);
     
+    const text = `📩 Новая заявка
+👤 Имя: ${formData.name || 'Не указано'}
+📞 Телефон: ${formData.phone}
+📧 Email: ${formData.email || 'Не указан'}
+💬 ${formData.message || 'Нет'}
+🕐 ${new Date().toLocaleString('ru-RU')}`;
+
     try {
-      const response = await fetch(API_URL, {
+      // Пробуем отправить напрямую
+      const response = await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData)
+        body: JSON.stringify({ chat_id: CHAT_ID, text })
       });
       
-      const data = await response.json();
-      
-      if (response.ok && data.success) {
+      if (response.ok) {
         setSuccess(true);
         setFormData({ name: '', phone: '', email: '', message: '' });
         setTimeout(() => setSuccess(false), 5000);
       } else {
-        setError('Ошибка отправки. Позвоните: +7 (963) 600-60-06');
+        throw new Error('Failed');
       }
     } catch {
-      setError('Ошибка сети. Позвоните: +7 (963) 600-60-06');
+      // Если CORS блокирует — показываем телефон
+      setError('Ошибка отправки. Позвоните: +7 (963) 600-60-06');
     }
     
     setLoading(false);
