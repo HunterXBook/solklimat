@@ -4,8 +4,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
 import { Phone, Loader2, CheckCircle } from 'lucide-react';
 
-const BOT_TOKEN = '8763856112:AAEGUeaIVf_6xY9_qMgXKLTZrUwH6gcyEe0';
-const CHAT_ID = '8430897822';
+const API_URL = '/api/send-form.php';
 
 export default function ContactPage() {
   const [formData, setFormData] = useState({ name: '', phone: '', email: '', message: '' });
@@ -35,22 +34,16 @@ export default function ContactPage() {
 
     setLoading(true);
     
-    const text = `📩 Новая заявка с сайта
-
-👤 Имя: ${formData.name || 'Не указано'}
-📞 Телефон: ${formData.phone}
-📧 Email: ${formData.email || 'Не указан'}
-💬 Сообщение: ${formData.message || 'Нет'}
-🕐 ${new Date().toLocaleString('ru-RU')}`;
-
     try {
-      const response = await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
+      const response = await fetch(API_URL, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ chat_id: CHAT_ID, text, parse_mode: 'HTML' })
+        body: JSON.stringify(formData)
       });
       
-      if (response.ok) {
+      const data = await response.json();
+      
+      if (response.ok && data.success) {
         setSuccess(true);
         setFormData({ name: '', phone: '', email: '', message: '' });
         setTimeout(() => setSuccess(false), 5000);
